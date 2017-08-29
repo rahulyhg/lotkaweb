@@ -1,0 +1,73 @@
+
+<h3>Supporter tickets now online!</h3>
+
+<form action="/charge" method="post" class="ticket">
+    <aside>
+        <img src="/img/LV-logo-ticket-icon-support.png">
+        <h2>3600 SEK</h2>
+
+        <fieldset>
+            <label for="surname">Character Surname</label>
+            <select id="surname" name="surname">
+            {% for name in surnames %}
+                <option>{{ name.surname|e }}</option>
+            {% endfor %}
+            </select>
+
+            <label for="shirt_type">Shirt Style</label>
+            <select id="shirt_type" name="shirt_type">
+                {% for key, style in shirt_styles %}
+                    <option class="{{ key }}">{{ style }}</option>
+                {% endfor %}                
+            </select>
+
+            <label for="shirt_size">Size</label>
+            <select id="shirt_size" name="shirt_size">
+                {% for shirt in shirts %}
+                    <option class="{{ shirt.type_class }} {{ shirt.size }}">{{ shirt.size }}</option>
+                {% endfor %}            
+            </select>
+
+            <label for="team">Team Preference</label>
+            <select id="team" name="team">
+                {% for key, team_name in teams %}
+                    <option class="{{ key }}">{{ team_name }}</option>
+                {% endfor %}   
+            </select>
+
+            <button id="supporter_ticket" class="customButton">Get Supporter Ticket!</button>
+        </fieldset>
+
+    </aside>
+
+    <aside>
+        <img src="/img/LV-logo-ticket-icon-standard.png">
+        <h2>2600 SEK</h2>
+
+        <fieldset>
+            <label for="shirt_size_standard">Size</label>
+            <select id="shirt_size_standard" name="shirt_size_standard">
+                {% for size in shirt_sizes %}
+                    <option>{{ size }}</option>
+                {% endfor %}               
+            </select>
+
+            <label for="team_standard">Team Preference</label>
+            <select id="team_standard" name="team_standard">
+                {% for class, team_name in teams %}
+                    <option class="{{ class }}">{{ team_name }}</option>
+                {% endfor %}
+            </select>
+
+            <button id="standard_ticket" class="customButton">Get Standard Ticket!</button>
+        </fieldset>         
+    </aside>
+
+    <article id="info" class="loading">
+    </article>
+</form>
+<!--
+<p>
+To buy tickets, please visit <a href="http://tickets.lotka-volterra.se" target="_blank">tickets.lotka-volterra.se</a>.
+</p>
+//-->

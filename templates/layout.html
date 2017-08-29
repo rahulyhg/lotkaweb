@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    {% block head %}
+        <meta charset="utf-8"/>
+        <title>{% block title %}{% endblock %} : Lotka-Volterra</title>
+        <link href="https://fonts.googleapis.com/css?family=Pathway+Gothic+One" rel="stylesheet">
+        <link href="/css/stye.css" rel="stylesheet">
+        <script src="https://checkout.stripe.com/checkout.js"></script>
+        <script
+          src="http://code.jquery.com/jquery-3.2.1.min.js"
+          integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+          crossorigin="anonymous"></script>
+        <script src="/script/main.js"></script>
+    {% endblock %}
+    </head>
+    <body>
+    {% block header %}
+         <header></header>
+    {% endblock %}
+    {% block body %}
+        
+    {% endblock %}
+    {% block footer %}
+        <footer></footer>
+    {% endblock %}
+    </body>
+</html>
