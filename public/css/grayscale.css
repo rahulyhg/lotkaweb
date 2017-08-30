@@ -366,7 +366,7 @@ body {
 .container li {
   list-style: hangul-consonant;
   font-size: 120%;
-  margin: 0 0 .75em 0;
+  margin: 0;
   padding-left: .5em;
 }
 .navbar-brand > img.nav-logo {

@@ -12,106 +12,67 @@ $stripe_settings = $container->get('settings')['stripe'];
 
 $app->get('/', function ($request, $response, $args) {
     // Sample log message
-    //$this->logger->info("Slim-Skeleton '/' route");
+    $this->logger->info("Slim-Skeleton '/' route");
 
+    $ticket_types = $this
+      ->get('db')
+      ->table('tickets')
+      ->select('sku','price','description','img')
+      ->where('available', '=', 1)
+      ->get();
+  
+    $shirts = $this
+      ->get('db')
+      ->table('shirts')
+      ->select('type', 'type_class', 'size')
+      ->where('available', '=', 1)
+      ->get();
 
-// TODO: MOVE!
-    $shirts = [
-        ['type' => 'Slim T-shirt', 'type_class' => 'SLIM_TSHIRT', 'size' => 'XS'],
-        ['type' => 'Slim T-shirt', 'type_class' => 'SLIM_TSHIRT', 'size' => 'S'],
-        ['type' => 'Slim T-shirt', 'type_class' => 'SLIM_TSHIRT', 'size' => 'M'],
-        ['type' => 'Slim T-shirt', 'type_class' => 'SLIM_TSHIRT', 'size' => 'L'],
-        ['type' => 'Slim T-shirt', 'type_class' => 'SLIM_TSHIRT', 'size' => 'XL'],
-        ['type' => 'Slim T-shirt', 'type_class' => 'SLIM_TSHIRT', 'size' => 'XXL'],
-        ['type' => 'Slim T-shirt', 'type_class' => 'SLIM_TSHIRT', 'size' => 'XXXL'],
-        ['type' => 'Slim T-shirt', 'type_class' => 'SLIM_TSHIRT', 'size' => 'XXXXL'],
-        ['type' => 'Regular Fit T-Shirt', 'type_class' => 'REGULAR_TSHIRT', 'size' => 'XS'],
-        ['type' => 'Regular Fit T-Shirt', 'type_class' => 'REGULAR_TSHIRT', 'size' => 'S'],
-        ['type' => 'Regular Fit T-Shirt', 'type_class' => 'REGULAR_TSHIRT', 'size' => 'M'],
-        ['type' => 'Regular Fit T-Shirt', 'type_class' => 'REGULAR_TSHIRT', 'size' => 'L'],
-        ['type' => 'Regular Fit T-Shirt', 'type_class' => 'REGULAR_TSHIRT', 'size' => 'XL'],
-        ['type' => 'Regular Fit T-Shirt', 'type_class' => 'REGULAR_TSHIRT', 'size' => 'XXL'],
-        ['type' => 'Regular Fit T-Shirt', 'type_class' => 'REGULAR_TSHIRT', 'size' => 'XXXL'],
-        ['type' => 'Regular Fit T-Shirt', 'type_class' => 'REGULAR_TSHIRT', 'size' => 'XXXXL'],
-        ['type' => 'Hooie', 'type_class' => 'HOODIE', 'size' => 'XS'],
-        ['type' => 'Hooie', 'type_class' => 'HOODIE', 'size' => 'S'],
-        ['type' => 'Hooie', 'type_class' => 'HOODIE', 'size' => 'M'],
-        ['type' => 'Hooie', 'type_class' => 'HOODIE', 'size' => 'L'],
-        ['type' => 'Hooie', 'type_class' => 'HOODIE', 'size' => 'XL'],
-        ['type' => 'Hooie', 'type_class' => 'HOODIE', 'size' => 'XXL'],
-        ['type' => 'Hooie', 'type_class' => 'HOODIE', 'size' => 'XXXL'],
-        ['type' => 'Hooie', 'type_class' => 'HOODIE', 'size' => 'XXXXL'],
-    ];
+    $shirt_styles = $this
+      ->get('db')
+      ->table('shirts')
+      ->select('type', 'type_class')
+      ->where('available', '=', 1)
+      ->groupBy('type')
+      ->get();
 
-    $shirt_styles = [
-        'SLIM_TSHIRT' => 'Slim T-shirt',
-        'REGULAR_TSHIRT' => 'Regular Fit T-Shirt',
-    ];
+    $teams = $this
+      ->get('db')
+      ->table('teams')
+      ->select('type', 'name')
+      ->where('available', '=', 1)
+      ->get();
 
-    $teams = [
-        'MAINT' => 'Maintenance',
-        'SURFOPS' => 'Surface Operations',
-        'COMMAND' => 'Outpost Command',
-        'MISCON' => 'Mission Control',
-        'OTHER' => 'Other',
-    ];
+    $surnames = $this
+      ->get('db')
+      ->table('surnames')
+      ->select('surname')
+      ->where('available', '=', 1)
+      ->where('order_id', '=', 0)
+      ->get();
 
-    $surnames = [
-        ['surname' => 'Aaron']
-    ];
-
-    $shirt_sizes = array_unique(array_map( 
-        function($shirt) { return $shirt['size']; }, 
-        $shirts
-    ));  
-
+    $shirt_sizes =  $this
+      ->get('db')
+      ->table('shirts')
+      ->select('id','size')
+      ->groupBy('size')
+      ->orderBy('id')
+      ->get();
 
     return $this->view->render($response, 'open/index.html', [
-        'PUBLIC_KEY' => $this->get('settings')['stripe']['PUBLIC_KEY'],
-        'surnames' => $surnames,
-        'shirt_styles' => $shirt_styles,
-        'shirt_sizes' => $shirt_sizes,
-        'shirts' => $shirts,
-        'teams' => $teams
+      'PUBLIC_KEY' => $this->get('settings')['stripe']['PUBLIC_KEY'],
+      'surnames' => $surnames,
+      'shirt_styles' => $shirt_styles,
+      'shirt_sizes' => $shirt_sizes,
+      'shirts' => $shirts,
+      'teams' => $teams,
+      'ticket_types' => $ticket_types
     ]);
 });
 
 $app->post('/charge', function ($request, $response, $args = array('name' => '')) {
     // Sample log message
     //$this->logger->info("Create Slim charge");
-
-    $ticke_prices = array(
-        'SUPPORT' =>        array(
-            'id' => 4,
-            'price' => 360000, 
-            'description' => 'Support Ticket', 
-            'statement_descriptor' => 'Lotka-Volterra, Ticket'
-        ),
-        'STANDARD' =>   array(
-            'id' => 5,
-            'price' => 260000, 
-            'description' => 'Standard Ticket', 
-            'statement_descriptor' => 'Lotka-Volterra, Ticket'
-        ),
-        'STD_1' =>          array(
-            'id' => 5,
-            'price' => 130000, 
-            'description' => 'Standard Ticket, down payment', 
-            'statement_descriptor' => 'Lotka-Volterra, Ticket'
-        ),
-        'STD_2' =>          array(
-            'id' => 5,
-            'price' => 130000, 
-            'description' => 'Standard Ticket, final payment', 
-            'statement_descriptor' => 'Lotka-Volterra, Ticket'
-        ),
-        'SUBSIDIZED' => array(
-            'id' => 6,
-            'price' => 170000, 
-            'description' => 'Subsidized Ticket', 
-            'statement_descriptor' => 'Lotka-Volterra, Ticket'
-        )
-    );
 
     $data = $request->getParsedBody();
     $ticket_data = [];
@@ -124,19 +85,35 @@ $app->post('/charge', function ($request, $response, $args = array('name' => '')
     $ticket_data['ticket_type'] =   filter_var($data['ticket_type'], FILTER_SANITIZE_STRING);
 
     $metadata = array(
-        'shirt_type' => $ticket_data['type'],
-        'shirt_size' => $ticket_data['size'],
-        'preference' => $ticket_data['pref'],
-        'surname' => $ticket_data['surname']
+      'shirt_type' => $ticket_data['type'],
+      'shirt_size' => $ticket_data['size'],
+      'preference' => $ticket_data['pref'],
+      'surname' => $ticket_data['surname']
     );
 
-try {
-    $ticket = \Stripe\Product::retrieve($ticket_data['ticket_type']);
+    $ticket_type = $this
+      ->get('db')
+      ->table('tickets')
+      ->select('sku','price','description','statement_descriptor')
+      ->where('available', '=', 1)
+      ->where('sku', 'like', $ticket_data['ticket_type'])
+      ->first();
+
+    if(!$ticket_type) {
+      return $this->json_provider->withError(
+        $response, 
+        "No such ticket type available.", 
+        500
+      );
+    }
+  
+  try {
+    $ticket = \Stripe\Product::retrieve($ticket_type->sku);
 
     $customer = \Stripe\Customer::create(array(
-        'email' => $ticket_data['email'],
-        'source'  => $ticket_data['token'],
-        'metadata' => $metadata
+      'email'    => $ticket_data['email'],
+      'source'   => $ticket_data['token'],
+      'metadata' => $metadata
     ));
 /*
 $order_data = array(
@@ -165,44 +142,46 @@ $order_payment->pay(array("source" => $token));
 */
 
     $charge = \Stripe\Charge::create(array(
-        'customer' => $customer->id,
-        'amount'   => $ticke_prices[$ticket->id]['price'],
-        'currency' => 'sek',
-        'metadata' => $metadata,
-        //      'source' => $token,
-        'description' => $ticket->caption,
-        'receipt_email' => $ticket_data['email'],
-        'statement_descriptor' => $ticke_prices[$ticket->id]['statement_descriptor']
+      'customer' => $customer->id,
+      'amount'   => $ticket_type->price,
+      'currency' => 'sek',
+      'metadata' => $metadata,
+      //      'source' => $token,
+      'description' => $ticket->caption,
+      'receipt_email' => $ticket_data['email'],
+      'statement_descriptor' => $ticket_type->statement_descriptor
     ));
 
     if ($charge->status == "succeeded") {
-/*
-|
-| TODO: Remove names from database here
-|
-*/
-/*
-    $order_id = DB::table('orders')->insertGetId(
-        [
-            'name' => $surname, 
-            'email' => $customer_email,
-            'type' => $ticke_prices[$ticket->id]['id'],
-            'amount' => $ticke_prices[$ticket->id]['price'],
-            'size' => $shirt_size,
-            'preference' => $preference
+      $order_id = $this
+        ->get('db')
+        ->table('orders')
+        ->insertGetId([
+          'name' => $ticket_data['surname'], 
+          'email' => $ticket_data['email'],
+          'type' => $ticket_type->sku,
+          'amount' => $ticket_type->price,
+          'size' => $ticket_data['size'],
+          'preference' => $ticket_data['pref']
         ]);
 
-    $res = DB::table('surnames')
-        ->where('surname', $surname)
+      $res = $this
+        ->get('db')
+        ->table('surnames')
+        ->where('surname', $ticket_data['surname'])
         ->where('available', true)
         ->where('order_id', 0)
-        ->where('user_id', 0)
         ->update([
-            'available' => false, 
-            'order_id' => $order_id
+          'available' => false, 
+          'order_id' => $order_id
         ]);
-*/
-        return $this->json_provider->withOk($response, $charge, 'Stripe Charge successful.');
+
+      if($order_id) {
+        //$charge;
+        return $this->json_provider->withOk($response, array(), 'Stripe Charge successful.');
+      } else {
+        $body = "Your order could not be saved internally and was not charged.";
+      }
     }
 
     } catch(\Stripe\Error\Card $e) {
@@ -233,7 +212,7 @@ $order_payment->pay(array("source" => $token));
 
     } catch (Exception $e) {
         // Something else happened, completely unrelated to Stripe
-        $body = $e->getJsonBody();
+        $body = $e->getMessage();
 
     }
 
@@ -248,16 +227,76 @@ $order_payment->pay(array("source" => $token));
 
 $app->group('/api/v1', function () {
     $this->get('/names', function ($request, $response, $args) {
-        return $this->json_provider->withOk($response, ['surnames' => ['TODO: populate names']], "Unreserved names as of: ". date("Y-m-d H:i:s"));
+      //$names = \App\Controllers\API::getNames();
+      $names = $this
+        ->get('db')
+        ->table('surnames')
+        ->select('surname')
+        ->where('available', '=', 1)
+        ->where('order_id', '=', 0)
+        ->get();
+      
+//      var_dump($names);
+        //->toArray();
+      return $this->json_provider->withOk($response, ['surnames' => $names], "Unreserved names as of: ". date("Y-m-d H:i:s"));
     });
 
     $this->get('/reserve/{name}', function ($request, $response, $args) {
-        $name = filter_var($args['name'], FILTER_SANITIZE_STRING);
-        return $this->json_provider->withError($response, "Unimplemented API function: 'reserve'", 501, ['surname' => $name]);
+      $name = filter_var($args['name'], FILTER_SANITIZE_STRING);
+
+      $res = $this
+        ->get('db')
+        ->table('surnames')
+        ->where('surname', $name)
+        ->where('available', true)
+        ->where('order_id', 0)
+        ->update([
+          'available' => false
+        ]);
+      
+      if ($res) {
+        return $this->json_provider
+          ->withOk($response, 
+                   ['surnames' => $name], 
+                   "Surname reserved on ". date("Y-m-d H:i:s")
+                  );
+      } else {
+        return $this->json_provider
+          ->withError($response, 
+                      "Surname could not be reserved. It either does not exist or is not available.", 
+                      400, 
+                      ['surname' => $name]
+                     );
+      }
+        
     });
 
     $this->get('/release/{name}', function ($request, $response, $args) {
-        $name = filter_var($args['name'], FILTER_SANITIZE_STRING);
-        return $this->json_provider->withError($response, "Unimplemented API function: 'release'", 501, ['surname' => $name]);
+      $name = filter_var($args['name'], FILTER_SANITIZE_STRING);
+      
+      $res = $this
+        ->get('db')
+        ->table('surnames')
+        ->where('surname', $name)
+        ->where('available', false)
+        ->where('order_id', 0)
+        ->update([
+          'available' => true
+        ]);
+      
+      if ($res) {
+        return $this->json_provider
+          ->withOk($response, 
+                   ['surnames' => $name], 
+                   "Surname released on ". date("Y-m-d H:i:s")
+                  );
+      } else {
+        return $this->json_provider
+          ->withError($response, 
+                      "Surname could not be released. It either does not exist or is reserved via order.", 
+                      400, 
+                      ['surname' => $name]
+                     );
+      }
     });    
 });

@@ -33,7 +33,18 @@
     {% endblock %}
 <script type='text/javascript'>//<![CDATA[
   window.stripe = {
-      public_key: '{{ PUBLIC_KEY }}'
+    public_key: '{{ PUBLIC_KEY }}',
+    ticket_types: [
+{% for ticket in ticket_types %}
+{
+  'sku': '{{ ticket.sku|e }}',
+  'price': '{{ ticket.price|e }}',
+  'description': '{{ ticket.description|e }}',
+  'img': '{{ticket.img}}'
+}{% if loop.last %}{% else %},{% endif %}
+{% endfor %}
+      
+    ]
   }
 {% block script %}{% endblock %}
 //]]>

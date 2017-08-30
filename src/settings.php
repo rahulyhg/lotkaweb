@@ -17,6 +17,17 @@ return [
             'level' => \Monolog\Logger::DEBUG,
         ],
 
+        'db' => [
+            'driver' => 'mysql',
+            'host' => 'localhost',
+            'database' => 'lotka-volterra',
+            'username' => 'root',
+            'password' => '',
+            'charset'   => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix'    => '',
+        ],
+      
         'stripe' => [
             'SECRET_KEY' => 'sk_test_guDNkknGzHaSWG1LN2QGlJXn',
             'PUBLIC_KEY' => 'pk_test_zCWWc29QQlnsSfZtMwqx2qBp',

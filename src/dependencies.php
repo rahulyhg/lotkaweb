@@ -17,3 +17,26 @@ $container['logger'] = function ($c) {
     $logger->pushHandler(new Monolog\Handler\StreamHandler($settings['path'], $settings['level']));
     return $logger;
 };
+
+// Service factory for the ORM
+$container['db'] = function ($container) {
+    $capsule = new \Illuminate\Database\Capsule\Manager;
+    $capsule->addConnection($container['settings']['db']);
+
+    $capsule->setAsGlobal();
+    $capsule->bootEloquent();
+
+    return $capsule;
+};
+
+/*
+| CONTROLLERS
+*/
+
+$container[App\WidgetController::class] = function ($container) {
+    $view = $container->get('view');
+    $logger = $container->get('logger');
+    $table = $container->get('db')->table('shirts');
+  
+    return new \App\WidgetController($view, $logger, $table);
+};
