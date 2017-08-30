@@ -173,7 +173,8 @@ form.ticket article  em {
                 top: 0;
                 left: 0;
                 cursor: pointer;
-                background-size: contain, auto; }
+                background-size: contain, auto;
+                display: none; }
         
             @media (max-width: 660px) {
                 .pinns .area {

@@ -24,7 +24,10 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\": "tests/"
+            "Tests\\": "tests/",
+            "OpenSite\\": "src/open/",
+            "ParticipantSite\\": "src/participants/",
+            "Admin\\": "src/admin/"
         }
     },
 	"scripts": {

@@ -12,7 +12,7 @@ $stripe_settings = $container->get('settings')['stripe'];
 
 $app->get('/', function ($request, $response, $args) {
     // Sample log message
-    $this->logger->info("Slim-Skeleton '/' route");
+    //$this->logger->info("Slim-Skeleton '/' route");
 
 
 // TODO: MOVE!
@@ -78,7 +78,7 @@ $app->get('/', function ($request, $response, $args) {
 
 $app->post('/charge', function ($request, $response, $args = array('name' => '')) {
     // Sample log message
-    $this->logger->info("Create Slim charge");
+    //$this->logger->info("Create Slim charge");
 
     $ticke_prices = array(
         'SUPPORT' =>        array(

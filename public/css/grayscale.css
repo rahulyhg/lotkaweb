@@ -153,7 +153,8 @@ a:focus {
   margin: 15vh auto 0;
   max-height: 40vh;
   max-width: 85vw;
-  width: 5em;
+  width: 100%;
+  margin-bottom: .5em;
 }
 .intro .intro-body .logo .logo g {
   fill: white;
@@ -271,7 +272,7 @@ footer {
   font-family: "Pathway Gothic One", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 .content-section {
-  padding-top: 100px;
+  padding-top: 65px;
 }
 .download-section {
   background-color: black;
@@ -290,9 +291,6 @@ footer {
   width: 100%;
 }
 @media (min-width: 767px) {
-  .content-section {
-    padding-top: 250px;
-  }
   .download-section {
     padding: 100px 0;
   }
@@ -432,5 +430,5 @@ section img {
 #contact figure img {
   display: inline-block;
   margin: .2em auto 0;
-  filter: saturate(0.4);
+  filter: contrast(1.5) saturate(0.3);
 }
