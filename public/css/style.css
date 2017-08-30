@@ -95,7 +95,7 @@ form.ticket article.fail {
 form.ticket article.loading {
   padding: 3em;
   background-color: #0cf;
-  background-image: url(/img/ripple.svg);
+  background-image: url(../img/ripple.svg);
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
