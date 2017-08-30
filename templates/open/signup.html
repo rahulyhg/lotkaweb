@@ -6,6 +6,7 @@
   {% for ticket in ticket_types %}
   <aside>
     <img src="{{ ticket.img|e }}">
+    <h3>{{ ticket.description|e }}</h3>
     <h2>{{ ticket.price|number_format / 10 * 100}} SEK</h2>
     
     <fieldset>
@@ -39,7 +40,7 @@
           {% endfor %}   
       </select>
 
-      <button class="customButton buy_ticket {{ ticket.sku|e }}">Get {{ ticket.description|e }}!</button>
+      <button class="customButton buy_ticket {{ ticket.sku|e }}">Get ticket!</button>
     </fieldset>
   </aside>
   {% endfor %}

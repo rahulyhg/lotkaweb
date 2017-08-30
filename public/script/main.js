@@ -1,4 +1,22 @@
 window.onload = function() {
+
+  $("main").on("click", function() {
+    $(this).hide();
+  }).fadeOut(1500);
+
+  $("#shirt_type").on("change", function() {
+    var selected_type = $("#shirt_type option:selected").attr('class');
+    var selected_size = $("#shirt_size option:selected").val();
+    $("#shirt_size").val([]);
+    $("#shirt_size option").hide();
+    $("#shirt_size option." + selected_type).show();
+    $("#shirt_size option." + selected_type + "." + selected_size).prop("selected", true);
+  }).trigger("change");
+
+  $("#info").on('click', function() {
+    $(this).fadeOut(200);
+  });
+
   $(".pinns").each(function() {
     var board = $(this);
     if (board.data("spotify-uri"))
@@ -27,30 +45,14 @@ window.onload = function() {
         });
     });
   });
+  
   $(".pinns").on("click", ".pinned", function(event) {
     event.preventDefault();
     $("main").css({
       "background-image": $(this).css("background-image").replace('237x', 'originals') + ", url(spinner.svg)"
     }).show();
   });
-
-  $("main").on("click", function() {
-    $(this).hide();
-  }).fadeOut(1500);
-
-  $("#shirt_type").on("change", function() {
-    var selected_type = $("#shirt_type option:selected").attr('class');
-    var selected_size = $("#shirt_size option:selected").val();
-    $("#shirt_size").val([]);
-    $("#shirt_size option").hide();
-    $("#shirt_size option." + selected_type).show();
-    $("#shirt_size option." + selected_type + "." + selected_size).prop("selected", true);
-  }).trigger("change");
-
-  $("#info").on('click', function() {
-    $(this).fadeOut(200);
-  });
-
+  
   $("form.ticket aside img, form.ticket aside h2").on('click', function() {
     $("form.ticket fieldset").fadeOut(50);
     $(this).parent().children("fieldset").fadeToggle(200);

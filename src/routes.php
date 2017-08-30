@@ -19,6 +19,7 @@ $app->get('/', function ($request, $response, $args) {
       ->table('tickets')
       ->select('sku','price','description','img')
       ->where('available', '=', 1)
+      ->orderBy('weight')
       ->get();
   
     $shirts = $this
