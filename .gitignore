@@ -1,4 +1,4 @@
 /vendor/
-/src/settings.*
+**/settings.*
 /logs/*
 !/logs/README.md

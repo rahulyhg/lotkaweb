@@ -31,7 +31,17 @@ return [
         'stripe' => [
             'SECRET_KEY' => 'sk_test_guDNkknGzHaSWG1LN2QGlJXn',
             'PUBLIC_KEY' => 'pk_test_zCWWc29QQlnsSfZtMwqx2qBp',
-            'API_VERSION' => '2017-08-15'
+            'API_VERSION' => '2017-08-15',
+        ],
+      
+        'external_stores' => [
+          'texttalk' => [
+            'admin' => [
+              'user' => 'info@beratta.org',
+              'password' => '<OUR_PASSWORD_HERE>',
+            ],
+            'shop_id' = > 70834,
+          ],
         ],
     ],
     'json_provider' => function() { return new SJsonResponseProvider(); }

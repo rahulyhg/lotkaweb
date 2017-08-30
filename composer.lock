@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "d9ec2cc66ba77db721440eba2012b6fd",
+    "content-hash": "4d0ca3e165f0be6c4c37b9617b33a24b",
     "packages": [
         {
             "name": "container-interop/container-interop",
@@ -1074,6 +1074,134 @@
             "description": "Symfony Translation Component",
             "homepage": "https://symfony.com",
             "time": "2017-07-29T21:54:42+00:00"
+        },
+        {
+            "name": "textalk/webshop-client",
+            "version": "0.2.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Textalk/textalk-webshopclient-php.git",
+                "reference": "48a11595c7b827f06e78a0ccf1321f54ce53ddfa"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Textalk/textalk-webshopclient-php/zipball/48a11595c7b827f06e78a0ccf1321f54ce53ddfa",
+                "reference": "48a11595c7b827f06e78a0ccf1321f54ce53ddfa",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3",
+                "tivoka/tivoka": "3.5.*"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.8.*",
+                "satooshi/php-coveralls": "1.0.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Textalk\\WebshopClient\\": "lib"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fredrik Liljegren",
+                    "email": "fredrik.liljegren@textalk.se"
+                },
+                {
+                    "name": "Sören Jensen",
+                    "email": "soren.jensen@textalk.se"
+                }
+            ],
+            "description": "Textalk Webshop API-client",
+            "time": "2016-07-12T07:45:25+00:00"
+        },
+        {
+            "name": "textalk/websocket",
+            "version": "1.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Textalk/websocket-php.git",
+                "reference": "ba2e5f9ef7cf24d536d1c864ae74b2a9599b86eb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Textalk/websocket-php/zipball/ba2e5f9ef7cf24d536d1c864ae74b2a9599b86eb",
+                "reference": "ba2e5f9ef7cf24d536d1c864ae74b2a9599b86eb",
+                "shasum": ""
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.1.*",
+                "phpunit/phpunit-selenium": "1.3.3",
+                "satooshi/php-coveralls": "dev-master"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "WebSocket\\": "lib"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fredrik Liljegren",
+                    "email": "fredrik.liljegren@textalk.se"
+                }
+            ],
+            "description": "WebSocket client and server",
+            "time": "2015-04-11T05:45:54+00:00"
+        },
+        {
+            "name": "tivoka/tivoka",
+            "version": "3.5.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/marcelklehr/tivoka.git",
+                "reference": "cc57da6c0a5bd745fa50af19e91931e7d6b4714a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/marcelklehr/tivoka/zipball/cc57da6c0a5bd745fa50af19e91931e7d6b4714a",
+                "reference": "cc57da6c0a5bd745fa50af19e91931e7d6b4714a",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3",
+                "textalk/websocket": "1.0.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Tivoka": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Marcel Klehr",
+                    "email": "mklehr@gmx.net"
+                }
+            ],
+            "description": "The universal JSON-RPC client/server library. JSON-RPC done right!",
+            "homepage": "http://marcelklehr.github.com/tivoka",
+            "keywords": [
+                "api",
+                "json",
+                "json-rpc",
+                "rpc",
+                "xml-rpc"
+            ],
+            "time": "2016-10-20T15:30:08+00:00"
         },
         {
             "name": "twig/twig",

@@ -7,6 +7,7 @@ $stripe_settings = $container->get('settings')['stripe'];
 /*
 |
 | ROUTES
+| TODO: Clean this up and move into external classes.
 |
 */
 
@@ -73,7 +74,6 @@ $app->get('/', function ($request, $response, $args) {
 
 $app->post('/charge', function ($request, $response, $args = array('name' => '')) {
     // Sample log message
-    //$this->logger->info("Create Slim charge");
 
     $data = $request->getParsedBody();
     $ticket_data = [];
@@ -84,6 +84,9 @@ $app->post('/charge', function ($request, $response, $args = array('name' => '')
     $ticket_data['size'] =          filter_var($data['size'], FILTER_SANITIZE_STRING);
     $ticket_data['pref'] =          filter_var($data['pref'], FILTER_SANITIZE_STRING);
     $ticket_data['ticket_type'] =   filter_var($data['ticket_type'], FILTER_SANITIZE_STRING);
+
+    $this->logger
+      ->info("Create Stripe Charge for {$ticket_data['email']}, ticket type: {$ticket_data['ticket_type']}");
 
     $metadata = array(
       'shirt_type' => $ticket_data['type'],
@@ -101,11 +104,8 @@ $app->post('/charge', function ($request, $response, $args = array('name' => '')
       ->first();
 
     if(!$ticket_type) {
-      return $this->json_provider->withError(
-        $response, 
-        "No such ticket type available.", 
-        500
-      );
+      return $this->json_provider->withError($response, 
+        "No such ticket type available.", 500);
     }
   
   try {
@@ -116,30 +116,27 @@ $app->post('/charge', function ($request, $response, $args = array('name' => '')
       'source'   => $ticket_data['token'],
       'metadata' => $metadata
     ));
+    
 /*
-$order_data = array(
-"currency" => "sek",
-"customer" => $customer->id,    
-"items" => array(
-array(
-"amount" => $ticke_prices[$ticket->id]["price"],
-"currency" => "sek",
-"description" => $ticket->caption,
-"parent" => $ticket->id,
-"quantity" => 1
-)
-),
-"metadata" => array(
-"shirt_type" => $shirt_type,
-"shirt_size" => $shirt_size,
-"preference" => $preference,
-"surname" => $surname
-)
-);
+    //If we're using orders instead of sirect charge, this will add overhead.
+    $order_data = array(
+      "currency" => "sek",
+      "customer" => $customer->id,    
+      "items" => array(
+        array(
+          "amount" => $ticket_type->price,
+          "currency" => "sek",
+          "description" => $ticket->caption,
+          "parent" => $ticket->id,
+          "quantity" => 1
+        )
+      ),
+      "metadata" => $metadata
+    );
 
-$order = \Stripe\Order::create($order_data);
-$order_payment = \Stripe\Order::retrieve($order->id);
-$order_payment->pay(array("source" => $token));
+    $order = \Stripe\Order::create($order_data);
+    $order_payment = \Stripe\Order::retrieve($order->id);
+    $order_payment->pay(array("source" => $token));
 */
 
     $charge = \Stripe\Charge::create(array(
@@ -178,7 +175,7 @@ $order_payment->pay(array("source" => $token));
         ]);
 
       if($order_id) {
-        //$charge;
+        //Removing charge object echo $charge;
         return $this->json_provider->withOk($response, array(), 'Stripe Charge successful.');
       } else {
         $body = "Your order could not be saved internally and was not charged.";
@@ -220,84 +217,114 @@ $order_payment->pay(array("source" => $token));
     if(isset($body)) {
         return $this->json_provider->withError($response, "Something went wrong securing your ticket.", 500, $body);
     }
-
-    // return error
-//    return $this->json_provider->withError($response, 'Lecturer not exist', 404);
-
 });
 
 $app->group('/api/v1', function () {
-    $this->get('/names', function ($request, $response, $args) {
-      //$names = \App\Controllers\API::getNames();
-      $names = $this
-        ->get('db')
-        ->table('surnames')
-        ->select('surname')
-        ->where('available', '=', 1)
-        ->where('order_id', '=', 0)
-        ->get();
-      
+  $this->get('/names', function ($request, $response, $args) {
+    //$names = \App\Controllers\API::getNames();
+    $names = $this
+      ->get('db')
+      ->table('surnames')
+      ->select('surname')
+      ->where('available', '=', 1)
+      ->where('order_id', '=', 0)
+      ->get();
+
 //      var_dump($names);
-        //->toArray();
-      return $this->json_provider->withOk($response, ['surnames' => $names], "Unreserved names as of: ". date("Y-m-d H:i:s"));
-    });
+      //->toArray();
+    return $this->json_provider->withOk($response, ['surnames' => $names], "Unreserved names as of: ". date("Y-m-d H:i:s"));
+  });
 
-    $this->get('/reserve/{name}', function ($request, $response, $args) {
-      $name = filter_var($args['name'], FILTER_SANITIZE_STRING);
+  $this->get('/reserve/{name}', function ($request, $response, $args) {
+    $name = filter_var($args['name'], FILTER_SANITIZE_STRING);
 
-      $res = $this
-        ->get('db')
-        ->table('surnames')
-        ->where('surname', $name)
-        ->where('available', true)
-        ->where('order_id', 0)
-        ->update([
-          'available' => false
-        ]);
-      
-      if ($res) {
-        return $this->json_provider
-          ->withOk($response, 
-                   ['surnames' => $name], 
-                   "Surname reserved on ". date("Y-m-d H:i:s")
-                  );
-      } else {
-        return $this->json_provider
-          ->withError($response, 
-                      "Surname could not be reserved. It either does not exist or is not available.", 
-                      400, 
-                      ['surname' => $name]
-                     );
+    $res = $this
+      ->get('db')
+      ->table('surnames')
+      ->where('surname', $name)
+      ->where('available', true)
+      ->where('order_id', 0)
+      ->update([
+        'available' => false
+      ]);
+
+    if ($res) {
+      return $this->json_provider
+        ->withOk($response, 
+                 ['surnames' => $name], 
+                 "Surname reserved on ". date("Y-m-d H:i:s")
+                );
+    } else {
+      return $this->json_provider
+        ->withError($response, 
+                    "Surname could not be reserved. It either does not exist or is not available.", 
+                    400, 
+                    ['surname' => $name]
+                   );
+    }
+
+  });
+
+  $this->get('/release/{name}', function ($request, $response, $args) {
+    $name = filter_var($args['name'], FILTER_SANITIZE_STRING);
+
+    $res = $this
+      ->get('db')
+      ->table('surnames')
+      ->where('surname', $name)
+      ->where('available', false)
+      ->where('order_id', 0)
+      ->update([
+        'available' => true
+      ]);
+
+    if ($res) {
+      return $this->json_provider
+        ->withOk($response, 
+                 ['surnames' => $name], 
+                 "Surname released on ". date("Y-m-d H:i:s")
+                );
+    } else {
+      return $this->json_provider
+        ->withError($response, 
+                    "Surname could not be released. It either does not exist or is reserved via order.", 
+                    400, 
+                    ['surname' => $name]
+                   );
+    }
+  });
+  
+  $this->get('/extrernal/texttalk', function ($request, $response, $args) {
+    use Textalk\WebshopClient\Connection;
+    
+    $texttalk_settings = $this->get('settings')['external_stores']['texttalk'];
+
+    $api = Connection::getInstance('default', array('webshop' => $texttalk_settings['shop_id']));
+    $api->Admin->login(
+        $texttalk_settings['admin']['user'], 
+        $texttalk_settings['admin']['password']
+      );
+
+    $res = $api->Context->set(array("webshop" => $texttalk_settings['shop_id']));
+    $res = $api->Order->list(array("items" => true), true);
+
+    $choices = array();
+
+    foreach ($res as $order) {
+      $orders[] = $order["items"][0];
+    }
+
+    foreach($orders as $order) {
+      global $choices;
+      $res = $api->OrderItem->get($order, array("choices" => true));
+      $item = array_values($res["choices"]);
+      if ($item[2]) {
+        $choices[] = $api->ArticleChoiceOption->get($item[2])["name"]["en"];
       }
-        
-    });
+    }
 
-    $this->get('/release/{name}', function ($request, $response, $args) {
-      $name = filter_var($args['name'], FILTER_SANITIZE_STRING);
-      
-      $res = $this
-        ->get('db')
-        ->table('surnames')
-        ->where('surname', $name)
-        ->where('available', false)
-        ->where('order_id', 0)
-        ->update([
-          'available' => true
-        ]);
-      
-      if ($res) {
-        return $this->json_provider
-          ->withOk($response, 
-                   ['surnames' => $name], 
-                   "Surname released on ". date("Y-m-d H:i:s")
-                  );
-      } else {
-        return $this->json_provider
-          ->withError($response, 
-                      "Surname could not be released. It either does not exist or is reserved via order.", 
-                      400, 
-                      ['surname' => $name]
-                     );
-      }
-    });    
+    return $this->json_provider
+      ->withOk($response, $choices, "Names available at external provider: TextTalk");
+    
+  });
 });
