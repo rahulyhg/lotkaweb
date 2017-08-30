@@ -230,8 +230,6 @@ $app->group('/api/v1', function () {
       ->where('order_id', '=', 0)
       ->get();
 
-//      var_dump($names);
-      //->toArray();
     return $this->json_provider->withOk($response, ['surnames' => $names], "Unreserved names as of: ". date("Y-m-d H:i:s"));
   });
 
@@ -294,12 +292,13 @@ $app->group('/api/v1', function () {
     }
   });
   
-  $this->get('/extrernal/texttalk', function ($request, $response, $args) {
-    use Textalk\WebshopClient\Connection;
-    
+  $this->get('/external/texttalk', function ($request, $response, $args) {
+
     $texttalk_settings = $this->get('settings')['external_stores']['texttalk'];
 
-    $api = Connection::getInstance('default', array('webshop' => $texttalk_settings['shop_id']));
+    $texttalk = new \Textalk\WebshopClient\Connection;
+    
+    $api = $texttalk->getInstance('default', array('webshop' => $texttalk_settings['shop_id']));
     $api->Admin->login(
         $texttalk_settings['admin']['user'], 
         $texttalk_settings['admin']['password']
@@ -325,6 +324,5 @@ $app->group('/api/v1', function () {
 
     return $this->json_provider
       ->withOk($response, $choices, "Names available at external provider: TextTalk");
-    
   });
 });
