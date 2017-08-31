@@ -42,23 +42,6 @@ CREATE TABLE IF NOT EXISTS `orders` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=0 ;
 
 --
--- Dumping data for table `orders`
---
-
---INSERT INTO `orders` (`id`, `name`, `email`, `type`, `amount`, `size`, `preference`, `user_id`, `attested_id`) VALUES
---(1, 'Aaron', 'lv-n@example.com', 'SUPPORT', 360000, 'XS', 'Maintenance', NULL, NULL),
---(2, 'Aaron', 'lv-dk@example.com', 'SUPPORT', 360000, 'XS', 'Maintenance', NULL, NULL),
---(3, 'NA', 'lv-sub@example.com', 'SUBSIDIZED', 170000, 'NA', 'NA', NULL, NULL),
---(4, 'NA', 'lv-std@example.com', 'STANDARD', 260000, 'NA', 'NA', NULL, NULL),
---(5, 'NA', 'lv-part@example.com', 'STD_1', 100000, 'NA', 'NA', NULL, NULL),
---(6, 'NA', 'lv-part@example.com', 'STD_1', 100000, 'NA', 'NA', NULL, NULL),
---(7, 'Aaron', 'lv-sup@example.com', 'SUPPORT', 360000, 'XS', 'Maintenance', NULL, NULL),
---(8, 'NA', 'lv-std@example.com', 'STANDARD', 260000, 'NA', 'NA', NULL, NULL),
---(9, 'NA', 'lv-prt@example.com', 'STD_1', 100000, 'NA', 'NA', NULL, NULL);
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `shirts`
 --
 
@@ -91,15 +74,7 @@ INSERT INTO `shirts` (`id`, `type`, `type_class`, `size`, `available`) VALUES
 (13, 'Regular Fit T-Shirt', 'REGULAR_TSHIRT', 'XL', 1),
 (14, 'Regular Fit T-Shirt', 'REGULAR_TSHIRT', 'XXL', 1),
 (15, 'Regular Fit T-Shirt', 'REGULAR_TSHIRT', 'XXXL', 1),
-(16, 'Regular Fit T-Shirt', 'REGULAR_TSHIRT', 'XXXXL', 1),
-(17, 'Hooie', 'HOODIE', 'XS', 1),
-(18, 'Hooie', 'HOODIE', 'S', 1),
-(19, 'Hooie', 'HOODIE', 'M', 1),
-(20, 'Hooie', 'HOODIE', 'L', 1),
-(21, 'Hooie', 'HOODIE', 'XL', 1),
-(22, 'Hooie', 'HOODIE', 'XXL', 1),
-(23, 'Hooie', 'HOODIE', 'XXXL', 1),
-(24, 'Hooie', 'HOODIE', 'XXXXL', 1);
+(16, 'Regular Fit T-Shirt', 'REGULAR_TSHIRT', 'XXXXL', 1);
 
 -- --------------------------------------------------------
 

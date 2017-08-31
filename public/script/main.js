@@ -159,4 +159,10 @@ window.onload = function() {
   });
 
 //  $(".ticket_STD_1 header img").each(glitchSetup).data('glitch').ones(5);
+
+  $("#paybystripe").click(function () {
+    $("#ticketsform").show();
+    return false;
+  });
+
 }
