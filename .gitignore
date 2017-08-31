@@ -1,4 +1,5 @@
 /vendor/
 **/settings.*
 /logs/*
-!/logs/README.md
+!/logs/README.me
+!**/settings.sample.*
