@@ -36,7 +36,7 @@ form.ticket button {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   font-weight: 700;
   letter-spacing: 1px;
-  width: 20em;
+  width: 100%;
 }
 
 form.ticket button {
@@ -58,16 +58,28 @@ form.ticket aside {
 }
 
 form.ticket fieldset {
+  width: 100%;
   display: none;
 }
 
 form.ticket aside {
-  margin: 0 1em;
+  margin: 0 1em;7
+  width: 100%;
+  max-width: 20em;
+}
+
+@media(min-width:768px) {
+  form.ticket aside {
+    max-width: 210px;
+  }
+}
+
+form.ticket aside header{
+  
 }
 
 form.ticket aside img,
 form.ticket aside h2 {
-  cursor: pointer;
 }
 
 form.ticket aside h1 {
@@ -79,9 +91,8 @@ form.ticket aside h1 {
 }
 
 form.ticket aside img {
-  border: .25em solid rgba(255, 255, 255, .5);
-  border-radius: 100%;
-  width: 20em;
+  border: .125em solid rgb(0, 0, 0);
+  width: 100%;
   box-shadow: 0 0 5em rgba(0, 0, 0, .5);
   margin-bottom: .5em;
 }
@@ -109,7 +120,7 @@ form.ticket article.fail {
 form.ticket article.loading {
   padding: 3em;
   background-color: #0cf;
-  background-image: url(../img/ripple.svg);
+  background-image: url(/img/ripple.svg);
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;

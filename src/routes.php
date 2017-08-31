@@ -11,15 +11,25 @@ $stripe_settings = $container->get('settings')['stripe'];
 |
 */
 
-$app->get('/', function ($request, $response, $args) {
+$app->get('/[pay/{sku}]', function ($request, $response, $args) {
     // Sample log message
     $this->logger->info("Slim-Skeleton '/' route");
 
     $ticket_types = $this
       ->get('db')
       ->table('tickets')
-      ->select('sku','price','description','img')
+      ->select(
+        'sku',
+        'price',
+        'description',
+        'img', 
+        'surname', 
+        'shirtType', 
+        'size', 
+        'teamPreference'
+      )
       ->where('available', '=', 1)
+      ->where('visible', '=', 1)
       ->orderBy('weight')
       ->get();
   
@@ -61,7 +71,32 @@ $app->get('/', function ($request, $response, $args) {
       ->orderBy('id')
       ->get();
 
-    return $this->view->render($response, 'open/index.html', [
+  if($request->getAttribute('sku')) {
+    $sku = filter_var($args['sku'], FILTER_SANITIZE_STRING);
+    $ticket_types = $this
+      ->get('db')
+      ->table('tickets')
+      ->select(
+        'sku',
+        'price',
+        'description',
+        'img', 
+        'surname', 
+        'shirtType', 
+        'size', 
+        'teamPreference'
+      )
+      ->where('available', '=', 1)
+      ->where('sku', $sku)
+      ->orderBy('weight')
+      ->get();
+    
+    $page = 'part_ticket.html';
+  } else {
+    $page = 'open/index.html';
+  }
+  
+    return $this->view->render($response, $page, [
       'PUBLIC_KEY' => $this->get('settings')['stripe']['PUBLIC_KEY'],
       'surnames' => $surnames,
       'shirt_styles' => $shirt_styles,
@@ -72,11 +107,29 @@ $app->get('/', function ($request, $response, $args) {
     ]);
 });
 
+/*
+$app->get('/pay/{sku}', function ($request, $response, $args) {
+  $sku = filter_var($args['sku'], FILTER_SANITIZE_STRING);
+  return $this->view->render($response, 'part_ticket.html', [
+    'PUBLIC_KEY' => $this->get('settings')['stripe']['PUBLIC_KEY'],
+    'surnames' => [], 'shirt_styles' => [], 'shirt_sizes' => [], 'shirts' => [], 'teams' => [], 
+    'ticket_types' => $ticket_types
+  ]);  
+});
+*/
+
 $app->post('/charge', function ($request, $response, $args = array('name' => '')) {
     // Sample log message
 
     $data = $request->getParsedBody();
     $ticket_data = [];
+    if( !( isset($data['token']) && isset($data['email']) && isset($data['surname']) && 
+         isset($data['type']) && isset($data['size']) && isset($data['pref']) && 
+         isset($data['ticket_type']) ) ) {
+      return $this->json_provider->withError($response, 
+        "Missing one or more ticket arguments.", 500);
+    }
+  
     $ticket_data['token'] =         filter_var($data['token'], FILTER_SANITIZE_STRING);
     $ticket_data['email'] =         filter_var($data['email'], FILTER_SANITIZE_EMAIL);
     $ticket_data['surname'] =       filter_var($data['surname'], FILTER_SANITIZE_STRING);
@@ -219,6 +272,8 @@ $app->post('/charge', function ($request, $response, $args = array('name' => '')
     }
 });
 
+
+
 $app->group('/api/v1', function () {
   $this->get('/names', function ($request, $response, $args) {
     //$names = \App\Controllers\API::getNames();
@@ -317,12 +372,26 @@ $app->group('/api/v1', function () {
       global $choices;
       $res = $api->OrderItem->get($order, array("choices" => true));
       $item = array_values($res["choices"]);
-      if ($item[2]) {
+      if (isset($item[2])) {
         $choices[] = $api->ArticleChoiceOption->get($item[2])["name"]["en"];
       }
     }
 
-    return $this->json_provider
-      ->withOk($response, $choices, "Names available at external provider: TextTalk");
+    $res = $this
+      ->get('db')
+      ->table('surnames')
+      ->whereIn('surname', $choices)
+      ->where('available', true)
+      ->where('order_id', 0)
+      ->update([
+        'available' => false
+      ]);
+    
+    return $this
+      ->json_provider
+      ->withOk($response, 
+        ["surnames" => $choices], 
+        "{$res} names reserved by external provider TextTalk."
+      );
   });
 });

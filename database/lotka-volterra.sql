@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Aug 30, 2017 at 02:26 AM
+-- Generation Time: Aug 31, 2017 at 03:25 AM
 -- Server version: 5.5.38-0ubuntu0.14.04.1
 -- PHP Version: 5.5.9-1ubuntu4.5
 
@@ -28,7 +28,6 @@ USE `lotka-volterra`;
 -- Table structure for table `orders`
 --
 
-DROP TABLE IF EXISTS `orders`;
 CREATE TABLE IF NOT EXISTS `orders` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
@@ -40,14 +39,22 @@ CREATE TABLE IF NOT EXISTS `orders` (
   `user_id` int(11) DEFAULT NULL,
   `attested_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=0 ;
 
 --
 -- Dumping data for table `orders`
 --
 
-INSERT INTO `orders` (`id`, `name`, `email`, `type`, `amount`, `size`, `preference`, `user_id`, `attested_id`) VALUES
-(1, 'Aaron', 'lv-n@example.com', 'SUPPORT', 360000, 'XS', 'Maintenance', NULL, NULL);
+--INSERT INTO `orders` (`id`, `name`, `email`, `type`, `amount`, `size`, `preference`, `user_id`, `attested_id`) VALUES
+--(1, 'Aaron', 'lv-n@example.com', 'SUPPORT', 360000, 'XS', 'Maintenance', NULL, NULL),
+--(2, 'Aaron', 'lv-dk@example.com', 'SUPPORT', 360000, 'XS', 'Maintenance', NULL, NULL),
+--(3, 'NA', 'lv-sub@example.com', 'SUBSIDIZED', 170000, 'NA', 'NA', NULL, NULL),
+--(4, 'NA', 'lv-std@example.com', 'STANDARD', 260000, 'NA', 'NA', NULL, NULL),
+--(5, 'NA', 'lv-part@example.com', 'STD_1', 100000, 'NA', 'NA', NULL, NULL),
+--(6, 'NA', 'lv-part@example.com', 'STD_1', 100000, 'NA', 'NA', NULL, NULL),
+--(7, 'Aaron', 'lv-sup@example.com', 'SUPPORT', 360000, 'XS', 'Maintenance', NULL, NULL),
+--(8, 'NA', 'lv-std@example.com', 'STANDARD', 260000, 'NA', 'NA', NULL, NULL),
+--(9, 'NA', 'lv-prt@example.com', 'STD_1', 100000, 'NA', 'NA', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -55,7 +62,6 @@ INSERT INTO `orders` (`id`, `name`, `email`, `type`, `amount`, `size`, `preferen
 -- Table structure for table `shirts`
 --
 
-DROP TABLE IF EXISTS `shirts`;
 CREATE TABLE IF NOT EXISTS `shirts` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `type` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
@@ -101,22 +107,21 @@ INSERT INTO `shirts` (`id`, `type`, `type_class`, `size`, `available`) VALUES
 -- Table structure for table `surnames`
 --
 
-DROP TABLE IF EXISTS `surnames`;
 CREATE TABLE IF NOT EXISTS `surnames` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `surname` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `order_id` int(11) NOT NULL,
   `available` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=191 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=200 ;
 
 --
 -- Dumping data for table `surnames`
 --
 
 INSERT INTO `surnames` (`id`, `surname`, `order_id`, `available`) VALUES
-(1, 'Aaron', 2, 0),
-(2, 'Ackermann', 0, 1),
+(1, 'Aaron', 7, 1),
+(2, 'Ackermann', 0, 0),
 (3, 'Ali', 0, 1),
 (4, 'Allard', 0, 1),
 (5, 'Alvarez', 0, 1),
@@ -145,7 +150,7 @@ INSERT INTO `surnames` (`id`, `surname`, `order_id`, `available`) VALUES
 (28, 'Cody', 0, 1),
 (29, 'Coleman', 0, 1),
 (30, 'Conti', 0, 1),
-(31, 'Cooke', 0, 1),
+(31, 'Cooke', 0, 0),
 (32, 'Corneanu', 0, 1),
 (33, 'Craig', 0, 1),
 (34, 'Cressler', 0, 1),
@@ -158,8 +163,8 @@ INSERT INTO `surnames` (`id`, `surname`, `order_id`, `available`) VALUES
 (41, 'Dillard', 0, 1),
 (42, 'Dodd', 0, 1),
 (43, 'Downing', 0, 1),
-(44, 'Drake', 0, 1),
-(45, 'Dubois', 0, 1),
+(44, 'Drake', 0, 0),
+(45, 'Dubois', 0, 0),
 (46, 'Ellis', 0, 1),
 (47, 'Erdmann', 0, 1),
 (48, 'Evans', 0, 1),
@@ -187,11 +192,11 @@ INSERT INTO `surnames` (`id`, `surname`, `order_id`, `available`) VALUES
 (70, 'Heckler', 0, 1),
 (71, 'Hernandez', 0, 1),
 (72, 'Heydar', 0, 1),
-(73, 'Higgs', 0, 1),
+(73, 'Higgs', 0, 0),
 (74, 'Hines', 0, 1),
 (75, 'Hodges', 0, 1),
 (76, 'Holden', 0, 1),
-(77, 'Holzmann', 0, 1),
+(77, 'Holzmann', 0, 0),
 (78, 'Hook', 0, 1),
 (79, 'Horowitz', 0, 1),
 (80, 'Hurst', 0, 1),
@@ -211,8 +216,8 @@ INSERT INTO `surnames` (`id`, `surname`, `order_id`, `available`) VALUES
 (94, 'Konyev', 0, 1),
 (95, 'Kopek', 0, 1),
 (96, 'Kovacs', 0, 1),
-(97, 'Kruger', 0, 1),
-(98, 'Lacroix', 0, 1),
+(97, 'Kruger', 0, 0),
+(98, 'Lacroix', 0, 0),
 (99, 'Lambert', 0, 1),
 (100, 'Lange', 0, 1),
 (101, 'Laporte', 0, 1),
@@ -222,7 +227,7 @@ INSERT INTO `surnames` (`id`, `surname`, `order_id`, `available`) VALUES
 (105, 'March', 0, 1),
 (106, 'Massoud', 0, 1),
 (107, 'May', 0, 1),
-(108, 'Mcleod', 0, 1),
+(108, 'Mcleod', 0, 0),
 (109, 'Mercier', 0, 1),
 (110, 'Milburn', 0, 1),
 (111, 'Mitchell', 0, 1),
@@ -234,12 +239,12 @@ INSERT INTO `surnames` (`id`, `surname`, `order_id`, `available`) VALUES
 (117, 'Moreau', 0, 1),
 (118, 'Morse', 0, 1),
 (119, 'Moshke', 0, 1),
-(120, 'Murphy', 0, 1),
+(120, 'Murphy', 0, 0),
 (121, 'Naser', 0, 1),
 (122, 'Nazarov', 0, 1),
 (123, 'Noel', 0, 1),
 (124, 'North', 0, 1),
-(125, 'Novak', 0, 1),
+(125, 'Novak', 0, 0),
 (126, 'Nunoz', 0, 1),
 (127, 'O''neill', 0, 1),
 (128, 'Ortega', 0, 1),
@@ -248,7 +253,7 @@ INSERT INTO `surnames` (`id`, `surname`, `order_id`, `available`) VALUES
 (131, 'Owen', 0, 1),
 (132, 'Palmer', 0, 1),
 (133, 'Parker', 0, 1),
-(134, 'Parks', 0, 1),
+(134, 'Parks', 0, 0),
 (135, 'Patel', 0, 1),
 (136, 'Pearson', 0, 1),
 (137, 'Pereira', 0, 1),
@@ -258,8 +263,8 @@ INSERT INTO `surnames` (`id`, `surname`, `order_id`, `available`) VALUES
 (141, 'Poole', 0, 1),
 (142, 'Prescott', 0, 1),
 (143, 'Pasztor', 0, 1),
-(144, 'Radic', 0, 1),
-(145, 'Rains', 0, 1),
+(144, 'Radic', 0, 0),
+(145, 'Rains', 0, 0),
 (146, 'Reynolds', 0, 1),
 (147, 'Rosenberg', 0, 1),
 (148, 'Rowe', 0, 1),
@@ -304,7 +309,16 @@ INSERT INTO `surnames` (`id`, `surname`, `order_id`, `available`) VALUES
 (187, 'Yan', 0, 1),
 (188, 'Young', 0, 1),
 (189, 'Yu', 0, 1),
-(190, 'Zheng', 0, 1);
+(190, 'Zheng', 0, 1),
+(191, 'Reed', 0, 0),
+(192, 'Gardner', 0, 0),
+(193, 'van der Waal', 0, 0),
+(194, 'Conway', 0, 0),
+(195, 'Cox', 0, 0),
+(196, 'Walker', 0, 0),
+(197, 'Bishop', 0, 0),
+(198, 'Scully', 0, 0),
+(199, 'Mather', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -312,7 +326,6 @@ INSERT INTO `surnames` (`id`, `surname`, `order_id`, `available`) VALUES
 -- Table structure for table `teams`
 --
 
-DROP TABLE IF EXISTS `teams`;
 CREATE TABLE IF NOT EXISTS `teams` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `type` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
@@ -338,7 +351,6 @@ INSERT INTO `teams` (`id`, `type`, `name`, `available`) VALUES
 -- Table structure for table `tickets`
 --
 
-DROP TABLE IF EXISTS `tickets`;
 CREATE TABLE IF NOT EXISTS `tickets` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `sku` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
@@ -347,19 +359,26 @@ CREATE TABLE IF NOT EXISTS `tickets` (
   `statement_descriptor` varchar(22) COLLATE utf8_unicode_ci NOT NULL COMMENT 'Shows up on participants account',
   `available` tinyint(1) NOT NULL DEFAULT '0',
   `img` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `weight` int(11) NOT NULL DEFAULT '100',
+  `surname` tinyint(1) NOT NULL DEFAULT '0',
+  `shirtType` tinyint(1) NOT NULL DEFAULT '0',
+  `size` tinyint(1) NOT NULL DEFAULT '0',
+  `teamPreference` tinyint(1) NOT NULL DEFAULT '0',
+  `visible` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=6 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=7 ;
 
 --
 -- Dumping data for table `tickets`
 --
 
-INSERT INTO `tickets` (`id`, `sku`, `price`, `description`, `statement_descriptor`, `available`, `img`) VALUES
-(1, 'SUPPORT', 360000, 'Support Ticket', 'Lotka-Volterra, Ticket', 1, 'img/LV-logo-ticket-icon-support.png'),
-(2, 'STANDARD', 260000, 'Standard Ticket', 'Lotka-Volterra, Ticket', 1, 'img/LV-logo-ticket-icon-standard.png'),
-(3, 'STD_1', 130000, 'Standard Ticket, down payment', 'Lotka-Volterra, Ticket', 0, ''),
-(4, 'STD_2', 130000, 'Standard Ticket, final payment', 'Lotka-Volterra, Ticket', 0, ''),
-(5, 'SUBSIDIZED', 170000, 'Subsidized Ticket', 'Lotka-Volterra, Ticket', 0, '');
+INSERT INTO `tickets` (`id`, `sku`, `price`, `description`, `statement_descriptor`, `available`, `img`, `weight`, `surname`, `shirtType`, `size`, `teamPreference`, `visible`) VALUES
+(1, 'SUPPORT', 360000, 'Support Ticket', 'Lotka-Volterra, Ticket', 1, '/img/LV-logo-ticket-icon-supporter-small-glitch-1.png', 1, 1, 1, 1, 1, 1),
+(2, 'STANDARD', 260000, 'Standard Ticket', 'Lotka-Volterra, Ticket', 1, '/img/LV-logo-ticket-icon-standard-small-glitch-1.png', 2, 0, 0, 0, 0, 1),
+(3, 'STD_1', 100000, 'Standard Ticket, Part', 'Lotka-Volterra, Ticket', 1, '/img/LV-logo-ticket-icon-partial-small-glitch-1.png', 3, 0, 0, 0, 0, 1),
+(4, 'STD_2', 100000, 'Standard Ticket, second payment', 'Lotka-Volterra, Ticket', 1, '/img/LV-logo-ticket-icon-partial-small-glitch-2.png', 4, 0, 0, 0, 0, 0),
+(5, 'SUBSIDIZED', 170000, 'Subsidized Ticket', 'Lotka-Volterra, Ticket', 1, '/img/LV-logo-ticket-icon-standard-small.png', 6, 0, 0, 0, 0, 0),
+(6, 'STD_3', 60000, 'Standard Ticket, final payment', 'Lotka-Volterra, Ticket', 1, '/img/LV-logo-ticket-icon-partial-small-glitch-3.png', 5, 0, 0, 0, 0, 0);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

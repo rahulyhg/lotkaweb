@@ -53,11 +53,13 @@ window.onload = function() {
     }).show();
   });
   
+  /*
   $("form.ticket aside img, form.ticket aside h2").on('click', function() {
     $("form.ticket fieldset").fadeOut(50);
     $(this).parent().children("fieldset").fadeToggle(200);
   });
-
+  */
+  
   function tokenHandler(ticket_type, token) {
     $("#info").empty().addClass("loading").fadeIn(100);
 
@@ -66,19 +68,17 @@ window.onload = function() {
       email: token.email,
       surname: 'NA',
       type: 'NA',
-      size: $(".size." + ticket_type).val(),
-      pref: $("#team").val(),
-      ticket_type: ticket_type
+      size: 'NA',
+      pref: 'NA',
+      ticket_type: ticket_type.sku
     }
+    
+    if (ticket_type.show.surname) settings.surname = $(".surname."+ticket_type.sku).val();
+    if (ticket_type.show.shirtType) settings.type = $(".shirt_type."+ticket_type.sku).val();
+    if (ticket_type.show.size) settings.size = $(".size."+ticket_type.sku).val();
+    if (ticket_type.show.teamPreference) settings.pref = $(".team."+ticket_type.sku).val();
 
-    switch (ticket_type) {
-      case 'SUPPORT':
-          settings.type = $("#shirt_type").val();
-          settings.surname = $("#surname").val();        
-        break;
-    }
-
-    $.post('./charge', settings).done(function(resp) {
+    $.post($('form.ticket').attr('action'), settings).done(function(resp) {
       console.log('ok', resp);
 
       var info_html = resp.error ? "<h1>SORRY!</h1><p>" + resp.error.message + "<em>Sorry for the inconvenience.</em></p>" : "<h1>THANK YOU!</h1><p>Your ticket is reserved and you should get an email soon. <em>Your support means a lot to us!</em></p>";
@@ -114,7 +114,7 @@ window.onload = function() {
       image: ticket.img,
       locale: 'en',
       token: function(token) {
-        tokenHandler(ticket.sku, token);
+        tokenHandler(ticket, token);
       }
     });
     
@@ -131,24 +131,32 @@ window.onload = function() {
         }
       });
       e.preventDefault();
-    });
+    }).data('handler', config).prop('disabled', false);
+    
+    $('.ticket_' + ticket.sku + ' fieldset').fadeIn();
+    
   });
 
   // Close Checkout on page navigation:
   window.addEventListener('popstate', function() {
-    handler.close();
+    $('.buy_ticket').each(function () {
+      $(this).data('handler').close();
+    });
   });
 
-  $("#contact figure img").on('mousemove', function() {
-    $(this).data('glitch').ones(4);
-  }).each(function() {
+  window.glitchSetup = function () {
     var static = $(this).get(0)
     $(this).data('glitch',
       new Glitch(static, function(img) {
         static.src = img.src;
       }));
-  }).on('mouseleave', function() {
+  }
+  
+  $("#contact figure img").on('mousemove', function() {
+    $(this).data('glitch').ones(4);
+  }).each(glitchSetup).on('mouseleave', function() {
     $(this).data('glitch').reset();
   });
 
+//  $(".ticket_STD_1 header img").each(glitchSetup).data('glitch').ones(5);
 }
