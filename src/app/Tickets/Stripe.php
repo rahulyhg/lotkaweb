@@ -31,7 +31,7 @@ class Stripe
   private function createCharge($customer, $ticket_type, $metadata, $ticket, $ticket_data) {
     return \Stripe\Charge::create(array(
         'customer' => $customer->id,
-        'amount'   => $ticket_type->price,
+        'amount'   => ceil($ticket_type->price * 1.029), // add fee
         'currency' => 'sek',
         'metadata' => $metadata,
         'description' => $ticket->caption,
