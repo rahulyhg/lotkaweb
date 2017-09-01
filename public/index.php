@@ -37,8 +37,8 @@ $container['view'] = function ($container) {
 
     $view = new \Slim\Views\Twig($renderer_settings['template_path'], [
         'cache' => $renderer_settings['cache_path'],
-        'auto_reload' => true,
-        'debug' => true,
+        'auto_reload' => false,
+        'debug' => false,
     ]);
     
 
