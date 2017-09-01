@@ -23,6 +23,7 @@ $(function() {
         $('html, body').stop().animate({
             scrollTop: $($anchor.attr('href')).offset().top
         }, 1500, 'easeInOutExpo');
+        document.location.hash = $anchor.attr('href');
         event.preventDefault();
     });
 });

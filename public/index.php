@@ -40,7 +40,6 @@ $container['view'] = function ($container) {
         'auto_reload' => $renderer_settings['auto_reload'],
         'debug' => $renderer_settings['debug'],
     ]);
-    
 
     $view->addExtension(new Twig_Extension_Debug());
 

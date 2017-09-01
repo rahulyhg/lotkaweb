@@ -38,6 +38,7 @@ CREATE TABLE IF NOT EXISTS `orders` (
   `preference` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `user_id` int(11) DEFAULT NULL,
   `attested_id` int(11) DEFAULT NULL,
+  `orderdate` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=0 ;
 
