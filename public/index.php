@@ -37,10 +37,9 @@ $container['view'] = function ($container) {
 
     $view = new \Slim\Views\Twig($renderer_settings['template_path'], [
         'cache' => $renderer_settings['cache_path'],
-        'auto_reload' => false,
-        'debug' => false,
+        'auto_reload' => $renderer_settings['auto_reload'],
+        'debug' => $renderer_settings['debug'],
     ]);
-    
 
     $view->addExtension(new Twig_Extension_Debug());
 
