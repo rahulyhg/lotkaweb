@@ -2,6 +2,10 @@
 // DIC configuration
 
 $container = $app->getContainer();
+$container['app'] = function ($c) {
+   global $app;
+   return $app;
+};
 
 // view renderer
 $container['renderer'] = function ($c) {
@@ -22,10 +26,8 @@ $container['logger'] = function ($c) {
 $container['db'] = function ($container) {
     $capsule = new \Illuminate\Database\Capsule\Manager;
     $capsule->addConnection($container['settings']['db']);
-
     $capsule->setAsGlobal();
     $capsule->bootEloquent();
-
     return $capsule;
 };
 
@@ -33,10 +35,6 @@ $container['db'] = function ($container) {
 | CONTROLLERS
 */
 
-$container[App\WidgetController::class] = function ($container) {
-    $view = $container->get('view');
-    $logger = $container->get('logger');
-    $table = $container->get('db')->table('shirts');
-  
-    return new \App\WidgetController($view, $logger, $table);
-};
+$container[App\Tickets\Stripe::class] = function ($c) { return new \App\Tickets\Stripe($c); };
+$container[App\API\Names::class]      = function ($c) { return new \App\API\Names($c); };
+$container[App\Pages\OpenPage::class] = function ($c) { return new \App\Pages\OpenPage($c); };

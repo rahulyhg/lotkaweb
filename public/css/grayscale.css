@@ -436,16 +436,19 @@ section img {
   filter: contrast(1.5) saturate(0.3);
 }
 .bigbutton {
-  width: 49%;
+  width: 100%;
   display: inline-block;
-  border: 1px solid #42DCA3;
-  float: left;
   text-align: center;
-  padding: 55px;
+  padding: 2em;
   background-color: #91e28f;
-  color: white;
-  font-weight: bold;
-  margin: 2px;
+  color: #1d1d1d;
+  font-weight: 700;
+  margin: .25em;
+  position: relative;
+  text-shadow: 0px 0.05em 0.1em #d4d4d4;
+  -webkit-box-shadow: 5px 5px 1px 0 rgba(29, 29, 29, 0.6);
+  -moz-box-shadow: 5px 5px 1px 0 rgba(29, 29, 29, 0.6);
+  box-shadow: 5px 5px 1px 0 rgba(29, 29, 29, 0.6);
 }
 #ticketsform {
   display: none;
