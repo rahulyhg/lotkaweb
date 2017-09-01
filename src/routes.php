@@ -194,7 +194,7 @@ $app->post('/charge', function ($request, $response, $args = array('name' => '')
 
     $charge = \Stripe\Charge::create(array(
       'customer' => $customer->id,
-      'amount'   => $ticket_type->price,
+      'amount'   => ceil($ticket_type->price * 1.029), // add fee
       'currency' => 'sek',
       'metadata' => $metadata,
       //      'source' => $token,
