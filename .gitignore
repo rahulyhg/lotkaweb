@@ -3,4 +3,4 @@
 /logs/*
 !/logs/README.me
 !**/settings.sample.*
-/public/dev/
+/public/dev*
