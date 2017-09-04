@@ -4,3 +4,4 @@
 !/logs/README.me
 !**/settings.sample.*
 /public/dev*
+/phinx.yml
