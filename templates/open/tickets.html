@@ -1,6 +1,6 @@
 
 <form action="/charge" method="post" class="ticket" id="ticketsform">
-  
+  {{ csrf.field|raw }}
   {% for ticket in ticket_types %}
   <aside class="ticket_{{ticket.sku|e}}">
     <header>

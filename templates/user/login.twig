@@ -1,0 +1,33 @@
+{% extends "user/main.html" %}
+
+{% block content %}
+  <form id="loginform" class="form-vertical" method="post" action="{{ path_for('user.login') }}">
+      {{ csrf.field | raw }}
+      <div class="control-group normal_text">
+        <h3><img src="/img/lotka-volterra-logo-text.svg" alt="Logo" class="logo" /></h3>
+      </div>
+      <div class="control-group">
+        <div class="controls">
+          <div class="main_input_box">
+            <span class="add-on bg_lg">
+                              <i class="icon-user"> </i></span>
+            <input type="text" name="username" id="username" placeholder="User name">
+          </div>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <div class="controls">
+          <div class="main_input_box">
+            <span class="add-on bg_ly">
+                              <i class="icon-lock"> </i></span>
+            <input type="password" name="password" id="password" placeholder="Password">
+          </div>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <span class="pull-right"><button type="submit" class="btn btn-default bg_lg">Login</button></span>
+      </div>
+    </form>
+{% endblock %}

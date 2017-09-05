@@ -45,6 +45,14 @@ return [
         'shop_id' => '<OUR_TEXTTALK_SHIP_ID_HERE>',
       ],
     ],
+    
+    'event' => [
+      'date' => '5 April 2018',
+      'ticket' => [
+        'target' => <OUR_TICKET_TARGET_AMOUNT>,
+        'goal' => <OUR_TICKET_SALES_GOAL>,
+      ],
+    ],    
   ],
   'json_provider' => function() { return new SJsonResponseProvider(); }
 ];

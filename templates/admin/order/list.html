@@ -1,0 +1,68 @@
+{% extends 'admin/dashboard/main.twig' %}
+
+{% block title %}Order Manager{% endblock %}
+
+{% block contentHeader %}
+  <div id="content-header">
+    <div id="breadcrumb"> <a href="#" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a> <a href="#" class="current">Orders</a> </div>
+    
+    <h1>Orders</h1>
+  </div>
+{% endblock %}
+
+{% block content %}
+  <div class="container-fluid">
+    <hr>
+    <div class="row-fluid">
+      <div class="span12">
+        <div class="widget-box">
+          <div class="widget-title"> <span class="icon"><i class="icon-th"></i></span>
+            <h5>Ticket sales</h5>
+          </div>
+          <div class="widget-content nopadding">
+            <table class="table table-bordered data-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Character Name</th>
+                  <th>E-mail</th>
+                  <th>Ticket Type</th>
+                  <th>Payed Amount</th>
+                  <th>Shirt Size</th>
+                  <th>Team Preference</th>
+                  <th>User</th>
+                  <th>Attested By</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for order in listOrdes %}
+                <tr class="gradeA">
+                  <td>{{ order.id }}</td>
+                  <td>{{ order.name }}</td>
+                  <td>{{ order.email }}</td>
+                  <td>{{ order.type }}</td>
+                  <td>{{ order.amount|number_format / 10 * 100}}</td>
+                  <td>{{ order.size }}</td>
+                  <td>{{ order.preference }}</td>
+                  <td>{{ order.user_name }}</td>
+                  <td>{{ order.attester_name }}</td>
+                  <td class="center">
+                    <a href="{{ path_for('admin.order.edit', { 'uid': order.id }) }}" class="btn btn-default" title="Edit Order"><i class="icon-edit"></i></a>
+                    <a href="{{ path_for('admin.order.delete', { 'uid': user.id }) }}" class="btn btn-danger" title="Delete User"><i class="icon-remove"></i></a>
+                  {% if order.attested_id %}
+                    <a href="" class="btn btn-warning" title="Un-atterst Order"><i class="icon-check-empty"></i></a>
+                  {% else %}
+                    <a href="" class="btn btn-success" title="Atterst Order"><i class="icon-check"></i></a>
+                  {% endif %}
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

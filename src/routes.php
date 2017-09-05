@@ -1,4 +1,6 @@
 <?php
+use App\Middleware\AdminMiddleware;
+
 // Routes
 $stripe_settings = $container->get('settings')['stripe'];
 \Stripe\Stripe::setApiKey($stripe_settings['SECRET_KEY']);
@@ -8,13 +10,12 @@ $stripe_settings = $container->get('settings')['stripe'];
 | OPEN PAGE ROUTES
 */
 
-$app->get('/[pay/{sku}]', '\App\Pages\OpenPage:index');
+$app->get('/[pay/{sku}]', '\App\Pages\OpenPage:index')->setName('home');
 $app->post('/charge', 'App\Pages\OpenPage:charge');
 
 /*
 | API ROUTES
 */
-
 
 $app->group('/api/v1', function () {
   $this->get('/test', '\App\API\Names:test');
@@ -83,4 +84,97 @@ $app->group('/api/v1', function () {
     );
   });
   
+});
+
+$app->group('/user', function() {
+  
+  $this->get('/register', 'AuthController:getRegister')->setName('user.register');
+  $this->post('/register', 'AuthController:postRegister');
+
+  $this->get('/login', 'AuthController:getLogin')->setName('user.login');
+  $this->post('/login', 'AuthController:postLogin');
+
+  $this->get('/logout', 'AuthController:logout')->setName('user.logout');
+  
+});
+
+//Admin
+$app->group('/admin', function() use ($container) {
+
+  $event_settings = $container->get('settings')['event'];
+    
+  $container->get('view')->getEnvironment()->addGlobal('ticketData', [
+    'totalAmount' => \App\Models\Order::query()->sum('amount'),
+    'totalSold' => \App\Models\Order::query()->distinct('email')->count(),
+    'target' => $event_settings['ticket']['target'],
+    'goal' => $event_settings['ticket']['goal'],
+    'daysLeft' => floor((strtotime($event_settings['date']) - time())/60/60/24),
+  ]);
+  
+  $this->get('', 'AdminController:index')->setName('admin.index');
+
+  //Users
+  $this->group('/users', function() {
+    
+    $this->get('', 'UserActionController:index')->setName('admin.users.all');
+    
+    $this->get('/add', 'UserActionController:addUser')->setName('admin.user.add');
+    $this->get('/{uid}/edit', 'UserActionController:editUser')->setName('admin.user.edit');
+    $this->post('/{uid}/edit', 'UserActionController:postEditUser');
+
+    $this->get('/{uid}/delete', 'UserActionController:deleteUser')->setName('admin.user.delete');
+    
+  });
+  
+  //Orders
+  $this->group('/orders', function() {
+    
+    $this->get('', 'OrderActionController:index')->setName('admin.orders.all');  
+    $this->get('/attested', 'OrderActionController:listAttested')->setName('admin.orders.attested');
+    $this->get('/unattested', 'OrderActionController:listUnattested')->setName('admin.orders.unattested');
+    
+    $this->get('/{uid}/edit', 'OrderActionController:editOrder')->setName('admin.order.edit');
+    $this->post('/{uid}/edit', 'OrderActionController:postEditOrder');
+
+    $this->get('/{uid}/delete', 'OrderActionController:deleteOrder')->setName('admin.order.delete');
+    
+  });
+  
+})->add(new AdminMiddleware($container));
+
+
+$app->get('/setup', function () {
+  $sentinel = $this->sentinel;
+  
+  if( !$sentinel->findRoleBySlug('admin') ) {
+    $sentinel->getRoleRepository()->createModel()->create(array(
+        'name'          => 'Admin',
+        'slug'          => 'admin',
+        'permissions'   => array(
+            'user.create' => true,
+            'user.update' => true,
+            'user.delete' => true
+        ),
+    ));  
+  }
+
+  if( !$sentinel->findRoleBySlug('user') ) {
+    $sentinel->getRoleRepository()->createModel()->create(array(
+      'name'          => 'User',
+      'slug'          => 'user',
+      'permissions'   => array(
+          'user.update' => true
+      ),
+    ));
+  }
+
+  if( !$sentinel->findRoleBySlug('participant') ) {
+    $sentinel->getRoleRepository()->createModel()->create(array(
+      'name'          => 'Participant',
+      'slug'          => 'participant',
+      'permissions'   => array(
+          'user.update' => true
+      ),
+    ));
+  }  
 });

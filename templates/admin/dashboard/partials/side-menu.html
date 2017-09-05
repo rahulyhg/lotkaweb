@@ -1,0 +1,54 @@
+<ul>
+  <li class="{{ path_for('admin.index')|isActive }}">
+    <a href="{{ path_for('admin.index') }}"><i class="icon icon-home"></i> <span>Dashboard</span></a> 
+  </li>
+
+  <li class="submenu {{ [path_for('admin.orders.all'),path_for('admin.orders.attested'),path_for('admin.orders.unattested')]|isActive }}"> 
+    <a href="{{ path_for('admin.orders.all') }}">
+      <i class="icon icon-money"></i> <span>Orders</span> <span class="label label-important"></span>
+    </a>
+    <ul>
+      <li class="{{ path_for('admin.orders.attested')|isActive }}">
+        <a href="{{ path_for('admin.orders.attested') }}">Attested</a></li>
+      <li class="{{ path_for('admin.orders.unattested')|isActive }}">
+        <a href="{{ path_for('admin.orders.unattested') }}">Unattested</a></li>
+      <li class="{{ path_for('admin.orders.all')|isActive }}">
+        <a href="{{ path_for('admin.orders.all') }}">All</a></li>
+    </ul>
+  </li>
+
+  <li class="submenu {{ [path_for('admin.users.all'),path_for('admin.user.add')]|isActive }}"> 
+    <a href="{{ path_for('admin.users.all') }}">
+      <i class="icon icon-user"></i> <span>Users</span> <span class="label label-important"></span>
+    </a>
+    <ul>
+      <li class="{{ path_for('admin.users.all')|isActive }}">
+        <a href="{{ path_for('admin.users.all') }}">All</a></li>
+      <li class="{{ path_for('admin.user.add')|isActive }}">
+        <a href="{{ path_for('admin.user.add') }}"><i class="icon-plus-sign"></i> <span>Create new</span> </a></li>
+    </ul>
+  </li>  
+  
+  <li class="content"> <span>Ticket Sales Amount</span>
+    <div class="progress progress-mini progress-danger active progress-striped">
+      <div style="width: {{ (100 * ticketData.totalAmount/100 / ticketData.target)|number_format }}%;" class="bar"></div>
+    </div>
+    <span class="percent"> {{ (100 * ticketData.totalAmount/100 / ticketData.target)|number_format }}%</span>
+    <div class="stat">{{ ticketData.totalAmount/100|number_format }} / {{ ticketData.target }} SEK</div>
+  </li>
+  
+  <li class="content"> <span>Tickets Sold</span>
+    <div class="progress progress-mini progress-danger active progress-striped">
+      <div style="width: {{ (100 * ticketData.totalSold/100 / ticketData.goal)|number_format }}%;" class="bar"></div>
+    </div>
+    <span class="percent">{{ (100 * ticketData.totalSold/100 / ticketData.goal)|number_format }}%</span>
+    <div class="stat">{{ ticketData.totalSold|number_format }} / {{ ticketData.goal }}</div>
+  </li>
+  
+  <li class="content"> <span>Days To Event</span>
+    <div class="progress progress-mini active progress-striped">
+      <div style="width: {{ 100 * (1 - ticketData.daysLeft/365) }}%;" class="bar"></div>
+    </div>
+    <div class="stat">{{ ticketData.daysLeft }} Days left</div>
+  </li>
+</ul>

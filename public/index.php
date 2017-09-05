@@ -11,6 +11,9 @@ if (PHP_SAPI == 'cli-server') {
 
 require __DIR__ . '/../vendor/autoload.php';
 
+// USE 3RD PARTY
+use Respect\Validation\Validator as v;
+
 session_start();
 
 class SJsonResponseProvider
@@ -31,30 +34,17 @@ $settings = require __DIR__ . '/../src/settings.php';
 $app = new \Slim\App($settings);
 $container = $app->getContainer();
 
-// Register component on container
-$container['view'] = function ($container) {
-    $renderer_settings = $container->get('settings')['renderer'];
-
-    $view = new \Slim\Views\Twig($renderer_settings['template_path'], [
-        'cache' => $renderer_settings['cache_path'],
-        'auto_reload' => $renderer_settings['auto_reload'],
-        'debug' => $renderer_settings['debug'],
-    ]);
-
-    $view->addExtension(new Twig_Extension_Debug());
-
-    // Instantiate and add Slim specific extension
-    $basePath = rtrim(str_ireplace('index.php', '', $container['request']->getUri()->getBasePath()), '/');
-    $view->addExtension(new Slim\Views\TwigExtension($container['router'], $basePath));
-
-    return $view;
-};
-
 // Set up dependencies
 require __DIR__ . '/../src/dependencies.php';
 
 // Register middleware
 require __DIR__ . '/../src/middleware.php';
+
+// ADD CSRF
+$app->add($container->csrf);
+
+// ADD 3RD PARTY
+v::with('App\\Validation\\Rules\\');
 
 // Register routes
 require __DIR__ . '/../src/routes.php';

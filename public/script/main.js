@@ -70,7 +70,9 @@ window.onload = function() {
       type: 'NA',
       size: 'NA',
       pref: 'NA',
-      ticket_type: ticket_type.sku
+      ticket_type: ticket_type.sku,
+      csrf_name: $("[name='csrf_name']").val(),
+      csrf_value: $("[name='csrf_value']").val()
     }
     
     if (ticket_type.show.surname) settings.surname = $(".surname."+ticket_type.sku).val();
