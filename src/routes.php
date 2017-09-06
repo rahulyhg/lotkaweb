@@ -119,11 +119,14 @@ $app->group('/admin', function() use ($container) {
     $this->get('', 'UserActionController:index')->setName('admin.users.all');
     
     $this->get('/add', 'UserActionController:addUser')->setName('admin.user.add');
+    $this->post('/add', 'UserActionController:postAddUser');
+    
     $this->get('/{uid}/edit', 'UserActionController:editUser')->setName('admin.user.edit');
     $this->post('/{uid}/edit', 'UserActionController:postEditUser');
 
     $this->get('/{uid}/delete', 'UserActionController:deleteUser')->setName('admin.user.delete');
     
+    $this->get('/create-from-order/{uid}', 'UserActionController:createFromOrderAndAttest')->setName('admin.order.create.user');    
   });
   
   //Orders
@@ -132,11 +135,19 @@ $app->group('/admin', function() use ($container) {
     $this->get('', 'OrderActionController:index')->setName('admin.orders.all');  
     $this->get('/attested', 'OrderActionController:listAttested')->setName('admin.orders.attested');
     $this->get('/unattested', 'OrderActionController:listUnattested')->setName('admin.orders.unattested');
-    
+
+    $this->get('/add', 'OrderActionController:addOrder')->setName('admin.order.add');
+    $this->post('/add', 'OrderActionController:postAddOrder');
+        
     $this->get('/{uid}/edit', 'OrderActionController:editOrder')->setName('admin.order.edit');
     $this->post('/{uid}/edit', 'OrderActionController:postEditOrder');
 
     $this->get('/{uid}/delete', 'OrderActionController:deleteOrder')->setName('admin.order.delete');
+    
+    $this->get('/{uid}/attest', 'OrderActionController:attestOrder')->setName('admin.order.attest');
+    $this->post('/{uid}/attest', 'OrderActionController:postAttestOrder');
+    
+    $this->get('/{uid}/unattest', 'OrderActionController:unattestOrder')->setName('admin.order.unattest');
     
   });
   

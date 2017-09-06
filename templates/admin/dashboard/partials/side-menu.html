@@ -14,9 +14,11 @@
         <a href="{{ path_for('admin.orders.unattested') }}">Unattested</a></li>
       <li class="{{ path_for('admin.orders.all')|isActive }}">
         <a href="{{ path_for('admin.orders.all') }}">All</a></li>
+      <li class="{{ path_for('admin.order.add')|isActive }}">
+        <a href="{{ path_for('admin.order.add') }}"><i class="icon-plus-sign"></i> <span>Create new</span> </a></li>      
     </ul>
-  </li>
-
+  </li>  
+  
   <li class="submenu {{ [path_for('admin.users.all'),path_for('admin.user.add')]|isActive }}"> 
     <a href="{{ path_for('admin.users.all') }}">
       <i class="icon icon-user"></i> <span>Users</span> <span class="label label-important"></span>

@@ -1,0 +1,93 @@
+{% extends 'admin/dashboard/main.twig' %}
+
+{% block title %}User Manager{% endblock %}
+
+{% block contentHeader %}
+  <div id="content-header">
+    <div id="breadcrumb"> 
+      <a href="{{ path_for('admin.index') }}" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a> 
+      <a href="{{ path_for('admin.users.all') }}">Users</a> 
+      <a href="#" class="current">{{current.data.username|default('New User')}}</a> 
+    </div>
+    
+    <h1>Edit {{current.data.username|default('New User')}}</h1>
+  </div>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  <hr>
+  <div class="row-fluid">
+    <div class="span6">
+      <div class="widget-box">
+        <div class="widget-title"> <span class="icon"> <i class="icon-align-justify"></i> </span>
+          <h5>Edit User</h5>
+        </div>
+        <div class="widget-content nopadding">
+          <form action="{{ current.new ? path_for('admin.user.add') : path_for('admin.user.edit', { 'uid': current.data.username }) }}" method="post" autocomplete="on" class="form-horizontal">
+            {{ csrf.field | raw }}
+            <div class="control-group">
+              <label class="control-label">User Name :</label>
+              <div class="controls">
+                <input type="text" class="span11" name="username" placeholder="User name" value="{{ current.data.username }}">
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label">Display Name :</label>
+              <div class="controls">
+                <input type="text" class="span11" name="displayname" placeholder="Display name" value="{{ current.data.displayname }}">
+              </div>
+            </div>            
+            <div class="control-group">
+              <label class="control-label">First Name :</label>
+              <div class="controls">
+                <input type="text" class="span11" name="first_name" placeholder="First name" value="{{ current.data.first_name }}">
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label">Last Name :</label>
+              <div class="controls">
+                <input type="text" class="span11" name="last_name" placeholder="Last name" value="{{ current.data.last_name }}">
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label">E-mail :</label>
+              <div class="controls">
+                <input type="text" class="span11" name="email" placeholder="E-mail" value="{{ current.data.email }}">
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label">Password input</label>
+              <div class="controls">
+                <input type="password" class="span11" name="password" placeholder="Enter Password">
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label">Organizers Notes:</label>
+              <div class="controls">
+                <textarea class="span11" name="org_notes">{{ current.data.org_notes }}</textarea>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <label class="control-label">Select input</label>
+              <div class="controls">
+                <select name="role">
+                {% for role in auth.getRoles %}
+                  <option value="{{ role.slug }}" {% if role.slug == current.role %}selected="selected"{% endif %}>
+                    {{ role.name }}
+                  </option>
+                {% endfor %}
+                </select>
+              </div>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-success">Save</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

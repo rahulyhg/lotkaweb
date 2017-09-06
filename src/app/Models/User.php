@@ -13,6 +13,9 @@ class User extends SentinelUser
     'displayname',
     'email',
     'password',
+    'first_name',
+    'last_name',
+    'org_notes',
     'permissions'
   ];
 

@@ -162,5 +162,12 @@ $(document).ready(function(){
 		$('#lightbox').hide(200);
 	});
 	
+	
+	$(".btn.btn-danger[title~='Delete']").click(function(e) {
+		if (!window.confirm("Do you really want to Delete this?")) { 
+			e.preventDefault();
+		}
+	});
+
 });
 

@@ -24,13 +24,13 @@
               <thead>
                 <tr>
                   <th>#</th>
-                  <th>Character Name</th>
                   <th>E-mail</th>
+                  <th>User</th>
                   <th>Ticket Type</th>
                   <th>Payed Amount</th>
-                  <th>Shirt Size</th>
+                  <th>Character Name</th>
                   <th>Team Preference</th>
-                  <th>User</th>
+                  <th>Shirt Size</th>
                   <th>Attested By</th>
                   <th>Action</th>
                 </tr>
@@ -39,21 +39,21 @@
                 {% for order in listOrdes %}
                 <tr class="gradeA">
                   <td>{{ order.id }}</td>
-                  <td>{{ order.name }}</td>
                   <td>{{ order.email }}</td>
+                  <td>{{ order.user_name }}</td>
                   <td>{{ order.type }}</td>
                   <td>{{ order.amount|number_format / 10 * 100}}</td>
-                  <td>{{ order.size }}</td>
+                  <td>{{ order.name }}</td>
                   <td>{{ order.preference }}</td>
-                  <td>{{ order.user_name }}</td>
+                  <td>{{ order.size }}</td>
                   <td>{{ order.attester_name }}</td>
                   <td class="center">
                     <a href="{{ path_for('admin.order.edit', { 'uid': order.id }) }}" class="btn btn-default" title="Edit Order"><i class="icon-edit"></i></a>
-                    <a href="{{ path_for('admin.order.delete', { 'uid': user.id }) }}" class="btn btn-danger" title="Delete User"><i class="icon-remove"></i></a>
+                    <a href="{{ path_for('admin.order.delete', { 'uid': order.id }) }}" class="btn btn-danger" title="Delete User"><i class="icon-remove"></i></a>
                   {% if order.attested_id %}
-                    <a href="" class="btn btn-warning" title="Un-atterst Order"><i class="icon-check-empty"></i></a>
+                    <a href="{{ path_for('admin.order.unattest', { 'uid': order.id }) }}" class="btn btn-warning" title="Un-atterst Order"><i class="icon-check-empty"></i></a>
                   {% else %}
-                    <a href="" class="btn btn-success" title="Atterst Order"><i class="icon-check"></i></a>
+                    <a href="{{ path_for('admin.order.attest', { 'uid': order.id }) }}" class="btn btn-success" title="Atterst Order"><i class="icon-check"></i></a>
                   {% endif %}
                   </td>
                 </tr>
