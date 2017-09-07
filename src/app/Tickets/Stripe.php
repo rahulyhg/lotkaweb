@@ -63,7 +63,7 @@ class Stripe
             'origin' => 'Stripe',
             'created_at' => date("Y-m-d H:i:s"),
             'updated_at' => date("Y-m-d H:i:s"),
-            'orderdate' => 'created_at' => date("Y-m-d H:i:s"),
+            'orderdate' => date("Y-m-d H:i:s"),
           ]);
 
         $res = $this->db

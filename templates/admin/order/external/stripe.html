@@ -1,0 +1,117 @@
+{% extends 'admin/dashboard/main.twig' %} 
+
+{% block title %}External Order Manager : Stripe{% endblock %} 
+
+{% block contentHeader %}
+<div id="content-header">
+  <div id="breadcrumb">
+    <a href="{{ path_for('admin.index') }}" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a>
+    <a href="{{ path_for('admin.orders.all') }}">Orders</a>
+    <a href="{{ path_for('admin.orders.external') }}">External</a>
+    <a href="#" class="current">Stripe</a>
+  </div>
+
+  <h1>External Orders : Stripe</h1>
+</div>
+{% endblock %} 
+
+{% block content %}
+<div class="container-fluid">
+  <hr/>
+  <div class="row-fluid">
+    <div class="widget-box">
+      <div class="widget-title"> <span class="icon"><i class="icon-ok"></i></span>
+        <h5>Import Orders from Stripe</h5>
+      </div>
+      <form action="{{ path_for('admin.orders.external.stripe') }}" method="post">
+      {{ csrf.field | raw }}
+      <div class="widget-content">        
+        <p>
+          <button class="btn btn-primary btn-large" type="submit">
+            Import selected orders <i class="icon-signin"></i>
+          </button>
+        </p>
+<!--
+        <ul class="unstyled">
+          <li> <span class="icon24 icomoon-icon-arrow-up-2 green"></span> 0% Done <span class="pull-right strong">0</span>
+            <div class="progress progress-striped ">
+              <div style="width: 0%;" class="bar"></div>
+            </div>
+          </li>
+        </ul>
+//-->
+        <table class="table table-bordered table-striped with-check">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th><i class="icon-resize-vertical"></i></th>
+              <th>SKU</th>
+              <th>Participant</th>
+              <th>Charged Amount</th>              
+              <th>Ticket Type</th>
+              <th>Order Date</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for charge in orders.data %}
+            {% if charge.description %}
+            {% set lookup_key = "#{products[charge.description].id }#{ charge.receipt_email}#{ charge.amount}" %}
+            {% set order_id = exising[lookup_key] %}
+            {% set payed = ((charge.paid) and not (charge.refunded)) %}
+            <tr>
+              <td class="taskStatus">{{ loop.index }}</td>
+              <td class="taskStatus">
+                <input type="checkbox" {% if not order_id and payed %}checked{% endif %} name="import[{{ loop.index0 }}]" value="{{ lookup_key }}">
+                <input type="hidden" name="ticket_type[{{ loop.index0 }}]" value="{{ products[charge.description].id }}">
+                <input type="hidden" name="email[{{ loop.index0 }}]" value="{{ charge.receipt_email }}">
+                <input type="hidden" name="amount[{{ loop.index0 }}]" value="{{ charge.amount }}">
+                <input type="hidden" name="origin[{{ loop.index0 }}]" value="Stripe">
+                <input type="hidden" name="orderdate[{{ loop.index0 }}]" value="{{ charge.created }}">
+                
+                <input type="hidden" name="shirt_type[{{ loop.index0 }}]" 
+                       value="{{ charge.metadata.shirt_type == 'NA' ? '' : charge.metadata.shirt_type}}">
+                <input type="hidden" name="shirt_size[{{ loop.index0 }}]" 
+                       value="{{ charge.metadata.shirt_size == 'NA' ? '' : charge.metadata.shirt_size}}">
+                <input type="hidden" name="preference[{{ loop.index0 }}]" 
+                       value="{{ charge.metadata.preference == 'NA' ? '' : charge.metadata.preference}}">
+                <input type="hidden" name="surname[{{ loop.index0 }}]" 
+                       value="{{ charge.metadata.surname == 'NA' ? '' : charge.metadata.surname}}">
+             
+              </td>
+              <td class="taskDesc">
+                {{ products[charge.description].id }}
+              </td>
+              <td class="taskDesc">
+                {{ charge.receipt_email }}
+              </td>
+              <td class="taskAmount">
+                {{ charge.amount/100|number_format(2) }}{{ charge.currency|upper }}
+              </td>
+              <td class="taskDesc">
+                {{ charge.description }}
+              </td>
+              <td class="taskDesc">
+                {{ charge.created|date }}
+              </td>
+              <td class="taskStatus">
+                {% if charge.refunded %}
+                  <span class="in-progress">refunded</span>
+                {% elseif charge.paid %}
+                  <span class="done">payed</span>
+                {% else %}
+                  <span class="pending tip-left" data-original-title="{{ charge.outcome.seller_message }}">not payed</span>
+                {% endif %}
+              </td>
+            </tr>
+            {% endif %}
+          {% endfor %}
+          </tbody>
+        </table>
+        
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

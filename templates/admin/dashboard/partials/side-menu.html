@@ -19,6 +19,10 @@
     </ul>
   </li>  
   
+  <li class="{{ path_for('admin.orders.external')|isActive }}">
+    <a href="{{ path_for('admin.orders.external') }}"><i class="icon icon-magnet"></i> <span>External Orders</span></a> 
+  </li>
+  
   <li class="submenu {{ [path_for('admin.users.all'),path_for('admin.user.add')]|isActive }}"> 
     <a href="{{ path_for('admin.users.all') }}">
       <i class="icon icon-user"></i> <span>Users</span> <span class="label label-important"></span>
@@ -41,9 +45,9 @@
   
   <li class="content"> <span>Tickets Sold</span>
     <div class="progress progress-mini progress-danger active progress-striped">
-      <div style="width: {{ (100 * ticketData.totalSold/100 / ticketData.goal)|number_format }}%;" class="bar"></div>
+      <div style="width: {{ (100 * ticketData.totalSold / ticketData.goal)|number_format }}%;" class="bar"></div>
     </div>
-    <span class="percent">{{ (100 * ticketData.totalSold/100 / ticketData.goal)|number_format }}%</span>
+    <span class="percent">{{ (100 * ticketData.totalSold / ticketData.goal)|number_format }}%</span>
     <div class="stat">{{ ticketData.totalSold|number_format }} / {{ ticketData.goal }}</div>
   </li>
   

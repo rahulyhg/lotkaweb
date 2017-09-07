@@ -2,6 +2,11 @@
 // DIC configuration
 use \Symfony\Component\HttpFoundation\Request;
 
+//Stripe Setup
+$stripe_settings = $container['settings']['stripe_live'];
+\Stripe\Stripe::setApiKey($stripe_settings['SECRET_KEY']);
+\Stripe\Stripe::setApiVersion($stripe_settings['API_VERSION']);
+
 // Setup Eloquent
 $capsule = new \Illuminate\Database\Capsule\Manager;
 $capsule->addConnection($container['settings']['db']);

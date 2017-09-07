@@ -1,0 +1,38 @@
+{% extends 'admin/dashboard/main.twig' %}
+
+{% block title %}External Order Manager{% endblock %}
+
+{% block contentHeader %}
+  <div id="content-header">
+    <div id="breadcrumb"> 
+      <a href="{{ path_for('admin.index') }}" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a>
+      <a href="{{ path_for('admin.orders.all') }}">Orders</a>
+      <a href="#" class="current">External</a> 
+    </div>
+    
+    <h1>External Orders</h1>
+  </div>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  <div class="quick-actions_homepage">
+    <ul class="quick-actions">
+      <li class="bg_lb" style="background-color: #6772E5;"> 
+        <a href="{{ path_for('admin.orders.external.stripe') }}"> 
+          <i class="icon-credit-card"></i> 
+          <span class="label label-important"></span> 
+          Stripe 
+        </a> 
+      </li>
+      <li class="bg_lg" style="background-color: #8A4FA2;"> 
+        <a href="{{ path_for('admin.orders.external.texttalk') }}"> 
+          <i class="icon-money"></i> 
+          <span class="label label-important"></span> 
+          TextTalk
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>
+{% endblock %}

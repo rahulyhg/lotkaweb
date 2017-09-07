@@ -10,6 +10,11 @@ use App\Models\User;
 use App\Controllers\Controller;
 use Slim\Views\Twig as View;
 
+use Slim\App;
+use Slim\Http\Request;
+use Slim\Http\Response;
+use Slim\Http\Environment;
+
 class OrderActionController extends Controller
 {
   private function listOrdersQuery() {
@@ -203,4 +208,122 @@ class OrderActionController extends Controller
     }
     return $response->withRedirect($this->router->pathFor('admin.orders.all'));
   }
+
+  public function extrenalDashboard($request, $response, $arguments) 
+  {
+    return $this->view->render($response, 'admin/order/external/index.html');
+  }
+    
+  //Handle external order platforms
+  public function extrenalStripe($request, $response, $arguments) 
+  {
+    $stripe_orders = \Stripe\Charge::all(array("limit" => 100));
+    
+    //Making a few quick lookup objects
+    $stripe_products = \Stripe\Product::all(array("limit" => 100));
+    $products = [];
+    foreach ($stripe_products->data as $product) {
+      $products[$product['caption']] = $product;
+    }
+    
+    $existing_orders = Order::query()->select('id', 'type', 'email', 'amount')->get();
+    $orders = [];
+    foreach ($existing_orders as $order) {
+      $orders[$order->type . $order->email . $order->amount] = $order->id;
+    }
+    
+    $this->container->view->getEnvironment()->addGlobal('orders', $stripe_orders);
+    $this->container->view->getEnvironment()->addGlobal('products', $products);
+    $this->container->view->getEnvironment()->addGlobal('exising', $orders);
+    
+    return $this->view->render($response, 'admin/order/external/stripe.html');
+  }
+  
+  public function postExtrenalStripe($request, $response, $arguments) 
+  {
+    $posts = $request->getParsedBody();
+    $meta_data_keys = [ 
+      'shirt_type' => 'shirt_type', 
+      'shirt_size' => 'size', 
+      'preference' => 'preference', 
+      'surname' => 'name'
+    ];
+    $inserts = 0;
+    
+    foreach ($posts['import'] as $index => $lookup_key) {
+      $data = [
+        'amount' => $posts['amount'][$index],
+        'email' => $posts['email'][$index],
+        'origin' => $posts['origin'][$index],
+        'type' => $posts['ticket_type'][$index],
+      ]; 
+      
+      foreach ($meta_data_keys as $meta_key => $db_key) {
+        if ( strlen($posts[$meta_key][$index]) ) 
+          $data[$db_key] = $posts[$meta_key][$index];
+      }
+      
+      if(Order::create($data)) $inserts++;
+    }
+    
+    $this->flash->addMessage('success', 
+      $inserts . " of " . count($posts['import']) . " Stripe orders added to the local database.");
+    return $response->withRedirect($this->router->pathFor('admin.orders.external.stripe')); 
+  }
+
+  public function extrenalTextTalk($request, $response, $arguments) 
+  {
+    $endpoint = "https://spetsnaz.su/~tz/lvnamefetcher/orders.php";
+    $texttalk_orders = json_decode(file_get_contents($endpoint));
+    
+    $tickets = Ticket::select('sku', 'price')->distinct('sku')->orderBy('sku')->get();
+    $ticket_types = [];
+    foreach ($tickets as $ticket) {
+      $ticket_types[$ticket->sku] = $ticket->price;
+    }        
+    
+    $existing_orders = Order::query()->select('id', 'type', 'email')->get();
+    $orders = [];
+    foreach ($existing_orders as $order) {
+      $orders[$order->type . $order->email] = $order->id;
+    }    
+
+    $this->container->view->getEnvironment()->addGlobal('orders', $texttalk_orders->data);
+    $this->container->view->getEnvironment()->addGlobal('exising', $orders);
+    $this->container->view->getEnvironment()->addGlobal('ticketTypes', $ticket_types);
+    
+    return $this->view->render($response, 'admin/order/external/texttalk.html');
+  }
+  
+  public function postExtrenalTextTalk($request, $response, $arguments) 
+  {
+    $posts = $request->getParsedBody();
+    $meta_data_keys = [ 
+      'shirt_type' => 'shirt_type', 
+      'shirt_size' => 'size', 
+      'preference' => 'preference', 
+      'surname' => 'name'
+    ];
+    $inserts = 0;
+    
+    foreach ($posts['import'] as $index => $lookup_key) {
+      $data = [
+        'amount' => $posts['amount'][$index],
+        'email' => $posts['email'][$index],
+        'origin' => $posts['origin'][$index],
+        'type' => $posts['ticket_type'][$index],
+      ]; 
+      
+      foreach ($meta_data_keys as $meta_key => $db_key) {
+        if ( strlen($posts[$meta_key][$index]) ) 
+          $data[$db_key] = $posts[$meta_key][$index];
+      }
+      
+      if(Order::create($data)) $inserts++;
+    }
+    
+    $this->flash->addMessage('success', 
+      $inserts . " of " . count($posts['import']) . " TextTalk orders added to the local database.");
+    return $response->withRedirect($this->router->pathFor('admin.orders.external.texttalk')); 
+  }  
 }
