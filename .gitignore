@@ -5,3 +5,4 @@
 !**/settings.sample.*
 /public/dev*
 /phinx.yml
+/composer.lock
