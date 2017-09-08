@@ -38,6 +38,26 @@ class OrderActionController extends Controller
       'teams' => Team::query()->where('available', 1)->distinct('type')->orderBy('id')->get(),
       'users' => User::query()->orderBy('displayname')->get(),
       'surnames' => Surname::query()->where('available', 1)->get(),
+      'shirt_lookup' => [
+        'Regular Fit T-Shirt' => 'REGULAR_TSHIRT',
+        'Normal fit' => 'REGULAR_TSHIRT',
+        'REGULAR_TSHIR' => 'REGULAR_TSHIRT',
+        'Slim T-shirt' => 'SLIM_TSHIRT',
+        'Slim fit' => 'SLIM_TSHIRT',
+        'SLIM_TSHIRT' => 'SLIM_TSHIRT',
+      ],
+      'team_lookup' => [
+        'MAINT' => 'MAINT',
+        'Maintenance' => 'MAINT',
+        'SURFOPS' => 'SURFOPS',
+        'Surface Operations' => 'SURFOPS',
+        'COMMAND' => 'COMMAND',
+        'Outpost Command' => 'COMMAND',
+        'MISCON' => 'MISCON' ,
+        'Mission Control' => 'MISCON',
+        'OTHER' => 'OTHER',
+        'Other' => 'OTHER',
+      ],
     ];
   }
 
@@ -69,6 +89,7 @@ class OrderActionController extends Controller
   public function index($request, $response)
   {
     $orders_query = self::listOrdersQuery();
+    $orders_query->orderBy('id', 'desc');
     
     return self::renderList($response, [
       'listOrdes' => $orders_query->get(),
@@ -78,7 +99,8 @@ class OrderActionController extends Controller
   public function listAttested($request, $response)
   {
     $orders_query = self::listOrdersQuery();
-    $orders_query->whereNotNull('attested_id');
+    $orders_query->whereNotNull('attested_id')
+      ->orderBy('id', 'desc');
     
     return self::renderList($response, [
       'listOrdes' => $orders_query->get(),
@@ -88,7 +110,19 @@ class OrderActionController extends Controller
   public function listUnattested($request, $response)
   {
     $orders_query = self::listOrdersQuery();
-    $orders_query->whereNull('attested_id');
+    $orders_query->whereNull('attested_id')
+      ->orderBy('id', 'desc');
+    
+    return self::renderList($response, [
+      'listOrdes' => $orders_query->get(),
+    ]);
+  }   
+  
+  public function listPartialPayments($request, $response)
+  {
+    $orders_query = self::listOrdersQuery();
+    $orders_query->whereIn('type', ['STD_1','STD_2','STD_3'])
+      ->orderBy('email');
     
     return self::renderList($response, [
       'listOrdes' => $orders_query->get(),
@@ -109,7 +143,7 @@ class OrderActionController extends Controller
   public function editOrder($request, $response, $arguments)
   {
     $order = Order::where('id', $arguments['uid'])->first();
-
+    
     $this->container->view->getEnvironment()->addGlobal('order', self::orderData());    
     $this->container->view->getEnvironment()->addGlobal('current', [
       'data' => $order,

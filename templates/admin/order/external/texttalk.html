@@ -53,7 +53,7 @@
           </thead>
           <tbody>
 
-            {% for order in orders %}
+            {% for order in orders|reverse %}
             
             {% set lookup_key = "#{ order.type }#{ order.email }" %}
             {% set order_id = exising[lookup_key] %}

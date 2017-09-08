@@ -131,6 +131,7 @@ $app->group('/admin', function() use ($container) {
 
     $this->get('/attested', 'OrderActionController:listAttested')->setName('admin.orders.attested');
     $this->get('/unattested', 'OrderActionController:listUnattested')->setName('admin.orders.unattested');
+    $this->get('/partial', 'OrderActionController:listPartialPayments')->setName('admin.orders.partial');
 
     $this->get('/add', 'OrderActionController:addOrder')->setName('admin.order.add');
     $this->post('/add', 'OrderActionController:postAddOrder');
@@ -158,6 +159,19 @@ $app->group('/admin', function() use ($container) {
 
       $this->get('/unattest', 'OrderActionController:unattestOrder')->setName('admin.order.unattest');
     });
+  });
+  
+  //Tickets
+  $this->group('/tickets', function() {
+    $this->get('', 'TicketActionController:index')->setName('admin.tickets.all');
+    
+    $this->get('/add', 'TicketActionController:add')->setName('admin.ticket.add');
+    $this->post('/add', 'TicketActionController:postAdd');
+    
+    $this->get('/{uid}/edit', 'TicketActionController:edit')->setName('admin.ticket.edit');
+    $this->post('/{uid}/edit', 'TicketActionController:postEdit');
+
+    $this->get('/{uid}/delete', 'TicketActionController:delete')->setName('admin.ticket.delete');
   });
   
 })->add(new AdminMiddleware($container));

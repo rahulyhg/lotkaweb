@@ -14,12 +14,12 @@ class Ticket extends Model
     'description', 
     'statement_descriptor', 
     'available', 
+    'visibility',
     'img', 
     'weight', 
     'surname', 
     'shirtType', 
     'size', 
     'teamPreference', 
-    'visible'
   ];
 }

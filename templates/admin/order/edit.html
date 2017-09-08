@@ -85,10 +85,10 @@
             <div class="control-group">
               <label class="control-label">Shirt Type :</label>
               <div class="controls">
-                <select name="size">
+                <select name="shirt_type">
                 <option value="" selected> - No Shirt - </option>                  
                 {% for shirt in order.shirt_types %}
-                  <option value="{{ shirt.type_class }}" {% if shirt.type_class == current.data.shirt_type %}selected="selected"{% endif %}>
+                  <option value="{{ shirt.type_class }}" {% if shirt.type_class == order.shirt_lookup[current.data.shirt_type] %}selected{% endif %}>
                     {{ shirt.type }}
                   </option>
                 {% endfor %}
@@ -117,7 +117,7 @@
                 <select name="preference">
                   <option value="" selected> - No Preference - </option>
                 {% for team in order.teams %}
-                  <option value="{{ team.type }}" {% if team.type == current.data.preference %}selected="selected"{% endif %}>
+                  <option value="{{ team.type }}" {% if team.type == order.team_lookup[current.data.preference] %}selected{% endif %}>
                     {{ team.name }}
                   </option>
                 {% endfor %}
@@ -157,7 +157,7 @@
               <label class="control-label">Order Date :</label>
               <div class="controls">
                 <div  data-date="{{ current.data.orderdate }}" class="input-append date datepicker">
-                  <input type="date" name="orderdate" value="{{ current.data.orderdate|default('now'|date('Y-m-d')) }}" class="span11" >
+                  <input type="datetime-local" name="orderdate" value="{{ (current.data.orderdate|default('now'))|date('Y-m-d\\TH:i:s') }}" class="span11" >
                   <span class="add-on"><i class="icon-th"></i></span> </div>
               </div>
             </div>            

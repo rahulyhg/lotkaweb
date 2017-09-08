@@ -1,0 +1,68 @@
+{% extends 'admin/dashboard/main.twig' %}
+
+{% block title %}{{ settings.title }}{% endblock %}
+
+{% block contentHeader %}
+  <div id="content-header">
+    <div id="breadcrumb"> 
+      <a href="#" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a> 
+      {% for nav in settings.breadcrumb %}
+      <a href="{{ path_for(nav.path) }}">{{ nav.name }}</a>
+      {% endfor %}
+      <a href="#" class="current">{{ settings.name }}</a>
+    </div>
+    
+    <h1>{{ settings.name }}</h1>
+  </div>
+{% endblock %}
+
+{% block content %}
+  <div class="container-fluid">
+    <hr>
+    <div class="row-fluid">
+      <div class="span12">
+        <div class="widget-box">
+          <div class="widget-title"> <span class="icon"><i class="icon-th"></i></span>
+            <h5>{{ settings.title }}</h5>
+          </div>
+          <div class="widget-content nopadding">
+            <table class="table table-bordered data-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  {% for column in settings.columns %}
+                  <th>{{ column.title }}</th>
+                  {% endfor %}
+                  {% if settings.actions %}
+                  <th>Actions</th>
+                  {% endif %}
+                </tr>
+              </thead>
+              <tbody>
+                {% for item in list %}
+                <tr class="gradeA">
+                  <td class="center">{{ loop.index }}</td>                  
+                  {% for column in settings.columns %}
+                  <td {% if column.class %}class="{{ column.class}}"{% endif %}>{{ item[column.field_name] }}</td>
+                  {% endfor %}
+                  
+                  {% if settings.actions %}
+                  <td class="center">
+                  {% for action in settings.actions %}
+                    <a href="{{ path_for(action.path, { 'uid': item.id }) }}" class="btn btn-{{ action.class}}" title="{{ action.title }}">
+                      <i class="icon-{{ action.icon }}"></i>
+                    </a>
+                  {% endfor %}
+                  </td>
+                  {% endif %}                  
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

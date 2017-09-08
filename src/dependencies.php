@@ -128,3 +128,9 @@ $container['AuthController']          = function($c) { return new \App\Controlle
 $container['AdminController']         = function($c) { return new \App\Controllers\Admin\AdminController($c); };
 $container['UserActionController']    = function($c) { return new \App\Controllers\Admin\UserActionController($c); };
 $container['OrderActionController']   = function($c) { return new \App\Controllers\Admin\OrderActionController($c); };
+
+$container['RolesActionController']   = function($c) { return new \App\Controllers\Admin\RolesActionController($c); };
+$container['ShirtActionController']   = function($c) { return new \App\Controllers\Admin\ShirtActionController($c); };
+$container['SurnameActionController'] = function($c) { return new \App\Controllers\Admin\SurnameActionController($c); };
+$container['TeamActionController']    = function($c) { return new \App\Controllers\Admin\TeamActionController($c); };
+$container['TicketActionController']  = function($c) { return new \App\Controllers\Admin\TicketActionController($c); };

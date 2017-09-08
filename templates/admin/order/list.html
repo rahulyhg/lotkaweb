@@ -28,9 +28,12 @@
                   <th>User</th>
                   <th>Ticket Type</th>
                   <th>Payed Amount</th>
+                  <th>Order Via</th>
+<!--
                   <th>Character Name</th>
                   <th>Team Preference</th>
                   <th>Shirt Size</th>
+//-->
                   <th>Attested By</th>
                   <th>Action</th>
                 </tr>
@@ -38,14 +41,17 @@
               <tbody>
                 {% for order in listOrdes %}
                 <tr class="gradeA">
-                  <td>{{ order.id }}</td>
+                  <td class="center">{{ loop.index }}</td>
                   <td>{{ order.email }}</td>
                   <td>{{ order.user_name }}</td>
                   <td>{{ order.type }}</td>
-                  <td>{{ order.amount|number_format / 10 * 100}}</td>
+                  <td class="taskAmount">{{ order.amount/100|number_format }}SEK</td>
+                  <td>{{ order.origin }}</td>
+<!--                  
                   <td>{{ order.name }}</td>
                   <td>{{ order.preference }}</td>
                   <td>{{ order.size }}</td>
+//-->
                   <td>{{ order.attester_name }}</td>
                   <td class="center">
                     <a href="{{ path_for('admin.order.edit', { 'uid': order.id }) }}" class="btn btn-default" title="Edit Order"><i class="icon-edit"></i></a>
