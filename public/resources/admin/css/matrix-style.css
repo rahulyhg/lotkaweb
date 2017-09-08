@@ -882,6 +882,9 @@ hr{ border-top-color:#dadada;}
 .taskStatus, .taskOptions {
 	text-align: center !important;
 }
+.taskAmount {
+	text-align: right !important;
+}
 .taskStatus .in-progress {
 	color: #64909E;
 }

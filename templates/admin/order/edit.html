@@ -1,0 +1,174 @@
+{% extends 'admin/dashboard/main.twig' %}
+
+{% block title %}User Manager{% endblock %}
+
+{% block contentHeader %}
+  <div id="content-header">
+    <div id="breadcrumb"> 
+      <a href="{{ path_for('admin.index') }}" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a> 
+      <a href="{{ path_for('admin.orders.all') }}">Orders</a> 
+      <a href="#" class="current"># {{current.data.id|default('New Order')}}</a> 
+    </div>
+    
+    <h1>Edit # {{current.data.id|default('New Order')}}</h1>
+  </div>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  <hr>
+  <div class="row-fluid">
+    <div class="span6">
+      <div class="widget-box">
+        <div class="widget-title"> <span class="icon"> <i class="icon-align-justify"></i> </span>
+          <h5>Edit Order</h5>
+        </div>
+        <div class="widget-content nopadding">
+          <form action="{{ current.new ? path_for('admin.order.add') : path_for('admin.order.edit', { 'uid': current.data.id }) }}" method="post" autocomplete="on" class="form-horizontal">
+            {{ csrf.field | raw }}
+            
+            <div class="control-group warning">
+              <label class="control-label">Order E-mail * :</label>
+              <div class="controls">
+                <input type="text" class="span11" name="email" placeholder="Order e-mail" value="{{ current.data.email }}">
+                <span class="help-inline">This field is required</span>
+              </div>
+            </div>
+            
+            <div class="control-group warning">
+              <label class="control-label">Ticket Type * :</label>
+              <div class="controls">
+                <select name="type">
+                {% for type in order.types %}
+                  <option value="{{ type.sku }}" {% if type.sku == current.data.type %}selected="selected"{% endif %}>
+                    {{ type.description }}
+                  </option>
+                {% endfor %}
+                </select>
+                <span class="help-inline" style="display: block;">This field is required</span>                
+              </div>
+            </div>  
+
+            <div class="control-group warning">
+              <label class="control-label">Payed Amount * :</label>
+              <div class="controls">
+                <div class="input-append">
+                  <input type="text" placeholder="0" class="span11" name="amount" value="{{ current.data.amount/100|number_format }}">
+                  <span class="add-on">SEK</span>
+                </div>
+                <span class="help-inline" style="display: block;">This field is required</span>
+              </div>
+            </div>
+
+            <div class="control-group warning">
+              <label class="control-label">Order Origin * :</label>
+              <div class="controls">
+                <input type="text" class="span11" name="origin" placeholder="Order origin" value="{{ current.data.origin }}">
+                <span class="help-inline">This field is required</span>
+              </div>
+            </div>
+            
+            <div class="control-group">
+              <label class="control-label">Character Surname :</label>
+              <div class="controls">
+                <select name="name">
+                  <option value="" selected> - No Surname - </option> 
+                {% for name in order.surnames %}
+                  <option value="{{ name.surname }}" {% if name.surname == current.data.name %}selected="selected"{% endif %}>
+                    {{ name.surname }}
+                  </option>
+                {% endfor %}
+                </select>
+              </div>
+            </div>              
+            
+            <div class="control-group">
+              <label class="control-label">Shirt Type :</label>
+              <div class="controls">
+                <select name="shirt_type">
+                <option value="" selected> - No Shirt - </option>                  
+                {% for shirt in order.shirt_types %}
+                  <option value="{{ shirt.type_class }}" {% if shirt.type_class == order.shirt_lookup[current.data.shirt_type] %}selected{% endif %}>
+                    {{ shirt.type }}
+                  </option>
+                {% endfor %}
+                </select>
+              </div>
+            </div> 
+            
+            <div class="control-group">
+              <label class="control-label">Shirt Size :</label>
+              <div class="controls">
+                <select name="size">
+                <option value="" selected> - No Shirt - </option>                  
+                {% for shirt in order.sizes %}
+                  <option value="{{ shirt.size }}" {% if shirt.size == current.data.size %}selected="selected"{% endif %}>
+                    {{ shirt.size }}
+                  </option>
+                {% endfor %}
+                  <option value="{{current.data.size}}">{{ current.data.size }}</option>
+                </select>
+              </div>
+            </div> 
+
+            <div class="control-group">
+              <label class="control-label">Team Preference :</label>
+              <div class="controls">
+                <select name="preference">
+                  <option value="" selected> - No Preference - </option>
+                {% for team in order.teams %}
+                  <option value="{{ team.type }}" {% if team.type == order.team_lookup[current.data.preference] %}selected{% endif %}>
+                    {{ team.name }}
+                  </option>
+                {% endfor %}
+                </select>
+              </div>
+            </div> 
+            
+            <div class="control-group{% if (current.data.user_id == null) and (current.new != true) %} error{% endif %}">
+              <label class="control-label">User :</label>
+              <div class="controls">
+                <select name="user_id">
+                  <option value="" selected> - No User Attached - </option>
+                {% for user in order.users %}
+                  <option value="{{ user.id }}" {% if user.id == current.data.user_id %}selected="selected"{% endif %}>
+                    {{ user.displayname }}
+                  </option>
+                {% endfor %}
+                </select>
+              </div>
+            </div>
+            
+            <div class="control-group">
+              <label class="control-label">Attested By :</label>
+              <div class="controls">
+                <select name="attested_id">
+                  <option value="" selected> - Not Attested - </option>
+                {% for user in order.users %}
+                  <option value="{{ user.id }}" {% if user.id == current.data.attested_id %}selected="selected"{% endif %}>
+                    {{ user.displayname }}
+                  </option>
+                {% endfor %}
+                </select>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <label class="control-label">Order Date :</label>
+              <div class="controls">
+                <div  data-date="{{ current.data.orderdate }}" class="input-append date datepicker">
+                  <input type="datetime-local" name="orderdate" value="{{ (current.data.orderdate|default('now'))|date('Y-m-d\\TH:i:s') }}" class="span11" >
+                  <span class="add-on"><i class="icon-th"></i></span> </div>
+              </div>
+            </div>            
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn-success">Save</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

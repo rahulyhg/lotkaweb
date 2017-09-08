@@ -18,71 +18,37 @@ window.onload = function () {
     var datasets = {
         "STANDARD": {
             label: "Standard Ticket",
-            data: [
-{% for sale in sales %}     
-{% if sale.TicketType == 'STANDARD'%}
-              [{{sale.OrderDay}}, {{sale.Tickets}}],
-{% endif %}
-{% endfor %}
-              []
-            ]
+            data: []
         },
         "SUPPORT": {
             label: "Supporter Ticket",
-            data: [
-{% for sale in sales %}
-{% if sale.TicketType == 'SUPPORT'%}
-              [{{sale.OrderDay}}, {{sale.Tickets}}],
-{% endif %}
-{% endfor %}
-              []
-            ]
+            data: []
         },
         "STD_1": {
             label: "Standard, 1st payment",
-            data: [
-{% for sale in sales %}
-{% if sale.TicketType == 'STD_1'%}
-              [{{sale.OrderDay}}, {{sale.Tickets}}],
-{% endif %}
-{% endfor %}
-              []
-            ]
+            data: []
         },
         "STD_2": {
             label: "Standard, 2nd payment",
-            data: [
-{% for sale in sales %}
-{% if sale.TicketType == 'STD_2'%}
-              [{{sale.OrderDay}}, {{sale.Tickets}}],
-{% endif %}
-{% endfor %}
-              []
-            ]
+            data: []
         },
         "STD_3": {
             label: "Standard, 3nd payment",
-            data: [
-{% for sale in sales %}
-{% if sale.TicketType == 'STD_3'%}
-              [{{sale.OrderDay}}, {{sale.Tickets}}],
-{% endif %}
-{% endfor %}
-              []
-            ]
+            data: []
         },
         "SUBSIDIZED": {
             label: "Subsidized Ticket",
-            data: [
-{% for sale in sales %}
-{% if sale.TicketType == 'SUBSIDIZED'%}
-              [{{sale.OrderDay}}, {{sale.Tickets}}],
-{% endif %}
-{% endfor %}
-              []
-            ]
+            data: []
+        },
+        "LVTEST": {
+            label: "Live Test Ticket",
+            data: []
         }
     };
+  
+{% for sale in sales %}
+datasets['{{sale.TicketType}}'].data.push(['{{sale.OrderDay}}',{{sale.Tickets}}]);
+{% endfor %}  
 
     // hard-code color indices to prevent them from shifting as
     // countries are turned on/off
@@ -102,7 +68,6 @@ window.onload = function () {
     });
     choiceContainer.find("input").click(plotAccordingToChoices);
 
-    
     function plotAccordingToChoices() {
         var data = [];
 
@@ -113,6 +78,7 @@ window.onload = function () {
         });
 
         if (data.length > 0)
+          console.log(data)
             $.plot($("#placeholder"), data, {
                 yaxis: { min: 0 },
                 xaxis: { tickDecimals: 0 }

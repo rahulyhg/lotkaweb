@@ -95,7 +95,7 @@ class OpenPage
           'teamPreference'
         )
         ->where('available', '=', 1)
-        ->where('visible', '=', 1)
+        ->where('visibility', '=', 1)
         ->orderBy('weight')
         ->get();
 

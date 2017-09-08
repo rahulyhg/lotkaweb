@@ -53,12 +53,17 @@ class Stripe
         $order_id = $this->db
           ->table('orders')
           ->insertGetId([
-            'name' => $ticket_data['surname'], 
+            'name' => $ticket_data['surname'] == 'NA' ? null : $ticket_data['surname'], 
             'email' => $ticket_data['email'],
             'type' => $ticket_type->sku,
             'amount' => $ticket_type->price,
-            'size' => $ticket_data['size'],
-            'preference' => $ticket_data['pref']
+            'size' => $ticket_data['size'] == 'NA' ? null : $ticket_data['size'],
+            'preference' => $ticket_data['pref'] == 'NA' ? null : $ticket_data['pref'],
+            'shirt_type' => $ticket_data['type'] == 'NA' ? null : $ticket_data['type'],
+            'origin' => 'Stripe',
+            'created_at' => date("Y-m-d H:i:s"),
+            'updated_at' => date("Y-m-d H:i:s"),
+            'orderdate' => date("Y-m-d H:i:s"),
           ]);
 
         $res = $this->db

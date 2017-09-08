@@ -2,6 +2,11 @@
 // DIC configuration
 use \Symfony\Component\HttpFoundation\Request;
 
+//Stripe Setup
+$stripe_settings = $container['settings']['stripe_live'];
+\Stripe\Stripe::setApiKey($stripe_settings['SECRET_KEY']);
+\Stripe\Stripe::setApiVersion($stripe_settings['API_VERSION']);
+
 // Setup Eloquent
 $capsule = new \Illuminate\Database\Capsule\Manager;
 $capsule->addConnection($container['settings']['db']);
@@ -123,3 +128,9 @@ $container['AuthController']          = function($c) { return new \App\Controlle
 $container['AdminController']         = function($c) { return new \App\Controllers\Admin\AdminController($c); };
 $container['UserActionController']    = function($c) { return new \App\Controllers\Admin\UserActionController($c); };
 $container['OrderActionController']   = function($c) { return new \App\Controllers\Admin\OrderActionController($c); };
+
+$container['RolesActionController']   = function($c) { return new \App\Controllers\Admin\RolesActionController($c); };
+$container['ShirtActionController']   = function($c) { return new \App\Controllers\Admin\ShirtActionController($c); };
+$container['SurnameActionController'] = function($c) { return new \App\Controllers\Admin\SurnameActionController($c); };
+$container['TeamActionController']    = function($c) { return new \App\Controllers\Admin\TeamActionController($c); };
+$container['TicketActionController']  = function($c) { return new \App\Controllers\Admin\TicketActionController($c); };

@@ -1,0 +1,55 @@
+{% extends 'admin/dashboard/main.twig' %}
+
+{% block title %}User Manager{% endblock %}
+
+{% block contentHeader %}
+  <div id="content-header">
+    <div id="breadcrumb"> 
+      <a href="{{ path_for('admin.index') }}" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a> 
+      <a href="{{ path_for('admin.orders.all') }}">Orders</a> 
+      <a href="#" class="current"># {{current.data.id|default('New Order')}}</a> 
+    </div>
+    
+    <h1>Attest # {{current.data.id|default('New Order')}}</h1>
+  </div>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  <hr>
+  <div class="row-fluid">
+    <div class="span6">
+      <div class="widget-box">
+        <div class="widget-title"> <span class="icon"> <i class="icon-align-justify"></i> </span>
+          <h5>Attest Order</h5>
+        </div>
+        <div class="widget-content nopadding">
+          <form action="{{ path_for('admin.order.attest', { 'uid': current.data.id }) }}" method="post" autocomplete="on" class="form-horizontal">
+            {{ csrf.field | raw }}
+            
+            <div class="control-group">
+              <label class="control-label">User :</label>
+              <div class="controls">
+                <select name="user_id">
+                  <option value="0"> - No User Attached - </option>
+                {% for user in order.users %}
+                  <option value="{{ user.id }}" {% if user.id == current.data.user_id %}selected="selected"{% endif %}>
+                    {{ user.displayname|default( user.username )}}
+                  </option>
+                {% endfor %}
+                </select>
+              </div>
+            </div>
+            
+            <div class="form-actions">            
+              <a href="{{ path_for('admin.order.create.user', { 'uid': current.data.id }) }}" class="btn btn-warning " title="Create User"><i class="icon-plus-sign"></i> Create New User from order & attest</a>   
+              
+              <button type="submit" class="btn btn-success pull-right">Save</button>              
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,131 @@
+{% extends 'admin/dashboard/main.twig' %}
+
+{% block title %}{{ settings.title }}{% endblock %}
+
+{% block contentHeader %}
+  <div id="content-header">
+    <div id="breadcrumb"> 
+      <a href="#" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a> 
+      {% for nav in settings.breadcrumb %}
+      <a href="{{ path_for(nav.path) }}">{{ nav.name }}</a>
+      {% endfor %}
+      <a href="#" class="current">{{ settings.name }}</a>
+    </div>
+    
+    <h1>{{ settings.name }} {{ current.data.sku }}</h1>
+  </div>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  <hr>
+  <div class="row-fluid">
+    <div class="span6">
+      <div class="widget-box">
+        <div class="widget-title"> <span class="icon"> <i class="icon-align-justify"></i> </span>
+          <h5>Edit Ticket</h5>
+        </div>
+        <div class="widget-content nopadding">
+          <form action="{{ current.new ? path_for('admin.ticket.add') : path_for('admin.ticket.edit', { 'uid': current.data.id }) }}" method="post" autocomplete="on" class="form-horizontal">
+            {{ csrf.field | raw }}
+            
+            <div class="control-group warning">
+              <label class="control-label">Ticket SKU :</label>
+              <div class="controls">
+                <input type="text" class="span11" name="sku" placeholder="SKU" value="{{ current.data.sku }}">
+                <span class="help-inline">This field is required</span>
+              </div>
+            </div>
+
+            <div class="control-group warning">
+              <label class="control-label">Description :</label>
+              <div class="controls">
+                <input type="text" class="span11" name="description" placeholder="Deskription" value="{{ current.data.description }}">
+                <span class="help-inline">This field is required</span>
+              </div>
+            </div>
+
+            <div class="control-group warning">
+              <label class="control-label">Statement Description :</label>
+              <div class="controls">
+                <input type="text" class="span11" name="statement_descriptor" placeholder="Statement descriptor" value="{{ current.data.statement_descriptor }}">
+                <span class="help-inline">This field is required (this is what ends up on the participants bank statement).</span>
+              </div>
+            </div>
+            
+            <div class="control-group warning">
+              <label class="control-label">Price :</label>
+              <div class="controls">
+                <input type="number" class="span11" name="price" placeholder="Ticket price (in ören)" value="{{ current.data.price }}">
+                <span class="help-inline">This field is required</span>
+              </div>
+            </div>
+            
+            <div class="control-group">
+              <label class="control-label">Image :</label>
+              <div class="controls">
+                <img src="{{ current.data.img }}" alt="Current Tickage Image" width="340">
+                <input type="text" class="span11" name="image" placeholder="Path to ticket image" value="{{ current.data.img }}">
+              </div>
+            </div>
+            
+            <div class="control-group">
+              <label class="control-label">Available :</label>
+              <div class="controls">
+                <input type="checkbox" class="span11" name="available" {% if current.data.available %}checked{% endif %}>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <label class="control-label">Visible :</label>
+              <div class="controls">
+                <input type="checkbox" class="span11" name="visibility" {% if current.data.visibility %}checked{% endif %}>
+              </div>
+            </div>
+            
+            <div class="control-group">
+              <label class="control-label">Presentation weigh :</label>
+              <div class="controls">
+                <input type="number" class="span11" name="weight" placeholder="Weight" value="{{ current.data.weight|default(100) }}">
+                <span class="help-inline">This field determens the order of tickets being presented (lower on top)</span>
+              </div>
+            </div>
+            
+            <div class="control-group">
+              <label class="control-label">Has Surname :</label>
+              <div class="controls">
+                <input type="checkbox" class="span11" name="surname" {% if current.data.surname %}checked{% endif %}>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <label class="control-label">Has T-Shirt Types :</label>
+              <div class="controls">
+                <input type="checkbox" class="span11" name="shirtType" {% if current.data.shirtType %}checked{% endif %}>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <label class="control-label">Has Size :</label>
+              <div class="controls">
+                <input type="checkbox" class="span11" name="size" {% if current.data.size %}checked{% endif %}>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <label class="control-label">Has Team Preference :</label>
+              <div class="controls">
+                <input type="checkbox" class="span11" name="teamPreference" {% if current.data.teamPreference %}checked{% endif %}>
+              </div>
+            </div>
+            
+            <div class="form-actions">
+              <button type="submit" class="btn btn-success">Save</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

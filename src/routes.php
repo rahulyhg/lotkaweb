@@ -1,11 +1,6 @@
 <?php
 use App\Middleware\AdminMiddleware;
 
-// Routes
-$stripe_settings = $container->get('settings')['stripe'];
-\Stripe\Stripe::setApiKey($stripe_settings['SECRET_KEY']);
-\Stripe\Stripe::setApiVersion($stripe_settings['API_VERSION']);
-
 /*
 | OPEN PAGE ROUTES
 */
@@ -119,25 +114,64 @@ $app->group('/admin', function() use ($container) {
     $this->get('', 'UserActionController:index')->setName('admin.users.all');
     
     $this->get('/add', 'UserActionController:addUser')->setName('admin.user.add');
+    $this->post('/add', 'UserActionController:postAddUser');
+    
     $this->get('/{uid}/edit', 'UserActionController:editUser')->setName('admin.user.edit');
     $this->post('/{uid}/edit', 'UserActionController:postEditUser');
 
     $this->get('/{uid}/delete', 'UserActionController:deleteUser')->setName('admin.user.delete');
     
+    $this->get('/create-from-order/{uid}', 'UserActionController:createFromOrderAndAttest')->setName('admin.order.create.user');    
   });
   
   //Orders
   $this->group('/orders', function() {
     
     $this->get('', 'OrderActionController:index')->setName('admin.orders.all');  
+
     $this->get('/attested', 'OrderActionController:listAttested')->setName('admin.orders.attested');
     $this->get('/unattested', 'OrderActionController:listUnattested')->setName('admin.orders.unattested');
-    
-    $this->get('/{uid}/edit', 'OrderActionController:editOrder')->setName('admin.order.edit');
-    $this->post('/{uid}/edit', 'OrderActionController:postEditOrder');
+    $this->get('/partial', 'OrderActionController:listPartialPayments')->setName('admin.orders.partial');
 
-    $this->get('/{uid}/delete', 'OrderActionController:deleteOrder')->setName('admin.order.delete');
+    $this->get('/add', 'OrderActionController:addOrder')->setName('admin.order.add');
+    $this->post('/add', 'OrderActionController:postAddOrder');
+
+    //Handle external orders
+    $this->group('/external', function() {
+      $this->get('', 'OrderActionController:extrenalDashboard')->setName('admin.orders.external');
+      
+      $this->get('/stripe', 'OrderActionController:extrenalStripe')->setName('admin.orders.external.stripe');
+      $this->post('/stripe', 'OrderActionController:postExtrenalStripe');
+      
+      $this->get('/texttalk', 'OrderActionController:extrenalTextTalk')->setName('admin.orders.external.texttalk');
+      $this->post('/texttalk', 'OrderActionController:postExtrenalTextTalk');
+    });
+        
+    //Handle specific orders
+    $this->group('/{uid}', function() {
+      $this->get('/edit', 'OrderActionController:editOrder')->setName('admin.order.edit');
+      $this->post('/edit', 'OrderActionController:postEditOrder');
+
+      $this->get('/delete', 'OrderActionController:deleteOrder')->setName('admin.order.delete');
+
+      $this->get('/attest', 'OrderActionController:attestOrder')->setName('admin.order.attest');
+      $this->post('/attest', 'OrderActionController:postAttestOrder');
+
+      $this->get('/unattest', 'OrderActionController:unattestOrder')->setName('admin.order.unattest');
+    });
+  });
+  
+  //Tickets
+  $this->group('/tickets', function() {
+    $this->get('', 'TicketActionController:index')->setName('admin.tickets.all');
     
+    $this->get('/add', 'TicketActionController:add')->setName('admin.ticket.add');
+    $this->post('/add', 'TicketActionController:postAdd');
+    
+    $this->get('/{uid}/edit', 'TicketActionController:edit')->setName('admin.ticket.edit');
+    $this->post('/{uid}/edit', 'TicketActionController:postEdit');
+
+    $this->get('/{uid}/delete', 'TicketActionController:delete')->setName('admin.ticket.delete');
   });
   
 })->add(new AdminMiddleware($container));
