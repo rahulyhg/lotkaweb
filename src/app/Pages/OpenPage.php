@@ -104,7 +104,7 @@ class OpenPage
     }
     
     return $this->view->render($response, $page, [
-      'PUBLIC_KEY' => $this->container->get('settings')['stripe']['PUBLIC_KEY'],
+      'PUBLIC_KEY' => $this->container->get('settings')['stripe_live']['PUBLIC_KEY'],
       'surnames' => $surnames,
       'shirt_styles' => $shirt_styles,
       'shirt_sizes' => $shirt_sizes,
