@@ -62,7 +62,7 @@
             <tr>
               <td class="taskStatus">{{ loop.index }}</td>
               <td class="taskStatus">
-                <input type="checkbox" {% if not order_id and payed %}checked{% endif %} name="import[{{ loop.index0 }}]" value="{{ lookup_key }}">
+                <input type="checkbox" {% if not order_id and payed and (products[charge.description].id != 'LVTEST') %}checked{% endif %} name="import[{{ loop.index0 }}]" value="{{ lookup_key }}">
                 <input type="hidden" name="ticket_type[{{ loop.index0 }}]" value="{{ products[charge.description].id }}">
                 <input type="hidden" name="email[{{ loop.index0 }}]" value="{{ charge.receipt_email }}">
                 <input type="hidden" name="amount[{{ loop.index0 }}]" value="{{ charge.amount }}">
