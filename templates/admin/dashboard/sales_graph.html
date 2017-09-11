@@ -15,55 +15,76 @@
 <!--Turning-series-chart-js-->
 <script type="text/javascript">
 window.onload = function () {
-    var datasets = {
+  function emptyDates() {
+    var d = (new Date);
+    var start_date = Date.parse("2017-08-25");
+    var end_date = Date.parse([d.getFullYear(), d.getMonth()+1, d.getDate()].join('-'));
+    var day_length = 24*60*60*1000;
+    var days = Math.ceil((end_date - start_date)/day_length);
+    var r = {};
+    
+    Array(days).fill(0).forEach(function (n,i) { 
+      r[new Date(start_date + day_length * i).toISOString().substr(0,10)] = 0; 
+    });
+    
+    return r;
+  }
+  
+    window.datasets = {
         "STANDARD": {
             label: "Standard Ticket",
-            data: []
+            data: emptyDates()
         },
         "SUPPORT": {
             label: "Supporter Ticket",
-            data: []
+            data: emptyDates()
         },
         "STD_1": {
             label: "Standard, 1st payment",
-            data: []
+            data: emptyDates()
         },
         "STD_2": {
             label: "Standard, 2nd payment",
-            data: []
+            data: emptyDates()
         },
         "STD_3": {
             label: "Standard, 3nd payment",
-            data: []
+            data: emptyDates()
         },
         "SUBSIDIZED": {
             label: "Subsidized Ticket",
-            data: []
+            data: emptyDates()
         },
         "LVTEST": {
             label: "Live Test Ticket",
-            data: []
+            data: emptyDates()
         }
-    };
+    }; 
   
 {% for sale in sales %}
-datasets['{{sale.TicketType}}'].data.push(['{{sale.OrderDay}}',{{sale.Tickets}}]);
+datasets['{{sale.TicketType}}'].data['{{sale.OrderDay}}'] = {{sale.Tickets}};
 {% endfor %}  
 
     // hard-code color indices to prevent them from shifting as
     // countries are turned on/off
-    var i = 0;
+    var i = 0, dataArr =[];
     $.each(datasets, function(key, val) {
-        val.color = i;
-        ++i;
+      val.color = i;
+      dataArr = [];
+      $.each(val.data, function(key, val) {
+        dataArr.push([Date.parse(key), val]);
+      });
+      val.data = dataArr;
+      ++i;
     });
     
     // insert checkboxes 
     var choiceContainer = $("#choices");
+    var default_hidden = ['LVTEST'];
     $.each(datasets, function(key, val) {
         choiceContainer.append('<br/><input type="checkbox" name="' + key +
-                               '" checked="checked" id="id' + key + '">' +
-                               '<label for="id' + key + '">'
+                               '" ' + (default_hidden.indexOf(key) === -1 ? 'checked="checked"' : '')
+                               + ' id="id' + key + '">' + '<label for="id' + key + '">'
                                 + val.label + '</label>');
     });
     choiceContainer.find("input").click(plotAccordingToChoices);
@@ -78,10 +99,9 @@ datasets['{{sale.TicketType}}'].data.push(['{{sale.OrderDay}}',{{sale.Tickets}}]
         });
 
         if (data.length > 0)
-          console.log(data)
             $.plot($("#placeholder"), data, {
                 yaxis: { min: 0 },
-                xaxis: { tickDecimals: 0 }
+                xaxis: { mode: "time" }
             });
     }
 

@@ -290,6 +290,7 @@ class OrderActionController extends Controller
         'email' => $posts['email'][$index],
         'origin' => $posts['origin'][$index],
         'type' => $posts['ticket_type'][$index],
+        'orderdate' => $posts['orderdate'][$index],
       ]; 
       
       foreach ($meta_data_keys as $meta_key => $db_key) {
@@ -342,10 +343,11 @@ class OrderActionController extends Controller
     
     foreach ($posts['import'] as $index => $lookup_key) {
       $data = [
+        'type' => $posts['ticket_type'][$index],
         'amount' => $posts['amount'][$index],
         'email' => $posts['email'][$index],
         'origin' => $posts['origin'][$index],
-        'type' => $posts['ticket_type'][$index],
+        'orderdate' => $posts['orderdate'][$index],
       ]; 
       
       foreach ($meta_data_keys as $meta_key => $db_key) {

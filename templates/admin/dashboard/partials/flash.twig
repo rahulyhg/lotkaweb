@@ -15,3 +15,9 @@
     {{ flash.getMessage('error') | first | raw }}
   </div>
 {% endif %}
+
+{% if flash.getMessage('warning') %}
+  <div class="alert alert-warning">
+    {{ flash.getMessage('warning') | first | raw }}
+  </div>
+{% endif %}

@@ -93,7 +93,7 @@
                 <input type="hidden" name="email[{{ loop.index0 }}]" value="{{ order.customer.info.email }}">
                 <input type="hidden" name="amount[{{ loop.index0 }}]" value="{{ paidSum*100 }}">
                 <input type="hidden" name="origin[{{ loop.index0 }}]" value="{{ origin|default('TextTalk') }}">
-                <input type="hidden" name="orderdate[{{ loop.index0 }}]" value="{{ order.ordered }}">
+                <input type="hidden" name="orderdate[{{ loop.index0 }}]" value="{{ order.ordered|date('Y-m-d H:i:s') }}">
                 
                 <input type="hidden" name="shirt_type[{{ loop.index0 }}]" value="{{ isSupporter ? order.choices[0] : '' }}">
                 <input type="hidden" name="shirt_size[{{ loop.index0 }}]" value="{{ isSupporter ? order.choices[1] : '' }}">
