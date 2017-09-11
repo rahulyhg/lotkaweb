@@ -71,12 +71,14 @@
             <div class="control-group">
               <label class="control-label">Character Surname :</label>
               <div class="controls">
-                <select name="name">
+                <select name="name" data-importedName="{{ current.data.name }}">
+                {% if current.data.name %}
+                  <option value="{{ current.data.name }}" selected>{{ current.data.name }}</option> 
+                {% else %}
                   <option value="" selected> - No Surname - </option> 
+                {% endif %}
                 {% for name in order.surnames %}
-                  <option value="{{ name.surname }}" {% if name.surname == current.data.name %}selected="selected"{% endif %}>
-                    {{ name.surname }}
-                  </option>
+                  <option value="{{ name.surname }}">{{ name.surname }}</option>
                 {% endfor %}
                 </select>
               </div>

@@ -144,7 +144,7 @@ class OrderActionController extends Controller
   {
     $order = Order::where('id', $arguments['uid'])->first();
     
-    $this->container->view->getEnvironment()->addGlobal('order', self::orderData());    
+    $this->container->view->getEnvironment()->addGlobal('order', self::orderData());
     $this->container->view->getEnvironment()->addGlobal('current', [
       'data' => $order,
     ]);
@@ -307,7 +307,7 @@ class OrderActionController extends Controller
 
   public function extrenalTextTalk($request, $response, $arguments) 
   {
-    $endpoint = "https://spetsnaz.su/~tz/lvnamefetcher/orders.php";
+    $endpoint = "https://spetsnaz.su/~tz/lvnamefetcher/orders.php?version=2";
     $texttalk_orders = json_decode(file_get_contents($endpoint));
     
     $tickets = Ticket::select('sku', 'price')->distinct('sku')->orderBy('sku')->get();
@@ -321,7 +321,7 @@ class OrderActionController extends Controller
     foreach ($existing_orders as $order) {
       $orders[$order->type . $order->email] = $order->id;
     }    
-
+    
     $this->container->view->getEnvironment()->addGlobal('orders', $texttalk_orders->data);
     $this->container->view->getEnvironment()->addGlobal('exising', $orders);
     $this->container->view->getEnvironment()->addGlobal('ticketTypes', $ticket_types);
