@@ -169,5 +169,37 @@ $(document).ready(function(){
 		}
 	});
 
+	$(".select").on("click", function () {
+		$("[type=checkbox]:checked").prop("checked", false);
+		
+		switch (true) {
+			case $(this).hasClass('paid'):
+				$("span.done").each(function () {
+					$(this).parent().siblings(".importCheck").children("input").prop("checked", true);
+				});
+				break;
+			case $(this).hasClass('notPaid'):
+				$("span.pending").each(function () {
+					$(this).parent().siblings(".importCheck").children("input").prop("checked", true);
+				});
+				break;
+			case $(this).hasClass('all'):
+				$("[type=checkbox]").prop("checked", true);
+				break;
+			default:
+		}
+		
+		var num_checked = $("[type=checkbox]:checked").length;
+		var val_checked = num_checked ? 
+				$("[type=checkbox]:checked").map(function () { 
+			return parseInt($(this).parent().siblings(".taskAmount").text(), 10) }).toArray()
+		.reduce(function(a, b) { return a + b; }) : 0;
+		
+		$(".select.count").text(num_checked);
+		$(".select.value").text(val_checked);
+		
+		console.log(num_checked, val_checked)
+	});
+	
 });
 

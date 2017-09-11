@@ -30,7 +30,24 @@
           <button class="btn btn-primary btn-large" type="submit">
             Import selected orders <i class="icon-signin"></i>
           </button>
+          
+          <div class="btn-group">
+            <button data-toggle="dropdown" class="btn btn-info dropdown-toggle">Select… <span class="caret"></span></button>
+            <ul class="dropdown-menu">
+              <li><a href="#" class="select none">None</a></li>
+              <li><a href="#" class="select paid">All Paid</a></li>
+              <li><a href="#" class="select notPaid">All Not Paied</a></li>
+              <li class="divider"></li>
+              <li><a href="#" class="select all">All</a></li>
+            </ul>
+          </div>
         </p>
+        
+        <p>
+          Orders selected: <span class="select count">0</span> | 
+          Value selected: <span class="select value">0</span>SEK
+        </p>
+        
 <!--
         <ul class="unstyled">
           <li> <span class="icon24 icomoon-icon-arrow-up-2 green"></span> 0% Done <span class="pull-right strong">0</span>
@@ -60,12 +77,14 @@
             {% set isSupporter = order.type == "SUPPORT" %}
             {% set origin = order.type == "STANDARD" and order.choices ? order.choices[0] : "" %}
             {% set paidSum = 0 %}
+            {% set payments = ["Payments:"] %}
             {% for payment in order.payments %}
               {% set paidSum = paidSum + payment.amount %}
+              {% set payments = payments|merge([payment.amount ~ order.currency]) %}
             {% endfor %}
             <tr>
               <td class="taskStatus">{{ loop.index }}</td>
-              <td class="taskStatus">
+              <td class="taskStatus importCheck">
                 <input type="checkbox" {% if not order_id and order.paymentStatus == "paid" %}checked{% endif %} name="import[{{ loop.index0 }}]" value="{{ lookup_key }}">
                 <input type="hidden" name="ticket_type[{{ loop.index0 }}]" value="{{order.type }}">
                 <input type="hidden" name="email[{{ loop.index0 }}]" value="{{ order.customer.info.email }}">
@@ -86,7 +105,9 @@
                 {{ order.customer.info.email }}
               </td>
               <td class="taskAmount">
-                {{ paidSum }}{{ order.currency}}
+                <a  class="pending tip-left" data-original-title="{{ payments|join(' ')}}" href>
+                  {{ paidSum }}{{ order.currency}}
+                </a>
               </td>
               <td class="taskDesc">
                 {{ order.ordered }}
