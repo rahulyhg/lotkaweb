@@ -175,16 +175,21 @@ $(document).ready(function(){
 		switch (true) {
 			case $(this).hasClass('paid'):
 				$("span.done").each(function () {
-					$(this).parent().siblings(".importCheck").children("input").prop("checked", true);
+					$(this).parent().siblings(".importCheck").children("[type=checkbox]").prop("checked", true);
 				});
 				break;
 			case $(this).hasClass('notPaid'):
 				$("span.pending").each(function () {
-					$(this).parent().siblings(".importCheck").children("input").prop("checked", true);
+					$(this).parent().siblings(".importCheck").children("[type=checkbox]").prop("checked", true);
 				});
 				break;
 			case $(this).hasClass('all'):
 				$("[type=checkbox]").prop("checked", true);
+				break;
+			case $(this).hasClass('new'):
+				$(".notInSystem").each(function () {
+					$(this).children("[type=checkbox]").prop("checked", true);
+				});
 				break;
 			default:
 		}
@@ -195,10 +200,8 @@ $(document).ready(function(){
 			return parseInt($(this).parent().siblings(".taskAmount").text(), 10) }).toArray()
 		.reduce(function(a, b) { return a + b; }) : 0;
 		
-		$(".select.count").text(num_checked);
-		$(".select.value").text(val_checked);
-		
-		console.log(num_checked, val_checked)
+		$(".selectOut.count").text(num_checked);
+		$(".selectOut.value").text(val_checked);
 	});
 	
 });
