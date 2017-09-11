@@ -20,4 +20,9 @@ class User extends SentinelUser
   ];
 
   protected $loginNames = ['email', 'username'];
+  
+  public function tasks()
+  {
+      return $this->hasMany('App\Models\Task');
+  }  
 }

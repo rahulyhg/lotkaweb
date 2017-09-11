@@ -41,4 +41,9 @@ class AdminController extends Controller
       'sales' => $ticket_sales->get(),
     ]);
   }
+
+  public function todo($request, $response)
+  {
+    
+  }
 }

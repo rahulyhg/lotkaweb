@@ -106,8 +106,16 @@ $app->group('/admin', function() use ($container) {
     'daysLeft' => floor((strtotime($event_settings['date']) - time())/60/60/24),
   ]);
   
+  $auth = $container->get('view')->getEnvironment()->getGlobals()['auth'];
+  $container->get('view')->getEnvironment()->addGlobal('userData', [
+    'todos' => \App\Models\User::find($auth['user']->id)->tasks()->count(),
+  ]);
+  
   $this->get('', 'AdminController:index')->setName('admin.index');
 
+  //Todo
+  $this->get('/todo', 'TaskActionController:todo')->setName('admin.tasks.todo');
+  
   //Users
   $this->group('/users', function() {
     
@@ -172,6 +180,19 @@ $app->group('/admin', function() use ($container) {
     $this->post('/{uid}/edit', 'TicketActionController:postEdit');
 
     $this->get('/{uid}/delete', 'TicketActionController:delete')->setName('admin.ticket.delete');
+  });
+  
+  //Tasks
+  $this->group('/tasks', function() {
+    $this->get('', 'TaskActionController:index')->setName('admin.tasks.all');
+    
+    $this->get('/add', 'TaskActionController:add')->setName('admin.task.add');
+    $this->post('/add', 'TaskActionController:postAdd');
+    
+    $this->get('/{uid}/edit', 'TaskActionController:edit')->setName('admin.task.edit');
+    $this->post('/{uid}/edit', 'TaskActionController:postEdit');
+
+    $this->get('/{uid}/delete', 'TaskActionController:delete')->setName('admin.task.delete');
   });
   
 })->add(new AdminMiddleware($container));

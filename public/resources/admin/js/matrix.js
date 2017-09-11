@@ -175,29 +175,40 @@ $(document).ready(function(){
 		switch (true) {
 			case $(this).hasClass('paid'):
 				$("span.done").each(function () {
-					$(this).parent().siblings(".importCheck").children("[type=checkbox]").prop("checked", true);
+					$(this).parent().siblings(".importCheck").children()
+						.find("[type=checkbox]").prop("checked", true);
 				});
 				break;
 			case $(this).hasClass('notPaid'):
 				$("span.pending").each(function () {
-					$(this).parent().siblings(".importCheck").children("[type=checkbox]").prop("checked", true);
+					$(this).parent().siblings(".importCheck").children()
+						.find("[type=checkbox]").prop("checked", true);
 				});
 				break;
 			case $(this).hasClass('all'):
-				$("[type=checkbox]").prop("checked", true);
+				$("[type=checkbox]").prop("checked", true).trigger('click');
 				break;
 			case $(this).hasClass('new'):
 				$(".notInSystem").each(function () {
-					$(this).children("[type=checkbox]").prop("checked", true);
+					$(this).children("[type=checkbox]").prop("checked", true).trigger('click');
 				});
 				break;
 			default:
 		}
 		
+		$("[type=checkbox]").each(function () {
+			if (this.checked) {
+				$(this).closest('.checker > span').addClass('checked');
+			} else { 
+				$(this).closest('.checker > span').removeClass('checked');
+			}
+		})
+
+		
 		var num_checked = $("[type=checkbox]:checked").length;
 		var val_checked = num_checked ? 
 				$("[type=checkbox]:checked").map(function () { 
-			return parseInt($(this).parent().siblings(".taskAmount").text(), 10) }).toArray()
+			return parseInt($(this).parents('tr').children('.taskAmount').text(), 10) }).toArray()
 		.reduce(function(a, b) { return a + b; }) : 0;
 		
 		$(".selectOut.count").text(num_checked);

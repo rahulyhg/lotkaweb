@@ -134,3 +134,4 @@ $container['ShirtActionController']   = function($c) { return new \App\Controlle
 $container['SurnameActionController'] = function($c) { return new \App\Controllers\Admin\SurnameActionController($c); };
 $container['TeamActionController']    = function($c) { return new \App\Controllers\Admin\TeamActionController($c); };
 $container['TicketActionController']  = function($c) { return new \App\Controllers\Admin\TicketActionController($c); };
+$container['TaskActionController']  = function($c) { return new \App\Controllers\Admin\TaskActionController($c); };

@@ -1,0 +1,95 @@
+{% extends 'admin/dashboard/main.twig' %}
+
+{% block title %}Task Manager{% endblock %}
+
+{% block contentHeader %}
+  <div id="content-header">
+    <div id="breadcrumb"> 
+      <a href="{{ path_for('admin.index') }}" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a> 
+      <a href="{{ path_for('admin.tasks.all') }}">Tasks</a> 
+      <a href="#" class="current">{{current.data.title|default('New Task')}}</a> 
+    </div>
+    
+    <h1>Edit {{current.data.title|default('New Task')}}</h1>
+  </div>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  <hr>
+  <div class="row-fluid">
+    <div class="span7">
+      <div class="widget-box">
+        <div class="widget-title"> <span class="icon"> <i class="icon-align-justify"></i> </span>
+          <h5>Edit Task</h5>
+        </div>
+        <div class="widget-content nopadding">
+          <form action="{{ current.new ? path_for('admin.task.add') : path_for('admin.task.edit', { 'uid': current.data.id }) }}" method="post" autocomplete="on" class="form-horizontal">
+            {{ csrf.field | raw }}
+            
+            <div class="control-group">
+              <label class="control-label">Title :</label>
+              <div class="controls">
+                <input type="text" class="span11" name="title" placeholder="Task Title" value="{{ current.data.title }}">
+              </div>
+            </div>
+            
+            <div class="control-group">
+              <label class="control-label">Description:</label>
+              <div class="controls">
+                <textarea class="span11" name="description">{{ current.data.description }}</textarea>
+              </div>
+            </div>
+            
+            <div class="control-group">
+              <label class="control-label">Priority :</label>
+              <div class="controls">
+                <input type="range" class="span11" name="priority" value="{{ current.data.priority }}" max="100" min="0" step="10">
+              </div>
+            </div>  
+            
+            <div class="control-group">
+              <label class="control-label">Due Date :</label>
+              <div class="controls">
+                <div  data-date="{{ current.data.due_date }}" class="input-append date datepicker">
+                  <input type="datetime-local" name="due_date" value="{{ (current.data.due_date|default('now'))|date('Y-m-d\\TH:i:s') }}" class="span11" >
+                  <span class="add-on"><i class="icon-th"></i></span> </div>
+              </div>
+            </div>
+
+            <div class="control-group{% if (current.data.user_id == null) and (current.new != true) %} error{% endif %}">
+              <label class="control-label">Assign To :</label>
+              <div class="controls">
+                <select name="user_id">
+                {% for user in users %}
+                  <option value="{{ user.id }}" {% if user.id == current.data.user_id %}selected="selected"{% endif %}>
+                    {{ user.displayname }}
+                  </option>
+                {% endfor %}
+                  <option value=""> - No Assigned user - </option>
+                </select>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <label for="checkboxes" class="control-label">Status :</label>
+              <div class="controls">
+                <div data-toggle="buttons-radio" class="btn-group">
+                  <button name="status {% if current.data.status == 0 %}active{% endif %}" class="btn btn-info" type="button">Not Started</button>                  
+                  <button name="status {% if current.data.status == 1 %}active{% endif %}" class="btn btn-success" type="button">Completed</button>
+                  <button name="status {% if current.data.status == 2 %}active{% endif %}" class="btn btn-warning" type="button">In Progress</button>
+                  <button name="status {% if current.data.status == 3 %}active{% endif %}" class="btn btn-danger" type="button">Blocked</button>
+                </div>
+              </div>
+            </div>            
+            
+            <div class="form-actions">
+              <button type="submit" class="btn btn-success">Save</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

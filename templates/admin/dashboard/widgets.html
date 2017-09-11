@@ -1,8 +1,8 @@
 <div class="container-fluid">
   <div class="quick-actions_homepage">
     <ul class="quick-actions">
-      <li class="bg_lb span3"> <a href="/admin/orders/unattested"> <i class="icon-money"></i> <span class="label label-important">{{ orderStatus.unattested }}</span> Tickets </a> </li>
-      <li class="bg_lg"> <a href="/admin/users"> <i class="icon-user"></i> Users</a> </li>
+      <li class="bg_lb span3"> <a href="{{ path_for('admin.orders.all') }}"> <i class="icon-money"></i> <span class="label label-important">{{ orderStatus.unattested }}</span> Orders </a> </li>
+      <li class="bg_lg"> <a href="{{ path_for('admin.users.all') }}"> <i class="icon-user"></i> Users </a> </li>
     </ul>
   </div>
 </div>
