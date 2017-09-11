@@ -67,6 +67,8 @@
               <th>Participant</th>
               <th>Charged Amount</th>
               <th>Order Date</th>
+              <th>Notes</th>
+              <th>Status</th>
             </tr>
           </thead>
           <tbody>
@@ -112,6 +114,9 @@
               </td>
               <td class="taskDesc">
                 {{ order.ordered }}
+              </td>
+              <td class="taskDesc">
+                {{ order.note|nl2br }}
               </td>
               <td class="taskStatus">
                 {% if order.paymentStatus == "pending" %}
