@@ -1,6 +1,7 @@
 <?php
 namespace App\Controllers\Admin;
 
+use Textalk\WebshopClient\Connection;
 use App\Models\Order;
 use App\Models\Shirt;
 use App\Models\Ticket;
@@ -308,8 +309,44 @@ class OrderActionController extends Controller
 
   public function extrenalTextTalk($request, $response, $arguments) 
   {
-    $endpoint = "https://spetsnaz.su/~tz/lvnamefetcher/orders.php?version=2";
-    $texttalk_orders = json_decode(file_get_contents($endpoint));
+    $settings = $this->container->get('settings')['external_stores']['texttalk'];
+    $api = Connection::getInstance('default', array('webshop' => $settings['shop_id']));
+    $api->Admin->login(
+      $settings['admin']['user'], 
+      $settings['admin']['password']
+    );
+
+    $res = $api->Context->set(array("webshop" => $settings['shop_id']));
+    $res = $api->Order->list(true, true);
+    $texttalk_orders = [];
+    
+    foreach ($res as $order) {
+      if ($order["discarded"]) continue;
+      $res2 = $api->OrderItem->get(
+        $order["items"][0], 
+        array("choices" => true, "articleNumber"=>true)
+      );
+
+      $choices = [];
+      $items = array_values($res2["choices"]);
+      foreach ($items as $item) {
+        if((int)$item == 0) continue;
+        $choices[] = $api->ArticleChoiceOption->get($item)["name"]["en"];
+      }
+
+      $payments = [];
+      foreach ($order["payments"] as $item) {
+        if((int)$item == 0) continue;
+        $payments[] = $api->Payment->get($item);
+      }
+
+      $order["type"] = substr($res2["articleNumber"],0,5) == "LVSUP" ? "SUPPORT" : "STANDARD";
+      $order["choices"] = $choices;
+      $order["payments"] = $payments;
+      $texttalk_orders[] = $order;
+    }
+
+//  $texttalk_orders["paymentSchema"] = $api->Payment->getSchema(null);
     
     $tickets = Ticket::select('sku', 'price')->distinct('sku')->orderBy('sku')->get();
     $ticket_types = [];
@@ -323,7 +360,7 @@ class OrderActionController extends Controller
       $orders[$order->type . $order->email] = $order->id;
     }    
     
-    $this->container->view->getEnvironment()->addGlobal('orders', $texttalk_orders->data);
+    $this->container->view->getEnvironment()->addGlobal('orders', $texttalk_orders);
     $this->container->view->getEnvironment()->addGlobal('exising', $orders);
     $this->container->view->getEnvironment()->addGlobal('ticketTypes', $ticket_types);
     

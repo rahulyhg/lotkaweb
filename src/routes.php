@@ -107,10 +107,12 @@ $app->group('/admin', function() use ($container) {
   ]);
   
   $auth = $container->get('view')->getEnvironment()->getGlobals()['auth'];
-  $container->get('view')->getEnvironment()->addGlobal('userData', [
-    'todos' => \App\Models\User::find($auth['user']->id)->tasks()->count(),
-  ]);
-  
+  if ($auth['user']) {
+    $container->get('view')->getEnvironment()->addGlobal('userData', [
+      'todos' => \App\Models\User::find($auth['user']->id)->tasks()->count(),
+    ]);
+  }
+
   $this->get('', 'AdminController:index')->setName('admin.index');
 
   //Todo
