@@ -1,0 +1,87 @@
+<li class="dropdown"><a class="dropdown-toggle" href="{{ site.navPath }}" data-toggle="dropdown">About</a>
+  <ul class="dropdown-menu" role="menu">
+    <li><a href="{{ site.navPath }}organizers"><i class="fa fa-sitemap[&#xf0e8;]"></i> Organizers</a></li> 
+  </ul>
+</li>
+
+<li class="dropdown"><a class="dropdown-toggle" href="{{ site.navPath }}story" data-toggle="dropdown">The Story</a>
+  <ul class="dropdown-menu" role="menu">
+    <li><a href="{{ site.navPath }}story#arrival">The Arrival</a></li>
+    <li><a href="{{ site.navPath }}story#starving">The Starving Years</a></li>
+    <li><a href="{{ site.navPath }}story#colony">Haven Colony</a></li>
+    <li><a href="{{ site.navPath }}story#outpost">The Outpost</a></li>
+    <li class="dropdown"><a class="dropdown-toggle" href="{{ site.navPath }}story#teams" data-toggle="dropdown">Teams</a>
+      <ul class="dropdown-menu">
+        <li><a href="{{ site.navPath }}story/maint">maintenance</a></li>
+        <li><a href="{{ site.navPath }}story/surfops">Surface Operations</a></li>
+        <li><a href="{{ site.navPath }}story/command">Outpost Command</a></li>
+        <li><a href="{{ site.navPath }}story/miscon">Mission Control</a></li>
+        <li><a href="{{ site.navPath }}story/other">Other</a></li>
+      </ul>
+    </li>
+  </ul>
+</li>
+
+<li class="dropdown"><a class="dropdown-toggle" href="{{ site.navPath }}experience" data-toggle="dropdown">The Experience</a>
+  <ul class="dropdown-menu">
+    <li class="dropdown"><a class="dropdown-toggle" href="{{ site.navPath }}aestethics" data-toggle="dropdown">Aestethics</a>
+      <ul class="dropdown-menu" role="menu">
+        <li><a href="{{ site.navPath }}aestethics#location">Location</a></li>
+        <li><a href="{{ site.navPath }}aestethics#clothing">Clothing & Costume</a></li>
+        <li><a href="{{ site.navPath }}aestethics#scenography">Tech & Scenography</a></li>
+      </ul>
+    </li>                
+    <li><a href="{{ site.navPath }}experience#scifi">Naturalistic science fiction</a></li>
+    <li><a href="{{ site.navPath }}experience#play_style">Collaborative play-style</a></li>
+    <li><a href="{{ site.navPath }}experience#ideal360">360 design ideals</a></li>
+    <li><a href="{{ site.navPath }}experience#workshops">Workshops & Briefings</a></li>
+    <li><a href="{{ site.navPath }}experience#wider_world">Wider world simulation</a></li>
+    <li><a href="{{ site.navPath }}experience#work">Work & shifts</a></li>
+    <li><a href="{{ site.navPath }}experience#conflict">Conflict & Drama</a></li>
+    <li><a href="{{ site.navPath }}experience/characters">Characters</a></li>
+  </ul>
+</li>
+
+<li class="dropdown"><a class="dropdown-toggle" href="{{ site.navPath }}practical" data-toggle="dropdown">Practical</a>
+  <ul class="dropdown-menu" role="menu">
+    <li><a href="{{ site.navPath }}practical#where">Where</a></li>
+    <li><a href="{{ site.navPath }}practical#when">When</a></li>
+    <li><a href="{{ site.navPath }}practical#participants">Participants</a></li>
+    <li><a href="{{ site.navPath }}practical#language">Language</a></li>
+    <li><a href="{{ site.navPath }}practical#cost">Cost</a></li>
+    <li><a href="{{ site.navPath }}practical#what_to_bring">What you need to bring</a></li>
+    <li><a href="{{ site.navPath }}practical#clothing">Clothing</a></li>
+    <li><a href="{{ site.navPath }}practical#personal_items">Personal items</a></li>
+    <li><a href="{{ site.navPath }}practical#provided">What we will provide</a></li>
+    <li><a href="{{ site.navPath }}practical#smoking">Smoking</a></li>
+    <li><a href="{{ site.navPath }}practical#safety">Safety & Sanity</a></li>
+    <li><a href="{{ site.navPath }}practical#accessibility">Accessibility</a></li>
+    <li><a href="{{ site.navPath }}practical#toilets">Toilets</a></li>
+    <li><a href="{{ site.navPath }}practical#ransportation">Transportation</a></li>
+  </ul>
+</li>
+
+<li><a href="http://lotka-volterra.se/dev/"><span class="icon-notebook"></span> Dev-Blog</a></li>
+{% if auth.isParticipant %}
+<li class="dropdown"><a class="dropdown-toggle" href="{{ site.navPath }}participants" data-toggle="dropdown"> <span class="icon-key"></span> Participants</a>
+  <ul class="dropdown-menu" role="menu">
+{% if auth.isAdmin %}
+    <li class="dropdown"><a class="dropdown-toggle" href="{{ site.navPath }}admin" data-toggle="dropdown"><i class="fa fa-cogs[&#xf085;]"></i> Admin</a>
+      <ul class="dropdown-menu" role="menu">
+        <li><a href="{{ site.navPath }}admin"><i class="fa fa-home[&#xf015;]"></i> Dashboard</a></li>
+        <li><a href="{{ site.navPath }}admin/orders"><i class="fa fa-magnet[&#xf076;]"></i> Orders</a></li>
+        <li><a href="{{ site.navPath }}admin/orders/external"><i class="fa fa-magnet[&#xf076;]"></i> External Orders</a></li>
+        <li><a href="{{ site.navPath }}admin/users"><i class="fa fa-user[&#xf076;]"></i> Users</a></li>
+        <li><a href="{{ site.navPath }}admin/post"><i class="fa fa-copy[&#xf076;]"></i> Posts</a></li>
+      </ul>
+    </li>   
+{% endif %}    
+    <li><a href="{{ site.navPath }}participants"><i class="fa fa-home[&#xf015;]"></i> Dashboard</a></li></a></li>
+    <li><a href="{{ site.navPath }}user/logout">logout</a></li>
+  </ul>
+</li>
+{% else %}
+<li><a href="{{ site.navPath }}participants"><span class="icon-key"></span> Participants</a></li>
+
+<li><a href="{{ site.navPath }}tickets" class="btn btn-d btn-round btn-block" type="submit">TICKETS</a></li>
+{% endif %}

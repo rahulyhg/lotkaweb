@@ -1,0 +1,44 @@
+{% extends "/new/layout.html" %}
+
+{% block title %} {{ post.title }} : {{ parent() }} {% endblock %}
+
+{% block headCover %}
+{% if not hideHead %}
+<section class="module bg-dark-60 blog-page-header" data-background="{{ site.basePath }}assets/images/covers/{{ post.image }}">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-6 col-sm-offset-3">
+        <h2 class="module-title font-alt">
+          {% if post.category.slug != post.slug %}
+          {{ post.category.name }} : {{ post.title }}
+          {% else %}
+          {{ post.category.name }}
+          {% endif %}
+        </h2>
+        <div class="module-subtitle font-serif">{{ post.headline }}</div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="col-sm-8 col-sm-offset-2">
+  <div class="post" id="{{ post.slug }}">
+    {% if post.category.name|lower != post.title|lower %}
+    <div class="post-header font-alt">
+      <h1 class="post-title">{{ post.title }}</h1>
+      {% if post.meta %}
+      <div class="post-meta">
+        {{ post.meta }}
+      </div>
+      {% endif %}
+    </div>
+    {% endif %}
+    <div class="post-entry">
+      {{ include(template_from_string(post.content|raw)) }}
+    </div>
+  </div>
+</div>
+{% endblock %}

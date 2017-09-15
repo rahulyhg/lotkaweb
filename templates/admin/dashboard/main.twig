@@ -70,7 +70,7 @@
 </div>
 
 <!--end-Footer-part-->
-
+{% block scripts %}
 <script src="/resources/admin/js/excanvas.min.js"></script> 
 <script src="/resources/admin/js/jquery.min.js"></script> 
 <script src="/resources/admin/js/jquery.ui.custom.js"></script> 
@@ -93,7 +93,7 @@
 <script src="/resources/admin/js/jquery.dataTables.min.js"></script> 
 <script src="/resources/admin/js/matrix.tables.js"></script> 
 <script src="/resources/admin/js/matrix.calendar.js"></script>
-
+{% endblock %}
 <script type="text/javascript">
   // This function is called from the pop-up menus to transfer to
   // a different page. Ignore if the value returned is a null string:
@@ -117,6 +117,7 @@
 function resetMenu() {
    document.gomenu.selector.selectedIndex = 2;
 }
+{% block inlinejs %}{% endblock %}
 </script>
 </body>
 </html>

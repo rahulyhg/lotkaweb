@@ -51,6 +51,18 @@
     </ul>
   </li>  
   
+  <li class="submenu {{ [path_for('admin.posts.all'),path_for('admin.post.add')]|isActive }}"> 
+    <a href="{{ path_for('admin.posts.all') }}">
+      <i class="icon icon-copy"></i> <span>Posts</span> <span class="label label-important"></span>
+    </a>
+    <ul>
+      <li class="{{ path_for('admin.posts.all')|isActive }}">
+        <a href="{{ path_for('admin.posts.all') }}">All</a></li>
+      <li class="{{ path_for('admin.post.add')|isActive }}">
+        <a href="{{ path_for('admin.post.add') }}"><i class="icon-plus-sign"></i> <span>Create new</span> </a></li>
+    </ul>
+  </li>  
+  
   <li class="content"> <span>Ticket Sales Amount</span>
     <div class="progress progress-mini progress-danger active progress-striped">
       <div style="width: {{ (100 * ticketData.totalAmount/100 / ticketData.target)|number_format }}%;" class="bar"></div>

@@ -1,0 +1,227 @@
+{% extends 'admin/dashboard/main.twig' %}
+
+{% block title %}Post Manager{% endblock %}
+
+{% block contentHeader %}
+  <div id="content-header">
+    <div id="breadcrumb"> 
+      <a href="{{ path_for('admin.index') }}" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a> 
+      <a href="{{ path_for('admin.posts.all') }}">Posts</a> 
+      <a href="#" class="current"># {{current.data.title|default('New Post')}}</a> 
+    </div>
+
+    <h1>Edit {{current.data.title|default('New Post')}}</h1>
+  </div>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  <hr>
+  <div class="row-fluid">
+    <div class="span8">
+      <div class="widget-box">
+        <div class="widget-title"> <span class="icon"> <i class="icon-align-justify"></i> </span>
+          <h5>Edit Post</h5>
+        </div>
+        <div class="widget-content nopadding">
+          <form action="{{ current.new ? path_for('admin.post.add') : path_for('admin.post.edit', { 'uid': current.data.id }) }}" method="post" autocomplete="on" class="form-horizontal">
+            <input type="hidden" name="selfsave">
+            {{ csrf.field | raw }}
+            
+            <div class="control-group">
+              <label class="control-label">Title :</label>
+              <div class="controls">
+                <input type="text" class="span11" name="title" placeholder="Title" value="{{ current.data.title }}">
+             </div>
+            </div>
+            
+            <div class="control-group">
+              <label class="control-label">Headline :</label>
+              <div class="controls">
+                <input type="text" class="span11" name="headline" placeholder="headline" value="{{ current.data.headline }}">
+             </div>
+            </div>
+            
+            <div class="control-group">
+              <label class="control-label">Description :</label>
+              <div class="controls">
+                <input type="text" class="span11" name="description" placeholder="description" value="{{ current.data.description }}">
+             </div>
+            </div>
+            
+            <div class="control-group">
+              <label class="control-label">Header Image :</label>
+              <div class="controls">
+                <input type="text" class="span11" name="image" placeholder="image filename" value="{{ current.data.image }}">
+                <span class="help-inline">Image path: <code>{{ site.basePath }}assets/images/covers/</code></span>
+             </div>
+            </div>
+            
+            <div class="control-group" id="saved">
+              <div class="widget-title"> <span class="icon"> <i class="icon-align-justify"></i> </span>
+                <h5>Content (twig template)</h5>
+              </div>
+              <div class="widget-content" style="min-height: 90vh;">
+                <pre id="editor" class="static span20" style="min-height: 90vh;">
+{{ current.data.content }}</pre>
+                <input type="hidden" name="content">
+             </div>
+            </div>
+
+            <div class="control-group">
+              <label class="control-label">Category :</label>
+              <div class="controls">
+                <select name="category_id">
+                  <option value=""> - New Category - </option>
+                {% for category in categories %}
+                  <option value="{{ category.id }}" {% if category.id == current.data.category_id %}selected="selected"{% endif %}>
+                    {{ category.name }}
+                  </option>
+                {% endfor %}
+                </select>
+                <input type="text" class="span5" name="new_category" placeholder="Create new category" style="margin-top: .5em;">
+              </div>
+            </div>            
+            
+            <div class="control-group">
+              <label class="control-label">Parent :</label>
+              <div class="controls">
+                <select name="post_id">
+                  <option value=""> - No Parent - </option>
+                {% for post in posts %}
+                  <option value="{{ post.id }}" {% if post.id == current.data.post_id %}selected="selected"{% endif %}>
+                    {{ post.title }}
+                  </option>
+                {% endfor %}
+                </select>          
+              </div>
+            </div>
+            
+            <div class="widget-box collapsible">
+              <div class="widget-title"> 
+                <a href="#collapseNotes" data-toggle="collapse"> 
+                  <span class="icon"><i class="icon-pencil"></i></span>
+                  <h5>Organizer Notes</h5>
+                </a> 
+              </div>
+              <div class="collapse" id="collapseNotes">
+                <div class="widget-content"> 
+                    <textarea class="span20" rows="10" name="notes">{{ current.data.notes }}</textarea>
+                </div>
+              </div>
+
+              <div class="widget-title"> 
+                <a href="#collapseSlug" data-toggle="collapse"> 
+                  <span class="icon"><i class="icon-remove"></i></span>
+                  <h5>Slug</h5>
+                </a> 
+              </div>
+              <div class="collapse" id="collapseSlug">
+                <div class="widget-content">
+                  <input type="text" class="span20" name="slug" placeholder="slug" value="{{ current.data.slug }}">
+                </div>
+              </div>
+
+              <div class="widget-title"> 
+                <a href="#collapseMeta" data-toggle="collapse"> 
+                  <span class="icon"><i class="icon-tags"></i></span>
+                  <h5>Meta</h5>
+                </a> 
+              </div>
+              <div class="collapse" id="collapseMeta">
+                <div class="widget-content">
+                  <input type="text" class="span20" name="meta" placeholder="{}" value="{{ current.data.meta }}">
+                </div>
+              </div>
+
+              <div class="widget-title"> 
+                <a href="#collapseWeight" data-toggle="collapse"> 
+                  <span class="icon"><i class="icon-arrow-up"></i></span>
+                  <h5>Weight</h5>
+                </a> 
+              </div>
+              <div class="collapse" id="collapseWeight">
+                <div class="widget-content">
+                  <input type="number" class="span5" name="weight" placeholder="100" value="{{ current.data.weight }}">
+                </div>
+              </div>
+              
+              <div class="widget-title"> 
+                <a href="#collapsePublish" data-toggle="collapse"> 
+                  <span class="icon"><i class="icon-time"></i></span>
+                  <h5>Publish Date</h5>
+                </a> 
+              </div>
+              <div class="collapse" id="collapsePublish">
+                <div class="widget-content">
+                  <div class="">
+                <div  data-date="{{ current.data.publish_at }}" class="input-append date datepicker">
+                  <input type="datetime-local" name="publish_at" value="{{ (current.data.publish_at|default('now'))|date('Y-m-d\\TH:i:s') }}" class="span11" >
+                  <span class="add-on"><i class="icon-th"></i></span> </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="widget-title"> 
+                <a href="#collapseUnpublish" data-toggle="collapse"> 
+                  <span class="icon"><i class="icon-time"></i></span>
+                  <h5>Unpublish Date</h5>
+                </a> 
+              </div>
+              <div class="collapse" id="collapseUnpublish">
+                <div class="widget-content">
+                  <div class="">
+                    <div  data-date="{% if current.data.unpublish_at and current.data.unpublish_at != '0000-00-00 00:00:00' %}{{ current.data.unpublish_at }}{% endif %}" class="input-append date datepicker">
+                      <input type="datetime-local" name="unpublish_at" {% if current.data.unpublish_at and current.data.unpublish_at != '0000-00-00 00:00:00' %}value="{{ current.data.unpublish_by|date('Y-m-d\\TH:i:s') }}"{% endif %} class="span20" >
+                      <span class="add-on"><i class="icon-th"></i></span> </div>
+                  </div>
+                </div>
+              </div>
+            </div>            
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn-success">Save</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ parent() }}
+<script src="/resources/admin/js/editor/src-min-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+{% endblock %}
+
+{% block inlinejs %}
+  var input = $("input[name=content]");
+  var editor = ace.edit("editor");
+
+  editor.$blockScrolling = Infinity;
+  editor.setTheme("ace/theme/clouds");
+  editor.session.setMode("ace/mode/twig");
+  editor.getSession().setTabSize(4);
+  editor.getSession().setUseWrapMode(true);
+  editor.commands.addCommand({
+    name: 'save',
+    bindKey: {win: 'Ctrl-S',  mac: 'Command-S'},
+    exec: function(editor) {
+      input.val(editor.getSession().getValue());
+      $("input[name=selfsave]").val(1);
+      $("form[method=post]").submit();
+    }
+  });
+  editor.getSession().on("change", function () {
+      input.val(editor.getSession().getValue());
+  });
+
+  input.val(editor.getSession().getValue());
+
+  $(window).on("keypress", function(event) {
+      if (!(event.which == 115 && event.ctrlKey) && !(event.which == 19)) return true;
+      event.preventDefault();
+      return false;
+  });
+{% endblock %}

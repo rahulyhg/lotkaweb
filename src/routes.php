@@ -1,20 +1,20 @@
 <?php
 use App\Middleware\AdminMiddleware;
-
-/*
-| OPEN PAGE ROUTES
-*/
-
-$app->get('/[pay/{sku}]', '\App\Pages\OpenPage:index')->setName('home');
-$app->post('/charge', 'App\Pages\OpenPage:charge');
+use App\Middleware\ParticipantMiddleware;
 
 /*
 | API ROUTES
 */
 
+//Global view values
+$container->get('view')->getEnvironment()->addGlobal('site', [
+    'siteName' => 'Lotka-Volterra | Sci-fi larp',
+    'basePath' => '/',
+    'navPath' => '/',
+    'playerCount' => \App\Models\Order::distinct()->count(["email"]),
+  ]);  
+
 $app->group('/api/v1', function () {
-  $this->get('/test', '\App\API\Names:test');
-  
   $this->get('/names', function ($request, $response, $args) {
     $names = \App\API\Names::get();
     
@@ -81,6 +81,7 @@ $app->group('/api/v1', function () {
   
 });
 
+//User
 $app->group('/user', function() {
   
   $this->get('/register', 'AuthController:getRegister')->setName('user.register');
@@ -91,6 +92,7 @@ $app->group('/user', function() {
 
   $this->get('/logout', 'AuthController:logout')->setName('user.logout');
   
+  $this->post('/forgot', 'AuthController:postReminder')->setName('user.reminder');
 });
 
 //Admin
@@ -197,9 +199,25 @@ $app->group('/admin', function() use ($container) {
     $this->get('/{uid}/delete', 'TaskActionController:delete')->setName('admin.task.delete');
   });
   
+  //Posts
+  $this->group('/post', function() {
+    $this->get('', 'PostActionController:index')->setName('admin.posts.all');
+    
+    $this->get('/add', 'PostActionController:add')->setName('admin.post.add');
+    $this->post('/add', 'PostActionController:postAdd');
+    
+    $this->get('/{uid}/edit', 'PostActionController:edit')->setName('admin.post.edit');
+    $this->post('/{uid}/edit', 'PostActionController:postEdit');
+
+    $this->get('/{uid}/publish', 'PostActionController:publish')->setName('admin.post.publish');
+    $this->get('/{uid}/unpublish', 'PostActionController:unpublish')->setName('admin.post.unpublish');
+
+    $this->get('/{uid}/delete', 'PostActionController:delete')->setName('admin.post.delete');
+  });
+  
 })->add(new AdminMiddleware($container));
 
-
+//Setup
 $app->get('/setup', function () {
   $sentinel = $this->sentinel;
   
@@ -234,4 +252,27 @@ $app->get('/setup', function () {
       ),
     ));
   }  
+});
+
+/*
+| PARTICIPANT PAGE ROUTES
+*/
+
+$app->group('/participants', function () { 
+  $this->get('', 'ParticipantPageController:index')->setName('participant.home');
+  
+  $this->get('/start', 'ParticipantPageController:onboarding')->setName('participant.onboarding');  
+  
+  $this->get('/{page}', 'ParticipantPageController:page')->setName('participant.page');
+})->add(new ParticipantMiddleware($container));
+
+/*
+| OPEN PAGE ROUTES
+*/
+
+$app->group('/', function () use ($container) {
+  $this->get('', 'HomePageController:index')->setName('home');              
+  $this->get('ticket/{sku}', 'HomePageController:ticket')->setName('single.ticket');
+  $this->post('charge', 'App\Pages\OpenPage:charge');  
+  $this->get('{category}[/{page}]', 'HomePageController:page')->setName('open.page'); //FINAL CATCH ALL
 });
