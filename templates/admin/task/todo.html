@@ -1,0 +1,58 @@
+{% extends 'admin/dashboard/main.twig' %}
+
+{% block title %}Todo{% endblock %}
+
+{% block contentHeader %}
+  <div id="content-header">
+    <div id="breadcrumb"> 
+      <a href="{{ path_for('admin.index') }}" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a> 
+      <a href="#" class="current">Todo</a> 
+    </div>
+    
+    <h1>ToDo</h1>
+    
+  </div>
+{% endblock %}
+
+{% block content %}
+  <div class="container-fluid">
+    <hr>
+    <div class="row-fluid">
+      <div class="span12">
+        <div class="widget-box">
+          <div class="widget-title"> <span class="icon"><i class="icon-th"></i></span>
+            <h5>Todo</h5>
+          </div>
+          <div class="widget-content nopadding">
+            <table class="table table-bordered data-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Title</th>
+                  <th>Description</th>
+                  <th>Due Date</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for task in userData.todos %}
+                <tr class="gradeA{% if "now"|date('Y-m-d') > post.due_date|date('Y-m-d') %} bg-lr{% endif %}">
+                  <td class="center">{{ loop.index }}</td>
+                  <td>{{ task.title }}</td>
+                  <td>{{ task.description }}</td>
+                  <td>{{ task.due_date }}</td>
+
+                  <td class="center">
+                    <a href="{{ path_for('admin.task.edit', { 'uid': task.id }) }}" class="btn btn-default" title="Edit Task"><i class="icon-edit"></i></a>
+                    <a href="{{ path_for('admin.task.delete', { 'uid': task.id }) }}" class="btn btn-danger" title="Delete Task"><i class="icon-remove"></i></a>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

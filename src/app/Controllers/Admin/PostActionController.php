@@ -3,6 +3,7 @@
 namespace App\Controllers\Admin;
 
 use App\Models\Post;
+use App\Models\Attribute;
 use App\Models\Category;
 use App\Models\User;
 use App\Controllers\Controller;
@@ -26,6 +27,13 @@ class PostActionController extends Controller
       'note' => $request->getParam('note'),
       'user_id' =>  $this->container->get('view')->getEnvironment()->getGlobals()['auth']['user']->id,
     ];   
+    
+    $attributes = [ 'keys' => $request->getParam('attrKey'), 'values' => $request->getParam('attrVal')];
+    $attribute_ids = [];
+    
+    foreach ($attributes['keys'] as $i => $attr_key) {
+      $attribute_ids[] = Attribute::firstOrCreate(['name' => $attr_key, 'value' => $attributes['values'][$i]])->id;
+    }
     
     $credentials['slug'] = self::slugify($request->getParam('slug') ? 
       $request->getParam('slug') : $request->getParam('title'));
@@ -52,7 +60,7 @@ class PostActionController extends Controller
         
     $credentials['category_id'] = $category_id;
     
-    return $credentials;
+    return [$credentials, $attribute_ids];
   }
   
   public function index($request, $response, $arguments)
@@ -80,8 +88,12 @@ class PostActionController extends Controller
   public function postAdd($request, $response, $arguments)
   {    
     // update data
-    $post_id = Post::create(self::handlePostData($request))->id;
-    if($post_id) {
+    $requestData = self::handlePostData($request);
+    $post = Post::create($requestData[0]);
+    
+    // update data
+    if($post->id) {
+      $post->attr()->sync($requestData[1]);
       $this->flash->addMessage('success', "Post details have been saved.");
     } else {
       $this->flash->addMessage('error', "The post could not be saved.");
@@ -109,8 +121,11 @@ class PostActionController extends Controller
   public function postEdit($request, $response, $arguments)
   {
     $post = Post::where('id', $arguments['uid'])->first();
+    $requestData = self::handlePostData($request);
+    
     // update data
-    if($post->update(self::handlePostData($request))) {
+    if($post->update($requestData[0])) {
+      $post->attr()->sync($requestData[1]);
       $this->flash->addMessage('success', "Post details have been saved.");
     } else {
       $this->flash->addMessage('error', "The post could not be saved.");

@@ -111,7 +111,8 @@ $app->group('/admin', function() use ($container) {
   $auth = $container->get('view')->getEnvironment()->getGlobals()['auth'];
   if ($auth['user']) {
     $container->get('view')->getEnvironment()->addGlobal('userData', [
-      'todos' => \App\Models\User::find($auth['user']->id)->tasks()->count(),
+      'todos' => \App\Models\User::find($auth['user']->id)->tasks()->where('status', '<>', 1)->get(),
+      'user' => $auth['user']
     ]);
   }
 
@@ -214,6 +215,63 @@ $app->group('/admin', function() use ($container) {
 
     $this->get('/{uid}/delete', 'PostActionController:delete')->setName('admin.post.delete');
   });
+  
+  //Participants
+  $this->group('/participants', function() {
+    $this->get('', 'PostActionController:index')->setName('admin.participant.dashboard');
+    
+    //Characters
+    $this->group('/characters', function () {
+      $this->get('/all', 'CharacterActionController:index')->setName('admin.character.list');
+      
+      $this->get('/add', 'CharacterActionController:add')->setName('admin.character.add');
+      $this->post('/add', 'CharacterActionController:postAdd');
+      
+      $this->get('/{uid}/edit', 'CharacterActionController:edit')->setName('admin.character.edit');
+      $this->post('/{uid}/edit', 'CharacterActionController:postEdit');
+      
+      $this->get('/{uid}/delete', 'CharacterActionController:delete')->setName('admin.character.delete');
+    });
+
+    //Groups
+    $this->group('/groups', function () {
+      $this->get('/all', 'GroupActionController:index')->setName('admin.group.list');
+      
+      $this->get('/add', 'GroupActionController:add')->setName('admin.group.add');
+      $this->post('/add', 'GroupActionController:postAdd');
+      
+      $this->get('/{uid}/edit', 'GroupActionController:edit')->setName('admin.group.edit');
+      $this->post('/{uid}/edit', 'GroupActionController:postEdit');
+      
+      $this->get('/{uid}/delete', 'GroupActionController:delete')->setName('admin.group.delete');
+    });
+    
+    //Plots
+    $this->group('/plots', function () {
+      $this->get('/all', 'PlotActionController:index')->setName('admin.plot.list');
+      
+      $this->get('/add', 'PlotActionController:add')->setName('admin.plot.add');
+      $this->post('/add', 'PlotActionController:postAdd');
+      
+      $this->get('/{uid}/edit', 'PlotActionController:edit')->setName('admin.plot.edit');
+      $this->post('/{uid}/edit', 'PlotActionController:postEdit');
+      
+      $this->get('/{uid}/delete', 'PlotActionController:delete')->setName('admin.plot.delete');
+    });
+    
+    //Relation
+    $this->group('/relations', function () {
+      $this->get('/all', 'RelationActionController:index')->setName('admin.relation.list');
+      
+      $this->get('/add', 'RelationActionController:add')->setName('admin.relation.add');
+      $this->post('/add', 'RelationActionController:postAdd');
+      
+      $this->get('/{uid}/edit', 'RelationActionController:edit')->setName('admin.relation.edit');
+      $this->post('/{uid}/edit', 'RelationActionController:postEdit');
+      
+      $this->get('/{uid}/delete', 'RelationActionController:delete')->setName('admin.relation.delete');
+    });    
+  });  
   
 })->add(new AdminMiddleware($container));
 

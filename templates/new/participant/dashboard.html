@@ -13,4 +13,5 @@
 </div> {# breaking the parent template row #}
 <div class="row multi-columns-row post-columns">
 {{ include('/new/participant/partials/dashboard_sections.html') }}
+  {{ dump(debug.tasks)|raw }}
 {% endblock %}

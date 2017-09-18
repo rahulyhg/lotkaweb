@@ -153,4 +153,7 @@ $container['TeamActionController']    = function($c) { return new \App\Controlle
 $container['TicketActionController']  = function($c) { return new \App\Controllers\Admin\TicketActionController($c); };
 $container['TaskActionController']    = function($c) { return new \App\Controllers\Admin\TaskActionController($c); };
 $container['PostActionController']    = function($c) { return new \App\Controllers\Admin\PostActionController($c); };
-
+$container['CharacterActionController'] = function($c) { return new \App\Controllers\Admin\Participants\CharacterActionController($c); };
+$container['GroupActionController'] = function($c) { return new \App\Controllers\Admin\Participants\GroupActionController($c); };
+$container['PlotActionController'] = function($c) { return new \App\Controllers\Admin\Participants\PlotActionController($c); };
+$container['RelationActionController'] = function($c) { return new \App\Controllers\Admin\Participants\RelationActionController($c); };

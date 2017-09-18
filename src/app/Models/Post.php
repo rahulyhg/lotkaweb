@@ -26,6 +26,11 @@ class Post extends Model
     "notes",
   ];
   
+  public function attr()
+  {
+      return $this->belongsToMany('App\Models\Attribute', 'post_attribute')->withTimeStamps();    
+  }  
+  
   public function category()
   {
       return $this->belongsTo('App\Models\Category');

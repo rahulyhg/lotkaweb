@@ -1,0 +1,54 @@
+{% extends 'admin/dashboard/main.twig' %}
+
+{% block title %}Character Manager{% endblock %}
+
+{% block contentHeader %}
+  <div id="content-header">
+    <div id="breadcrumb"> 
+      <a href="{{ path_for('admin.index') }}" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a> 
+      <a href="{{ path_for('admin.participant.dashboard') }}">Participants</a> 
+      <a href="#" class="current">Characters</a>
+    </div>
+    
+    <h1>Characters</h1>
+  </div>
+{% endblock %}
+
+{% block content %}
+  <div class="container-fluid">
+    <hr>
+    <div class="row-fluid">
+      <div class="span12">
+        <div class="widget-box">
+          <div class="widget-title"> <span class="icon"><i class="icon-th"></i></span>
+            <h5>Characters</h5>
+          </div>
+          <div class="widget-content nopadding">
+            <table class="table table-bordered data-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Name</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for character in characters %}
+                <tr class="gradeA">
+                  <td class="center">{{ character.id }}</td>
+                  <td><a href="{{ path_for('admin.character.edit', { 'uid': character.id }) }}" title="Edit Character">{{ character.name }}</a></td>
+
+                  <td class="center">
+                    <a href="{{ path_for('admin.character.edit', { 'uid': character.id }) }}" class="btn btn-default" title="Edit Character"><i class="icon-edit"></i></a>
+                    <a href="{{ path_for('admin.character.delete', { 'uid': character.id }) }}" class="btn btn-danger" title="Delete Character"><i class="icon-remove"></i></a>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

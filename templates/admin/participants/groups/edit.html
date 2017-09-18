@@ -1,0 +1,98 @@
+{% extends 'admin/dashboard/main.twig' %}
+
+{% block title %}Group Manager{% endblock %}
+
+{% block contentHeader %}
+  <div id="content-header">
+    <div id="breadcrumb"> 
+      <a href="{{ path_for('admin.index') }}" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a> 
+      <a href="{{ path_for('admin.participant.dashboard') }}">Participants</a> 
+      <a href="{{ path_for('admin.group.list') }}">Groups</a> 
+      <a href="#" class="current"># {{current.data.name|default('New Group')}}</a> 
+    </div>
+
+    <h1>Edit {{current.data.name|default('New Group')}}</h1>
+  </div>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  <hr>
+  <div class="row-fluid">
+    <div class="span8">
+      <div class="widget-box">
+        <div class="widget-title"> <span class="icon"> <i class="icon-align-justify"></i> </span>
+          <h5>Edit Group</h5>
+        </div>
+        <div class="widget-content nopadding">
+          <form action="{{ current.new ? path_for('admin.group.add') : path_for('admin.group.edit', { 'uid': current.data.id }) }}" method="post" autocomplete="on" class="form-horizontal">
+            <input type="hidden" name="selfsave">
+            {{ csrf.field | raw }}
+            
+            <div class="control-group">
+              <label class="control-label">Name :</label>
+              <div class="controls">
+                <input type="text" class="span11" name="name" placeholder="Name" value="{{ current.data.name }}">
+             </div>
+            </div>
+            
+            <div class="control-group">
+              <label class="control-label">Description :</label>
+              <div class="controls">
+                <textarea class="span11" name="description" rows="10">{{ current.data.description }}</textarea>
+             </div>
+            </div>
+            
+            <div class="widget-box collapsible">
+              <div class="widget-title"> 
+                <a href="#collapseNotes" data-toggle="collapse"> 
+                  <span class="icon"><i class="icon-tags"></i></span>
+                  <h5>Attributes</h5>
+                </a> 
+              </div>
+              <div class="collapse" id="collapseNotes">
+                <div class="widget-content attributes"> 
+                  {% for attribute in current.data.attr %}
+                  {% if attribute.name %}
+                  <div class="attribute">
+                    <input type="text" class="span6" name="attrKey[]" placeholder="Name" value="{{ attribute.name }}">
+                    <input type="text" class="span5" name="attrVal[]" placeholder="Value" value="{{ attribute.value }}">
+                    <button class="btn btn-warning remove_attrib span1 pull-right">-</button>
+                  </div>
+                  {% endif %}
+                  {% endfor %}
+                  <div class="attribute">
+                    <input type="text" class="span6" name="attrKey[]" placeholder="Name" value="">
+                    <input type="text" class="span5" name="attrVal[]" placeholder="Value" value="">
+                    <button class="btn btn-success add_attrib span1 pull-right">+</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+  
+            <div class="form-actions">
+              <button type="submit" class="btn btn-success">Save</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block inlinejs %}
+  $(".attributes").on("click", ".add_attrib", function (e) {
+    e.preventDefault();
+    $addDiv = $(this).parent().clone();
+    $addDiv.find('input').each(function () { $(this).val(null); })
+    $(this).parent().after($addDiv);
+    $(this).parent().find('button')
+      .removeClass('btn-success add_attrib').addClass('btn-warning remove_attrib').text('-');
+  });
+
+  $(".attributes").on("click", ".remove_attrib", function (e) {
+    e.preventDefault();
+    $addDiv = $(this).parent().remove();
+  });
+{% endblock %}

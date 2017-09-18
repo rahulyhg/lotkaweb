@@ -1,9 +1,9 @@
 <ul>
   <li class="{{ path_for('admin.index')|isActive }}">
-    <a href="{{ path_for('admin.index') }}"><i class="icon icon-home"></i> <span>Dashboard</span></a> 
+    <a href="{{ path_for('admin.index') }}"><i class="icon icon-home"></i> <span>Dashboard</span></a>
   </li>
 
-  <li class="submenu {{ [path_for('admin.orders.all'),path_for('admin.orders.attested'),path_for('admin.orders.unattested'),path_for('admin.orders.partial'),path_for('admin.order.add')]|isActive }}"> 
+  <li class="submenu {{ [path_for('admin.orders.all'),path_for('admin.orders.attested'),path_for('admin.orders.unattested'),path_for('admin.orders.partial'),path_for('admin.order.add')]|isActive }}">
     <a href="{{ path_for('admin.orders.all') }}">
       <i class="icon icon-money"></i> <span>Orders</span> <span class="label label-important"></span>
     </a>
@@ -17,15 +17,15 @@
       <li class="{{ path_for('admin.orders.all')|isActive }}">
         <a href="{{ path_for('admin.orders.all') }}">All</a></li>
       <li class="{{ path_for('admin.order.add')|isActive }}">
-        <a href="{{ path_for('admin.order.add') }}"><i class="icon-plus-sign"></i> <span>Create new</span> </a></li>      
+        <a href="{{ path_for('admin.order.add') }}"><i class="icon-plus-sign"></i> <span>Create new</span> </a></li>
     </ul>
-  </li>  
-  
-  <li class="{{ path_for('admin.orders.external')|isActive }}">
-    <a href="{{ path_for('admin.orders.external') }}"><i class="icon icon-magnet"></i> <span>External Orders</span></a> 
   </li>
-  
-  <li class="submenu {{ [path_for('admin.users.all'),path_for('admin.user.add')]|isActive }}"> 
+
+  <li class="{{ path_for('admin.orders.external')|isActive }}">
+    <a href="{{ path_for('admin.orders.external') }}"><i class="icon icon-magnet"></i> <span>External Orders</span></a>
+  </li>
+
+  <li class="submenu {{ [path_for('admin.users.all'),path_for('admin.user.add')]|isActive }}">
     <a href="{{ path_for('admin.users.all') }}">
       <i class="icon icon-user"></i> <span>Users</span> <span class="label label-important"></span>
     </a>
@@ -36,8 +36,8 @@
         <a href="{{ path_for('admin.user.add') }}"><i class="icon-plus-sign"></i> <span>Create new</span> </a></li>
     </ul>
   </li>
-  
-    <li class="submenu {{ [path_for('admin.tickets.all'),path_for('admin.ticket.add')]|isActive }}"> 
+
+  <li class="submenu {{ [path_for('admin.tickets.all'),path_for('admin.ticket.add')]|isActive }}">
     <a href="{{ path_for('admin.tickets.all') }}">
       <i class="icon icon-film"></i> <span>Tickets</span> <span class="label label-important"></span>
     </a>
@@ -49,9 +49,9 @@
         <a href="{{ path_for('admin.ticket.add') }}"><i class="icon-plus-sign"></i> <span>Create new</span> </a></li>
       //-->
     </ul>
-  </li>  
-  
-  <li class="submenu {{ [path_for('admin.posts.all'),path_for('admin.post.add')]|isActive }}"> 
+  </li>
+
+  <li class="submenu {{ [path_for('admin.posts.all'),path_for('admin.post.add')]|isActive }}">
     <a href="{{ path_for('admin.posts.all') }}">
       <i class="icon icon-copy"></i> <span>Posts</span> <span class="label label-important"></span>
     </a>
@@ -61,7 +61,61 @@
       <li class="{{ path_for('admin.post.add')|isActive }}">
         <a href="{{ path_for('admin.post.add') }}"><i class="icon-plus-sign"></i> <span>Create new</span> </a></li>
     </ul>
+  </li>
+
+  <li class="{{ [path_for('admin.participant.dashboard')]|isActive }}">
+    <a href="{{ path_for('admin.participant.dashboard') }}">
+      <i class="icon icon-user"></i> <span>Participants</span> <span class="label label-important"></span>
+    </a>
+  </li>
+
+  <li class="submenu {{ [path_for('admin.character.list'),path_for('admin.character.add')]|isActive }}">
+    <a href="{{ path_for('admin.participant.dashboard') }}">
+      <i class="icon icon-user"></i> <span>Characters</span> <span class="label label-important"></span>
+    </a>
+    <ul>
+      <li class="{{ path_for('admin.character.list')|isActive }}">
+        <a href="{{ path_for('admin.character.list') }}">All</a></li>
+      <li class="{{ path_for('admin.character.add')|isActive }}">
+        <a href="{{ path_for('admin.character.add') }}"><i class="icon-plus-sign"></i> <span>Create new</span> </a></li>
+    </ul>
+  </li>
+  
+  <li class="submenu {{ [path_for('admin.group.list'),path_for('admin.group.add')]|isActive }}">
+    <a href="{{ path_for('admin.participant.dashboard') }}">
+      <i class="icon icon-user"></i> <span>Groups</span> <span class="label label-important"></span>
+    </a>
+    <ul>
+      <li class="{{ path_for('admin.group.list')|isActive }}">
+        <a href="{{ path_for('admin.group.list') }}">All</a></li>
+      <li class="{{ path_for('admin.group.add')|isActive }}">
+        <a href="{{ path_for('admin.group.add') }}"><i class="icon-plus-sign"></i> <span>Create new</span> </a></li>
+    </ul>
+  </li>
+  
+  <li class="submenu {{ [path_for('admin.plot.list'),path_for('admin.plot.add')]|isActive }}">
+    <a href="{{ path_for('admin.participant.dashboard') }}">
+      <i class="icon icon-user"></i> <span>Plots</span> <span class="label label-important"></span>
+    </a>
+    <ul>
+      <li class="{{ path_for('admin.plot.list')|isActive }}">
+        <a href="{{ path_for('admin.plot.list') }}">All</a></li>
+      <li class="{{ path_for('admin.plot.add')|isActive }}">
+        <a href="{{ path_for('admin.plot.add') }}"><i class="icon-plus-sign"></i> <span>Create new</span> </a></li>
+    </ul>
   </li>  
+  
+  <li class="submenu {{ [path_for('admin.relation.list'),path_for('admin.relation.add')]|isActive }}">
+    <a href="{{ path_for('admin.participant.dashboard') }}">
+      <i class="icon icon-user"></i> <span>Relations</span> <span class="label label-important"></span>
+    </a>
+    <ul>
+      <li class="{{ path_for('admin.relation.list')|isActive }}">
+        <a href="{{ path_for('admin.relation.list') }}">All</a></li>
+      <li class="{{ path_for('admin.relation.add')|isActive }}">
+        <a href="{{ path_for('admin.relation.add') }}"><i class="icon-plus-sign"></i> <span>Create new</span> </a></li>
+    </ul>
+  </li>
   
   <li class="content"> <span>Ticket Sales Amount</span>
     <div class="progress progress-mini progress-danger active progress-striped">
@@ -70,7 +124,7 @@
     <span class="percent"> {{ (100 * ticketData.totalAmount/100 / ticketData.target)|number_format }}%</span>
     <div class="stat">{{ ticketData.totalAmount/100|number_format }} / {{ ticketData.target }} SEK</div>
   </li>
-  
+
   <li class="content"> <span>Tickets Sold</span>
     <div class="progress progress-mini progress-danger active progress-striped">
       <div style="width: {{ (100 * ticketData.totalSold / ticketData.goal)|number_format }}%;" class="bar"></div>
@@ -78,7 +132,7 @@
     <span class="percent">{{ (100 * ticketData.totalSold / ticketData.goal)|number_format }}%</span>
     <div class="stat">{{ ticketData.totalSold|number_format }} / {{ ticketData.goal }}</div>
   </li>
-  
+
   <li class="content"> <span>Days To Event</span>
     <div class="progress progress-mini active progress-striped">
       <div style="width: {{ 100 * (1 - ticketData.daysLeft/365) }}%;" class="bar"></div>

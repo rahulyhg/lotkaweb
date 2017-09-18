@@ -135,6 +135,29 @@
               </div>
 
               <div class="widget-title"> 
+                <a href="#collapseAttr" data-toggle="collapse"> 
+                  <span class="icon"><i class="icon-tags"></i></span>
+                  <h5>Attributes</h5>
+                </a> 
+              </div>
+              <div class="collapse" id="collapseAttr">
+                <div class="widget-content attributes">
+                  {% for attribute in current.data.attr %}
+                  <div class="attribute">
+                    <input type="text" class="span6" name="attrKey[]" placeholder="Name" value="{{ attribute.name }}">
+                    <input type="text" class="span5" name="attrVal[]" placeholder="Value" value="{{ attribute.value }}">
+                    <button class="btn btn-warning remove_attrib span1 pull-right">-</button>
+                  </div>
+                  {% endfor %}
+                  <div class="attribute">
+                    <input type="text" class="span6" name="attrKey[]" placeholder="Name" value="">
+                    <input type="text" class="span5" name="attrVal[]" placeholder="Value" value="">
+                    <button class="btn btn-success add_attrib span1 pull-right">+</button>
+                  </div>
+                </div>
+              </div>            
+              
+              <div class="widget-title"> 
                 <a href="#collapseWeight" data-toggle="collapse"> 
                   <span class="icon"><i class="icon-arrow-up"></i></span>
                   <h5>Weight</h5>
@@ -223,5 +246,19 @@
       if (!(event.which == 115 && event.ctrlKey) && !(event.which == 19)) return true;
       event.preventDefault();
       return false;
+  });
+
+  $(".attributes").on("click", ".add_attrib", function (e) {
+    e.preventDefault();
+    $addDiv = $(this).parent().clone();
+    $addDiv.find('input').each(function () { $(this).val(null); })
+    $(this).parent().after($addDiv);
+    $(this).parent().find('button')
+      .removeClass('btn-success add_attrib').addClass('btn-warning remove_attrib').text('-');
+  });
+
+  $(".attributes").on("click", ".remove_attrib", function (e) {
+    e.preventDefault();
+    $addDiv = $(this).parent().remove();
   });
 {% endblock %}
