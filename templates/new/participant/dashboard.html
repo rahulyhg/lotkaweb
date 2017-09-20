@@ -8,10 +8,10 @@
 {{ include('/new/partials/fragments/flash.html') }}
 {% endblock %}
 
+{% block mainClass%}mt-10{% endblock %}
+
 {% block content %}
 {{ include('/new/participant/partials/dashboard_header.html') }}
 </div> {# breaking the parent template row #}
-<div class="row multi-columns-row post-columns">
 {{ include('/new/participant/partials/dashboard_sections.html') }}
-  {{ dump(debug.tasks)|raw }}
 {% endblock %}

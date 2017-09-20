@@ -18,7 +18,7 @@ class ParticipantPageController extends Controller
   public function index($request, $response, $arguments)
   {
     $participant = $this->container->sentinel->getUser();
-    
+    $sections = '';
     
     return $this->view->render($response, '/new/participant/dashboard.html', [
       'debug' => $participant

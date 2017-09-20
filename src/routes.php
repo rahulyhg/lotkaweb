@@ -12,6 +12,7 @@ $container->get('view')->getEnvironment()->addGlobal('site', [
     'basePath' => '/',
     'navPath' => '/',
     'playerCount' => \App\Models\Order::distinct()->count(["email"]),
+    'devBlog' => $container['HomePageController']->devPosts(),
   ]);  
 
 $app->group('/api/v1', function () {
@@ -328,8 +329,10 @@ $app->group('/participants', function () {
 | OPEN PAGE ROUTES
 */
 
+
 $app->group('/', function () use ($container) {
   $this->get('', 'HomePageController:index')->setName('home');              
+  $this->get('press', 'HomePageController:press')->setName('page.press');  
   $this->get('ticket/{sku}', 'HomePageController:ticket')->setName('single.ticket');
   $this->post('charge', 'App\Pages\OpenPage:charge');  
   $this->get('{category}[/{page}]', 'HomePageController:page')->setName('open.page'); //FINAL CATCH ALL

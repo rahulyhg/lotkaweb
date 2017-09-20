@@ -1,19 +1,10 @@
-  {% for section in sections %}
-  <div class="col-sm-6 col-md-4 col-lg-4">
-    <div class="post">
-      <div class="post-thumbnail"><a href="{{ path_for(section.slug) }}"><img src="assets/images/{{ section.image }}" alt="{{ section.description }}"/></a></div>
-      <div class="post-header font-alt">
-        <h2 class="post-title"><a href="#">{{ section.name }}</a></h2>
-        <div class="post-meta">
-          {{ section.callout }}
-        </div>
-      </div>
-      {% if section.information %}
-      <div class="post-entry">
-        <p>{{ section.information }}</p>
-      </div>
-      <div class="post-more"><a class="more-link" href="{{ path_for(section.slug) }}">{{ section.cta }}</a></div>
-      {% endif %}
-    </div>
-  </div>
-  {% endfor %}
+<ul class="works-grid works-grid-gut works-grid-3 works-hover-w" id="works-grid">
+{% for section in sections %}  
+  <li class="work-item {{ section.types|join(' ') }}"><a href="{{ path_for('participant.page', { 'page': section.slug }) }}">
+      <div class="work-image"><img src="{{ section.image }}" alt="{{ section.title}} Item"/></div>
+      <div class="work-caption font-alt">
+        <h3 class="work-title">{{ section.title}}</h3>
+        <div class="work-descr">{{ section.info }}</div>
+      </div></a></li>
+{% endfor %}
+</ul>

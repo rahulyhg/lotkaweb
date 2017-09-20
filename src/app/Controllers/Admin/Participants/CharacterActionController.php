@@ -15,6 +15,15 @@ use Slim\Views\Twig as View;
 class CharacterActionController extends Controller
 {
 
+  private function character_attributes() {
+    return [
+      'quote', 'org', 'shift', 'role', 'traits', 
+      'iso_int', 'mil_dem', 'nos_pro', 'lib_col', 
+      'iso_int_note', 'mil_dem_note', 'nos_pro_note', 'lib_col_note',
+      'self_vision', 'others_vision', 'notes'
+    ];
+  }
+  
   private function handlePostData($request) {
     $credentials = [
       'name' => $request->getParam('name'),
@@ -22,7 +31,16 @@ class CharacterActionController extends Controller
       'user_id' => $request->getParam('user_id'),
     ];   
     
-    $attributes = [ 'keys' => $request->getParam('attrKey'), 'values' => $request->getParam('attrVal')];
+    $attributes = [ 
+      'keys' => $request->getParam('attrKey'), 
+      'values' => $request->getParam('attrVal')
+    ];
+    
+    foreach (self::character_attributes() as $attr) {
+      $attributes['keys'][] = $attr;
+      $attributes['values'][] = $request->getParam($attr);
+    }
+    
     $attribute_ids = [];
     
     foreach ($attributes['keys'] as $i => $attr_key) {
@@ -32,13 +50,26 @@ class CharacterActionController extends Controller
       ])->id;
     }
     
+    if($request->getParam('new_org')) {
+      $attribute_ids[] = Attribute::create([
+        'name' => 'org', 
+        'value' => $request->getParam('new_org')
+      ])->id;
+    }
+    
+    if($request->getParam('new_shift')) {
+      $attribute_ids[] = Attribute::create([
+        'name' => 'shift', 
+        'value' => $request->getParam('new_shift')
+      ])->id;
+    }   
+    
     $groups = $request->getParam('group_ids');
     $groups = is_array($groups) ? $groups : [$groups];
     
     $relations = $request->getParam('relations_ids');
     $relations = is_array($relations) ? $relations : [$relations];
     
-      
     return [ 
       'values' => $credentials, 
       'attributes' => $attribute_ids,
@@ -47,23 +78,36 @@ class CharacterActionController extends Controller
     ];
   }
   
+  private function mapAttributes($attributes) {
+    $attr = [];
+    foreach ($attributes as $name => $value) { $attr[$name] = $value; }
+    return $attr;
+  }
+  
+  private function characterOrgs() {
+    return Attribute::where('name', 'org')->get();
+  }
+  
+  private function characterShifts() {
+    return Attribute::where('name', 'shift')->get();
+  }    
+  
   public function index($request, $response, $arguments)
   {
-    $characters = Character::orderBy('name');
-    /*
+    //$characters = Character::orderBy('name');
+    
     //Filter by attribute
     $characters = Character::whereHas(
         'attr', function ($query) {
-            $query->where([
-              ['name','NPC'], ['value','yes']
-            ]);
+            $query->whereIn('name',['NPC','Costume done']);
         }
     )
     ->with('attr');
-    */
+    
     
     return $this->view->render($response, 'admin/participants/characters/list.html', [
       'characters' => $characters->get(),
+      'debug' => $characters->toSql(),
     ]);
   }
   
@@ -71,6 +115,7 @@ class CharacterActionController extends Controller
   {
     $this->container->view->getEnvironment()->addGlobal('current', [
       'data' => [],
+      'attr' => [],
       'new' => true
     ]);
     
@@ -79,6 +124,9 @@ class CharacterActionController extends Controller
       'groups' => Group::orderBy('name')->get(),
       'plots' => Plot::orderBy('name')->get(),
       'relations' => Relation::orderBy('name')->get(),
+      'shifts' => self::characterShifts(),
+      'orgs' => self::characterOrgs(),
+      'set_attr' => self::character_attributes(),
     ]);
   }
   
@@ -108,8 +156,10 @@ class CharacterActionController extends Controller
   
   public function edit($request, $response, $arguments)
   {
-     $this->container->view->getEnvironment()->addGlobal('current', [
-      'data' => Character::where('id', $arguments['uid'])->first(),
+    $character = Character::where('id', $arguments['uid'])->first();
+    $this->container->view->getEnvironment()->addGlobal('current', [
+      'data' => $character,
+      'attr' => self::mapAttributes( $character->attr )
     ]);
     
     return $this->view->render($response, 'admin/participants/characters/edit.html', [
@@ -117,7 +167,9 @@ class CharacterActionController extends Controller
       'groups' => Group::orderBy('name')->get(),
       'plots' => Plot::orderBy('name')->get(),
       'relations' => Relation::orderBy('name')->get(),
-      'debug' => Character::where('id', $arguments['uid'])->first()->rel()->get()
+      'shifts' => self::characterShifts(),
+      'orgs' => self::characterOrgs(),
+      'set_attr' => self::character_attributes(), 
     ]);
   }
   

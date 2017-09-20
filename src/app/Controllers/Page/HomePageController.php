@@ -64,5 +64,18 @@ class HomePageController extends Controller
       'post' =>$post = Post::where('slug', 'single_ticket')->first(),
     ]);
   }
-    
+  
+  public function devPosts($count = 2) 
+  {
+    $devBlogEndpoint = $this->container->get('settings')['event']['devBlog'];
+    $json_data = file_get_contents($devBlogEndpoint . '?json=get_recent_posts&count=' . $count);
+    return json_decode($json_data);
+  }
+
+  public function press($request, $response, $arguments)
+  {
+    return $this->view->render($response, '/new/barebones.html', [
+      'content' =>$post = Post::where('slug', 'press')->first()->content,
+    ]);  
+  }  
 }

@@ -29,6 +29,9 @@
                 <tr>
                   <th>#</th>
                   <th>Name</th>
+                  <th>Player</th>
+                  <th>Org</th>
+                  <th>Shift</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -37,7 +40,10 @@
                 <tr class="gradeA">
                   <td class="center">{{ character.id }}</td>
                   <td><a href="{{ path_for('admin.character.edit', { 'uid': character.id }) }}" title="Edit Character">{{ character.name }}</a></td>
-
+                  <td>{{ character.user.displayname }}</td>
+                  <td>{{ character.attr|key('org') }}</td>
+                  <td>{{ character.attr|key('shift') }}</td>
+                  
                   <td class="center">
                     <a href="{{ path_for('admin.character.edit', { 'uid': character.id }) }}" class="btn btn-default" title="Edit Character"><i class="icon-edit"></i></a>
                     <a href="{{ path_for('admin.character.delete', { 'uid': character.id }) }}" class="btn btn-danger" title="Delete Character"><i class="icon-remove"></i></a>

@@ -30,7 +30,7 @@
             {{ csrf.field | raw }}
             
             <div class="control-group">
-              <label class="control-label">Name :</label>
+              <label class="control-label">Surname :</label>
               <div class="controls">
                 <input type="text" class="span11" name="name" placeholder="Name" value="{{ current.data.name }}">
              </div>
@@ -51,12 +51,98 @@
             </div>
             
             <div class="control-group">
+              <label class="control-label">Quote :</label>
+              <div class="controls">
+                <textarea class="span11" name="quote" rows="2">{{ current.data.attr|key('quote') }}</textarea>
+             </div>
+            </div>            
+
+            <div class="control-group">
+              <label class="control-label">Org :</label>
+              <div class="controls">
+                <select name="org">
+                {% for org in orgs %}
+                  <option value="{{ org.value }}" {% if org.value == current.data.attr|key('org') %}selected="selected"{% endif %}>
+                    {{ org.value }}
+                  </option>
+                {% endfor %}
+                  <option value=""> - No Org - </option>
+                </select>
+                <input type="text" class="span5" name="new_org" placeholder="Create new Org" style="margin-top: .5em;">
+             </div>
+            </div>
+            
+            <div class="control-group">
+              <label class="control-label">Shift :</label>
+              <div class="controls">
+                <select name="shift">
+                {% for shift in shifts %}
+                  <option value="{{ shift.value }}" {% if shift.value == current.data.attr|key('shift') %}selected="selected"{% endif %}>
+                    {{ shift.value }}
+                  </option>
+                {% endfor %}
+                  <option value=""> - No Shift - </option>
+                </select>
+                <input type="text" class="span5" name="new_shift" placeholder="Create new Shift" style="margin-top: .5em;">
+             </div>
+            </div>
+
+            <div class="control-group">
+              <label class="control-label">Team Role/Specialization :</label>
+              <div class="controls">
+                <input type="text" class="span11" name="role" placeholder="Team Role/Specialization" value="{{ current.data.attr|key('role') }}">
+             </div>
+            </div>  
+            
+            <div class="control-group">
               <label class="control-label">Description :</label>
               <div class="controls">
                 <textarea class="span11" name="description" rows="10">{{ current.data.description }}</textarea>
              </div>
             </div>
 
+            <div class="control-group">
+              <label class="control-label">Personal traits :</label>
+              <div class="controls">
+                <textarea class="span11" name="traits" rows="3">{{ current.data.attr|key('traits') }}</textarea>
+             </div>
+            </div>
+            
+            <div class="control-group">
+              <label class="control-label">Values :</label>
+              <div class="controls">
+                <h5>Isolationist <span class="pull-right" style="margin-right: 40px;">Interventionist</span></h5>
+                <input type="range" class="span11" name="iso_int" value="{{ current.data.attr|key('iso_int') }}" max="100" min="0" step="10">
+                <textarea class="span11" name="iso_int_note" rows="3">{{ current.data.attr|key('iso_int_note') }}</textarea>
+                
+                <h5>Militarist <span class="pull-right" style="margin-right: 40px;">Democrat</span></h5>
+                <input type="range" class="span11" name="mil_dem" value="{{ current.data.attr|key('mil_dem') }}" max="100" min="0" step="10">
+                <textarea class="span11" name="mil_dem_note" rows="3">{{ current.data.attr|key('mil_dem_note') }}</textarea>
+                
+                <h5>Nostalgic <span class="pull-right" style="margin-right: 40px;">Progressive</span></h5>
+                <input type="range" class="span11" name="nos_pro" value="{{ current.data.attr|key('nos_pro') }}" max="100" min="0" step="10">
+                <textarea class="span11" name="nos_pro_note" rows="3">{{ current.data.attr|key('nos_pro_note') }}</textarea>
+                
+                <h5>Libertine <span class="pull-right" style="margin-right: 40px;">Collectivist</span></h5>
+                <input type="range" class="span11" name="lib_col" value="{{ current.data.attr|key('lib_col') }}" max="100" min="0" step="10">
+                <textarea class="span11" name="lib_col_note" rows="3">{{ current.data.attr|key('lib_col_note') }}</textarea>
+             </div>
+            </div>
+            
+            <div class="control-group">
+              <label class="control-label">How you see yourself :</label>
+              <div class="controls">
+                <textarea class="span11" name="self_vision" rows="10">{{ current.data.attr|key('self_vision') }}</textarea>
+             </div>
+            </div>            
+            
+            <div class="control-group">
+              <label class="control-label">How others see you :</label>
+              <div class="controls">
+                <textarea class="span11" name="others_vision" rows="10">{{ current.data.attr|key('others_vision') }}</textarea>
+             </div>
+            </div>
+            
             <div class="control-group">
               <label class="control-label">Character Groups :</label>
               <div class="controls">
@@ -96,6 +182,13 @@
               </div>
             </div>              
             
+            <div class="control-group">
+              <label class="control-label">Design notes & play openings :</label>
+              <div class="controls">
+                <textarea class="span11" name="notes" rows="10">{{ current.data.attr|key('notes') }}</textarea>
+             </div>
+            </div>
+            
             <div class="widget-box collapsible">
               <div class="widget-title"> 
                 <a href="#collapseNotes" data-toggle="collapse"> 
@@ -106,7 +199,7 @@
               <div class="collapse" id="collapseNotes">
                 <div class="widget-content attributes"> 
                   {% for attribute in current.data.attr %}
-                  {% if attribute.name %}
+                  {% if attribute.name and (attribute.name not in set_attr) %}
                   <div class="attribute">
                     <input type="text" class="span6" name="attrKey[]" placeholder="Name" value="{{ attribute.name }}">
                     <input type="text" class="span5" name="attrVal[]" placeholder="Value" value="{{ attribute.value }}">

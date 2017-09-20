@@ -11,7 +11,7 @@
                   <h5 class="widget-title font-alt">Produced By</h5>
                   <ul class="icon-list">
                     <li><a href="http://beratta.org/" target="_blank">Berättelsefrämjandet</a></b></li>
-                    <li><a href="#"><b style="color: #E00; border-bottom: .1em solid currentcolor;">Ariadnes Red Thread</b></a></li>
+                    <li><a href="#"><b style="color: #E00; border-bottom: .05em solid currentcolor;">Ariadnes Red Thread</b></a></li>
                   </ul>
                 </div>
               </div>
@@ -19,20 +19,20 @@
                 <div class="widget">
                   <h5 class="widget-title font-alt">Dev-Blog</h5>
                   <ul class="widget-posts">
+                    {% for post in site.devBlog.posts %}
                     <li class="clearfix">
-                      <div class="widget-posts-image"><a href="#"><img src="{{ basePath }}assets/images/rp-1.jpg" alt="Post Thumbnail"/></a></div>
+                      <div class="widget-posts-image"><a href="{{ post.url }}"><img src="{{ post.thumbnail }}" alt="{{ post.title }}"/></a></div>
                       <div class="widget-posts-body">
-                        <div class="widget-posts-title"><a href="#">Designer Desk Essentials</a></div>
-                        <div class="widget-posts-meta">23 january</div>
+                        <div class="widget-posts-title"><a href="{{ post.url }}">{{ post.title }}</a></div>
+                        <div class="widget-posts-meta"><h6>{{ post.date|date('d/m/Y') }}</h6></div>
+                        <!--//
+                        <div class="widget-posts-excerpt"><a href="{{ post.url }}"><h6>
+                          {{ post.excerpt|raw }}
+                          </h6></a></div>
+                        //-->
                       </div>
                     </li>
-                    <li class="clearfix">
-                      <div class="widget-posts-image"><a href="#"><img src="{{ basePath }}assets/images/rp-2.jpg" alt="Post Thumbnail"/></a></div>
-                      <div class="widget-posts-body">
-                        <div class="widget-posts-title"><a href="#">Realistic Business Card Mockup</a></div>
-                        <div class="widget-posts-meta">15 February</div>
-                      </div>
-                    </li>
+                    {% endfor %}
                   </ul>
                 </div>
               </div>

@@ -31,7 +31,7 @@ class CreateParticipantPageSchemas extends AbstractMigration
         $table = $this->table('attributes');
         $table
           ->addColumn('name', 'string', array('limit' => 255))
-          ->addColumn('value', 'string', array('limit' => 255, 'null' => true))
+          ->addColumn('value', 'text', array('null' => true))
           ->addColumn('created_at', 'datetime', array('default' => '0000-00-00 00:00:00'))
           ->addColumn('updated_at', 'datetime', array('default' => '0000-00-00 00:00:00'))
           ->create();

@@ -45,6 +45,17 @@ $container['view'] = function($container) {
   $view->getEnvironment()->addGlobal("current_path", 
     $container["request"]->getUri()->getPath()
   );
+  
+  $view->getEnvironment()->addFilter(new Twig_SimpleFilter(
+      'key', 
+      function ($collection, $key) {
+        $a = [];
+        foreach ($collection as $name => $value) {
+          $a[$value->name] = $value->value; 
+        }        
+        return isset($a[$key]) ? $a[$key] : null;
+      })
+  );
 
   $view->getEnvironment()->addFilter(new Twig_SimpleFilter(
       'isActive', 
