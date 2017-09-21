@@ -10,7 +10,7 @@ class AuthController extends Controller
 {
   public function getLogin($request, $response)
   {
-    return $this->view->render($response, 'user/login.twig');
+    return $this->view->render($response, 'new/user/login.html');
   }
 
   public function postLogin($request, $response)
@@ -39,7 +39,7 @@ class AuthController extends Controller
 
   public function getRegister($request, $response)
   {
-    return $this->view->render($response, 'user/register.twig');
+    return $this->view->render($response, 'new/user/register.html');
   }
 
   public function postRegister($request, $response)
@@ -66,6 +66,24 @@ class AuthController extends Controller
     $role->users()->attach($user);
 
     $this->flash->addMessage('success', 'You have been successfully registered. Login now.');
+    return $response->withRedirect($this->router->pathFor('user.login'));
+  }
+
+  public function postReminder($request, $response)
+  {
+    $credentials = [
+      'email' => $request->getParam('email'),
+    ];
+    
+    $validation = $this->validator->validate($request, [
+      'email' => v::noWhitespace()->notEmpty()->emailAvailable(),
+    ]);    
+    
+    if ($validation->failed()) { //we have a user with this email
+
+    }
+    
+    $this->flash->addMessage('success', "Check you email for login reset information.");
     return $response->withRedirect($this->router->pathFor('user.login'));
   }
 }

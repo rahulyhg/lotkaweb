@@ -72,7 +72,7 @@
             <div class="control-group">
               <label class="control-label">Select input</label>
               <div class="controls">
-                <select name="role">
+                <select name="role"{{current.new ? ' disabled' : '' }}>
                 {% for role in auth.getRoles %}
                   <option value="{{ role.slug }}" {% if role.slug == current.role %}selected="selected"{% endif %}>
                     {{ role.name }}

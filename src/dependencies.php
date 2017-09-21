@@ -6,6 +6,8 @@ use \Symfony\Component\HttpFoundation\Request;
 $stripe_settings = $container['settings']['stripe_live'];
 \Stripe\Stripe::setApiKey($stripe_settings['SECRET_KEY']);
 \Stripe\Stripe::setApiVersion($stripe_settings['API_VERSION']);
+$container['stripe'] = $stripe_settings;
+
 
 // Setup Eloquent
 $capsule = new \Illuminate\Database\Capsule\Manager;
@@ -38,8 +40,21 @@ $container['view'] = function($container) {
     $container->request->getUri()
   ));
 
+  $view->addExtension(new Twig_Extension_StringLoader());
+  
   $view->getEnvironment()->addGlobal("current_path", 
     $container["request"]->getUri()->getPath()
+  );
+  
+  $view->getEnvironment()->addFilter(new Twig_SimpleFilter(
+      'key', 
+      function ($collection, $key) {
+        $a = [];
+        foreach ($collection as $name => $value) {
+          $a[$value->name] = $value->value; 
+        }        
+        return isset($a[$key]) ? $a[$key] : null;
+      })
   );
 
   $view->getEnvironment()->addFilter(new Twig_SimpleFilter(
@@ -50,11 +65,20 @@ $container['view'] = function($container) {
       })
   );
   
+  $view->getEnvironment()->addFilter(new Twig_SimpleFilter(
+      'editable', 
+      function ($region) use ($container){
+        if(!$container->auth->isAdmin()) return;        
+        return " data-editable data-name=\"{$region}\" data-path=\"{$container["request"]->getUri()->getPath()}\"";
+      })
+  );
+  
   $view->getEnvironment()->addGlobal('auth', [
     'check' => $container->sentinel->check(),
     'user' => $container->sentinel->getUser(),
     'isAdmin' => $container->auth->isAdmin(),
-    'getRoles' => $container->auth->roles()
+    'isParticipant' => $container->auth->isParticipant(),
+    'getRoles' => $container->auth->roles(),
   ]);
 
   $view->getEnvironment()->addGlobal('flash', $container->flash);
@@ -124,6 +148,10 @@ $container[App\Tickets\Stripe::class] = function ($c) { return new \App\Tickets\
 $container[App\API\Names::class]      = function ($c) { return new \App\API\Names($c); };
 $container[App\Pages\OpenPage::class] = function ($c) { return new \App\Pages\OpenPage($c); };
 
+$container['HomePageController']        = function($c) { return new \App\Controllers\Page\HomePageController($c); };
+$container['ParticipantPageController'] = function($c) { return new \App\Controllers\Page\Participant\ParticipantPageController($c); };
+
+// Admin
 $container['AuthController']          = function($c) { return new \App\Controllers\Auth\AuthController($c); };
 $container['AdminController']         = function($c) { return new \App\Controllers\Admin\AdminController($c); };
 $container['UserActionController']    = function($c) { return new \App\Controllers\Admin\UserActionController($c); };
@@ -134,4 +162,9 @@ $container['ShirtActionController']   = function($c) { return new \App\Controlle
 $container['SurnameActionController'] = function($c) { return new \App\Controllers\Admin\SurnameActionController($c); };
 $container['TeamActionController']    = function($c) { return new \App\Controllers\Admin\TeamActionController($c); };
 $container['TicketActionController']  = function($c) { return new \App\Controllers\Admin\TicketActionController($c); };
-$container['TaskActionController']  = function($c) { return new \App\Controllers\Admin\TaskActionController($c); };
+$container['TaskActionController']    = function($c) { return new \App\Controllers\Admin\TaskActionController($c); };
+$container['PostActionController']    = function($c) { return new \App\Controllers\Admin\PostActionController($c); };
+$container['CharacterActionController'] = function($c) { return new \App\Controllers\Admin\Participants\CharacterActionController($c); };
+$container['GroupActionController'] = function($c) { return new \App\Controllers\Admin\Participants\GroupActionController($c); };
+$container['PlotActionController'] = function($c) { return new \App\Controllers\Admin\Participants\PlotActionController($c); };
+$container['RelationActionController'] = function($c) { return new \App\Controllers\Admin\Participants\RelationActionController($c); };

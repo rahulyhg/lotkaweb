@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!--  
+    Document Title
+    =============================================
+    -->
+    <title>{% block title %}{{ siteName }}{% endblock %}</title>
+    <!--  
+    Favicons
+    =============================================
+    -->
+    {% block favicons %}
+    {{ include('new/partials/favicons.html') }}
+    {% endblock %}
+    <!--  
+    Stylesheets
+    =============================================
+    -->
+    {% block stylesheets %}
+    {{ include('new/partials/stylesheets.html') }}
+    {% endblock %}
+    <!--  
+    Inline JS
+    =============================================
+    -->
+    <script type='text/javascript'>//<![CDATA[
+      window.stripe = {
+        public_key: '{{ PUBLIC_KEY }}',
+        ticket_types: [
+    {% if tickets %}
+    {% for ticket in tickets.ticket_types %}
+    {
+      'sku': '{{ ticket.sku|e }}',
+      'price': {{ ticket.price|e }},
+      'description': '{{ ticket.description|e }}',
+      'img': '{{ticket.img}}',
+      'show': {
+        'surname': {{ticket.surname}}, 
+        'shirtType': {{ticket.shirtType}}, 
+        'size': {{ticket.size}}, 
+        'teamPreference': {{ticket.teamPreference}}
+       }
+
+    }{% if loop.last %}{% else %},{% endif %}
+    {% endfor %}
+    {% endif %}
+        ]
+      }
+      
+      window.page = {
+        slug: '{{ slug|default('about') }}'
+      }
+      
+      {% block inlinejs %}{% endblock %}
+    //]]>
+    </script>
+  </head>
+  <body data-spy="scroll" data-target=".onpage-navigation" data-offset="60">
+    <main>
+      <div class="page-loader">
+        <div class="loader">Loading...</div>
+      </div>
+      <nav class="navbar navbar-custom navbar-fixed-top" role="navigation">
+        <div class="container">
+          {{ include('new/partials/navbar/logo.html') }}
+          <div class="collapse navbar-collapse" id="custom-collapse">
+            <ul class="nav navbar-nav navbar-right">
+            {{ include('new/partials/navbar/menu.html') }}     
+            </ul>
+          </div>
+        </div>
+      </nav>
+      {% if showSplash %}
+        {% block splash %}
+          {{ include('new/partials/splash.html') }}
+        {% endblock %}
+      {% endif %}
+      
+      <div class="main">
+        {% block headCover %}
+        {{ include('new/partials/headcover.html') }}
+        {% endblock %}
+        <section class="module{% block mainClass%}{% endblock %}">
+          <div class="container">
+
+            <div class="row">
+            {% block content %}
+            {{ include(template_from_string(content|raw)) }}
+            {% endblock %}
+            </div>
+
+          </div>
+        </section>
+        
+        <div class="module-small bg-dark">
+          <div class="container">
+            <div class="row">
+            {% block bottom %}
+            {{ include('new/partials/footer/bottom.html') }}
+            {% endblock %}
+          </div>
+        </div>
+        <hr class="divider-d">
+        <footer class="footer bg-dark">
+          <div class="container">
+            <div class="row">
+            {% block footer %}
+              <div class="col-sm-6">
+                {{ include('new/partials/footer/copy.html') }}
+              </div>
+              <div class="col-sm-6">
+                <div class="footer-social-links">
+                  {{ include('new/partials/footer/social.html') }}
+                </div>
+              </div>
+              {% endblock %}
+            </div>
+          </div>
+        </footer>
+      </div>
+      <div class="scroll-up"><a href="#totop"><i class="fa fa-angle-double-up"></i></a></div>
+    </main>
+    <!--  
+    JavaScripts
+    =============================================
+    -->
+    {% block scripts %}
+    {{ include('new/partials/scripts.html') }}
+    {% endblock %}
+    {% block inlineBody %}
+    <!---------------- 
+    Inline JS / Body 
+    -------------//-->
+    {% endblock %}      
+    {% if auth.isAdmin %}
+    {{ include('new/partials/inlineEditor.html') }}
+    {% endif %}      
+  </body>
+</html>

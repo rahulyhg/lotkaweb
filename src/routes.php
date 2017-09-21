@@ -1,20 +1,21 @@
 <?php
 use App\Middleware\AdminMiddleware;
-
-/*
-| OPEN PAGE ROUTES
-*/
-
-$app->get('/[pay/{sku}]', '\App\Pages\OpenPage:index')->setName('home');
-$app->post('/charge', 'App\Pages\OpenPage:charge');
+use App\Middleware\ParticipantMiddleware;
 
 /*
 | API ROUTES
 */
 
+//Global view values
+$container->get('view')->getEnvironment()->addGlobal('site', [
+    'siteName' => 'Lotka-Volterra | Sci-fi larp',
+    'basePath' => '/',
+    'navPath' => '/',
+    'playerCount' => \App\Models\Order::distinct()->count(["email"]),
+    'devBlog' => $container['HomePageController']->devPosts(),
+  ]);  
+
 $app->group('/api/v1', function () {
-  $this->get('/test', '\App\API\Names:test');
-  
   $this->get('/names', function ($request, $response, $args) {
     $names = \App\API\Names::get();
     
@@ -81,6 +82,7 @@ $app->group('/api/v1', function () {
   
 });
 
+//User
 $app->group('/user', function() {
   
   $this->get('/register', 'AuthController:getRegister')->setName('user.register');
@@ -91,6 +93,7 @@ $app->group('/user', function() {
 
   $this->get('/logout', 'AuthController:logout')->setName('user.logout');
   
+  $this->post('/forgot', 'AuthController:postReminder')->setName('user.reminder');
 });
 
 //Admin
@@ -109,7 +112,8 @@ $app->group('/admin', function() use ($container) {
   $auth = $container->get('view')->getEnvironment()->getGlobals()['auth'];
   if ($auth['user']) {
     $container->get('view')->getEnvironment()->addGlobal('userData', [
-      'todos' => \App\Models\User::find($auth['user']->id)->tasks()->count(),
+      'todos' => \App\Models\User::find($auth['user']->id)->tasks()->where('status', '<>', 1)->get(),
+      'user' => $auth['user']
     ]);
   }
 
@@ -197,9 +201,83 @@ $app->group('/admin', function() use ($container) {
     $this->get('/{uid}/delete', 'TaskActionController:delete')->setName('admin.task.delete');
   });
   
+  //Posts
+  $this->group('/post', function() {
+    $this->get('', 'PostActionController:index')->setName('admin.posts.all');
+    
+    $this->get('/add', 'PostActionController:add')->setName('admin.post.add');
+    $this->post('/add', 'PostActionController:postAdd');
+    
+    $this->get('/{uid}/edit', 'PostActionController:edit')->setName('admin.post.edit');
+    $this->post('/{uid}/edit', 'PostActionController:postEdit');
+
+    $this->get('/{uid}/publish', 'PostActionController:publish')->setName('admin.post.publish');
+    $this->get('/{uid}/unpublish', 'PostActionController:unpublish')->setName('admin.post.unpublish');
+
+    $this->get('/{uid}/delete', 'PostActionController:delete')->setName('admin.post.delete');
+  });
+  
+  //Participants
+  $this->group('/participants', function() {
+    //TODO: Fix participant dashboard (for writers)
+    $this->get('','AdminController:index')->setName('admin.participant.dashboard');
+    
+    //Characters
+    $this->group('/characters', function () {
+      $this->get('/all', 'CharacterActionController:index')->setName('admin.character.list');
+      
+      $this->get('/add', 'CharacterActionController:add')->setName('admin.character.add');
+      $this->post('/add', 'CharacterActionController:post');
+      
+      $this->get('/{uid}/edit', 'CharacterActionController:edit')->setName('admin.character.edit');
+      $this->post('/{uid}/edit', 'CharacterActionController:post');
+      
+      $this->get('/{uid}/delete', 'CharacterActionController:delete')->setName('admin.character.delete');
+    });
+
+    //Groups
+    $this->group('/groups', function () {
+      $this->get('/all', 'GroupActionController:index')->setName('admin.group.list');
+      
+      $this->get('/add', 'GroupActionController:add')->setName('admin.group.add');
+      $this->post('/add', 'GroupActionController:post');
+      
+      $this->get('/{uid}/edit', 'GroupActionController:edit')->setName('admin.group.edit');
+      $this->post('/{uid}/edit', 'GroupActionController:post');
+      
+      $this->get('/{uid}/delete', 'GroupActionController:delete')->setName('admin.group.delete');
+    });
+    
+    //Plots
+    $this->group('/plots', function () {
+      $this->get('/all', 'PlotActionController:index')->setName('admin.plot.list');
+      
+      $this->get('/add', 'PlotActionController:add')->setName('admin.plot.add');
+      $this->post('/add', 'PlotActionController:post');
+      
+      $this->get('/{uid}/edit', 'PlotActionController:edit')->setName('admin.plot.edit');
+      $this->post('/{uid}/edit', 'PlotActionController:post');
+      
+      $this->get('/{uid}/delete', 'PlotActionController:delete')->setName('admin.plot.delete');
+    });
+    
+    //Relation
+    $this->group('/relations', function () {
+      $this->get('/all', 'RelationActionController:index')->setName('admin.relation.list');
+      
+      $this->get('/add', 'RelationActionController:add')->setName('admin.relation.add');
+      $this->post('/add', 'RelationActionController:post');
+      
+      $this->get('/{uid}/edit', 'RelationActionController:edit')->setName('admin.relation.edit');
+      $this->post('/{uid}/edit', 'RelationActionController:post');
+      
+      $this->get('/{uid}/delete', 'RelationActionController:delete')->setName('admin.relation.delete');
+    });    
+  });  
+  
 })->add(new AdminMiddleware($container));
 
-
+//Setup
 $app->get('/setup', function () {
   $sentinel = $this->sentinel;
   
@@ -234,4 +312,29 @@ $app->get('/setup', function () {
       ),
     ));
   }  
+});
+
+/*
+| PARTICIPANT PAGE ROUTES
+*/
+
+$app->group('/participants', function () { 
+  $this->get('', 'ParticipantPageController:index')->setName('participant.home');
+  
+  $this->get('/start', 'ParticipantPageController:onboarding')->setName('participant.onboarding');  
+  
+  $this->get('/{page}', 'ParticipantPageController:page')->setName('participant.page');
+})->add(new ParticipantMiddleware($container));
+
+/*
+| OPEN PAGE ROUTES
+*/
+
+
+$app->group('/', function () use ($container) {
+  $this->get('', 'HomePageController:index')->setName('home');              
+  $this->get('press', 'HomePageController:press')->setName('page.press');  
+  $this->get('ticket/{sku}', 'HomePageController:ticket')->setName('single.ticket');
+  $this->post('charge', 'App\Pages\OpenPage:charge');  
+  $this->get('{category}[/{page}]', 'HomePageController:page')->setName('open.page'); //FINAL CATCH ALL
 });

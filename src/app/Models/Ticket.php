@@ -22,4 +22,9 @@ class Ticket extends Model
     'size', 
     'teamPreference', 
   ];
+  
+  public function attr()
+  {
+      return $this->belongsToMany('App\Models\Attribute', 'ticket_attribute')->withTimeStamps(); 
+  }  
 }

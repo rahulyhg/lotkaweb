@@ -16,7 +16,8 @@ class User extends SentinelUser
     'first_name',
     'last_name',
     'org_notes',
-    'permissions'
+    'permissions',
+    'character_id',
   ];
 
   protected $loginNames = ['email', 'username'];
@@ -24,5 +25,20 @@ class User extends SentinelUser
   public function tasks()
   {
       return $this->hasMany('App\Models\Task');
-  }  
+  }
+  
+  public function character()
+  {
+      return $this->hasOne('App\Models\Character');
+  }
+  
+  public function groups()
+  {
+      return $this->belongsToMany('App\Models\Group', 'user_group')->withTimeStamps(); 
+  }
+  
+  public function attr()
+  {
+      return $this->belongsToMany('App\Models\Attribute', 'user_attribute')->withTimeStamps(); 
+  } 
 }

@@ -1,0 +1,10 @@
+<ul class="works-grid works-grid-gut works-grid-3 works-hover-w" id="works-grid">
+{% for section in sections %}  
+  <li class="work-item {{ section.types|join(' ') }}"><a href="{{ path_for('participant.page', { 'page': section.slug }) }}">
+      <div class="work-image"><img src="{{ section.image }}" alt="{{ section.title}} Item"/></div>
+      <div class="work-caption font-alt">
+        <h3 class="work-title">{{ section.title}}</h3>
+        <div class="work-descr">{{ section.info }}</div>
+      </div></a></li>
+{% endfor %}
+</ul>

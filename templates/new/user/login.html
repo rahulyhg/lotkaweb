@@ -1,0 +1,52 @@
+{% extends "/new/layout.html" %}
+
+{% block title %} Participant Login : {{ parent() }} {% endblock %}
+
+{% block headCover %}
+{{ include('/new/partials/fragments/flash.html') }}
+{% endblock %}
+
+{% block content %}
+  <div class="col-sm-6 col-sm-offset-3 mb-sm-40 reminder_form">
+    <h4 class="font-alt">Login</h4>
+    <hr class="divider-w mb-10">
+    <form class="form" method="post" action="{{ path_for('user.login') }}">
+      {{ csrf.field|raw }}
+      <div class="form-group">
+        <input class="form-control" id="username" type="text" name="username" placeholder="Username"/>
+      </div>
+      <div class="form-group">
+        <input class="form-control" id="password" type="password" name="password" placeholder="Password"/>
+      </div>
+      <div class="form-group">
+        <button class="btn btn-round btn-b">Login</button>
+      </div>
+      <div class="form-group"><a href="#" class="reminder_link">Forgot Password?</a></div>
+    </form>
+  </div>
+
+  <div class="col-sm-6 col-sm-offset-3 mb-sm-40 reminder_form" id="reminder">
+    <h4 class="font-alt">Forgot Password?</h4>
+    <hr class="divider-w mb-10">
+    <form class="form" method="post" action="{{ path_for('user.reminder') }}">
+      {{ csrf.field|raw }}      
+      <div class="form-group">
+        <input class="form-control" id="email" type="text" name="email" placeholder="E-Mail"/>
+      </div>
+      <div class="form-group">
+        <button class="btn btn-round btn-b">Reset password</button>
+      </div>
+      <div class="form-group"><a href="#" class="reminder_link">Back to Login?</a></div>
+    </form>
+  </div>
+{% endblock %}
+              
+{% block inlineBody %}
+<script type='text/javascript'>//<![CDATA[
+  $("a.reminder_link").on('click', function (e) {
+    e.preventDefault();
+    $(".reminder_form").toggle(500);
+  });
+//]]>
+</script>
+{% endblock %}

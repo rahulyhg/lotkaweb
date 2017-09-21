@@ -1,0 +1,153 @@
+{% extends 'admin/dashboard/main.twig' %}
+
+{% block title %}Relation Manager{% endblock %}
+
+{% block contentHeader %}
+  <div id="content-header">
+    <div id="breadcrumb"> 
+      <a href="{{ path_for('admin.index') }}" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a> 
+      <a href="{{ path_for('admin.participant.dashboard') }}">Participants</a> 
+      <a href="{{ path_for('admin.relation.list') }}">Relations</a> 
+      <a href="#" class="current"># {{current.data.name|default('New Relation')}}</a> 
+    </div>
+
+    <h1>Edit {{current.data.name|default('New Relation')}}</h1>
+  </div>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  <hr>
+  <div class="row-fluid">
+    <div class="span8">
+      <div class="widget-box">
+        <div class="widget-title"> <span class="icon"> <i class="icon-align-justify"></i> </span>
+          <h5>Edit Relation</h5>
+        </div>
+        <div class="widget-content nopadding">
+          <form action="{{ current.new ? path_for('admin.relation.add') : path_for('admin.relation.edit', { 'uid': current.data.id }) }}" method="post" autocomplete="on" class="form-horizontal">
+            <input type="hidden" name="selfsave">
+            {{ csrf.field | raw }}
+            
+            <div class="control-group">
+              <label class="control-label">Name :</label>
+              <div class="controls">
+                <input type="text" class="span11" name="name" placeholder="Name" value="{{ current.data.name }}">
+             </div>
+            </div>
+            
+            <div class="control-group">
+              <label class="control-label">Type :</label>
+              <div class="controls">
+                <select name="relationship_type">
+                  <option value=""> - No Type - </option>
+                {% for type in types %}
+                  <option value="{{ type.value }}" {% if type.value == current.attr.relationship_type %}selected="selected"{% endif %}>
+                    {{ type.value }}
+                  </option>
+                {% endfor %}
+                </select>
+                <input type="text" class="span5" name="new_type" placeholder="Create new type" style="margin-top: .5em;">
+             </div>
+            </div>
+            
+            <div class="control-group">
+              <label class="control-label">Icon :</label>
+              <div class="controls">
+                <select name="relationship_icon">
+                  <option value=""> - No Icon - </option>
+                {% for icon in icons %}
+                  <option value="{{ icon }}" {% if icon == current.attr.relationship_icon %}selected="selected"{% endif %}>
+                    <i class="{{ icon }}"></i> {{ icon }}
+                  </option>
+                {% endfor %}
+                </select>
+             </div>
+            </div>             
+            
+            <div class="control-group">
+              <label class="control-label">Description :</label>
+              <div class="controls">
+                <textarea class="span11" name="description" rows="10">{{ current.data.description }}</textarea>
+             </div>
+            </div>
+            
+            <div class="control-group">
+              <label class="control-label">Character Relations :</label>
+              <div class="controls">
+                <select name="character_ids[]" multiple="true">
+                {% for character in characters %}
+                  <option value="{{ character.id }}"{% for relation_character in current.data.characters %}{% if character.id == relation_character.id %} selected="selected"{% endif %}{% endfor %}>
+                    {{ character.name }}
+                  </option>
+                {% endfor %}
+                </select>
+              </div>
+            </div>               
+            
+            <div class="control-group">
+              <label class="control-label">Group Relations :</label>
+              <div class="controls">
+                <select name="group_ids[]" multiple="true">
+                {% for group in groups %}
+                  <option value="{{ group.id }}"{% for relation_group in current.data.groups %}{% if group.id == relation_group.id %} selected="selected"{% endif %}{% endfor %}>
+                    {{ group.name }}
+                  </option>
+                {% endfor %}
+                </select>
+              </div>
+            </div> 
+            
+            <div class="widget-box collapsible">
+              <div class="widget-title"> 
+                <a href="#collapseNotes" data-toggle="collapse"> 
+                  <span class="icon"><i class="icon-tags"></i></span>
+                  <h5>Attributes</h5>
+                </a> 
+              </div>
+              <div class="collapse" id="collapseNotes">
+                <div class="widget-content attributes"> 
+                  {% for attribute in current.data.attr %}
+                  {% if attribute.name and (attribute.name not in set_attr) %}
+                  <div class="attribute">
+                    <input type="text" class="span6" name="attrKey[]" placeholder="Name" value="{{ attribute.name }}">
+                    <input type="text" class="span5" name="attrVal[]" placeholder="Value" value="{{ attribute.value }}">
+                    <button class="btn btn-warning remove_attrib span1 pull-right">-</button>
+                  </div>
+                  {% endif %}
+                  {% endfor %}
+                  <div class="attribute">
+                    <input type="text" class="span6" name="attrKey[]" placeholder="Name" value="">
+                    <input type="text" class="span5" name="attrVal[]" placeholder="Value" value="">
+                    <button class="btn btn-success add_attrib span1 pull-right">+</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+  
+            <div class="form-actions">
+              <button type="submit" class="btn btn-success">Save</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block inlinejs %}
+  $(".attributes").on("click", ".add_attrib", function (e) {
+    e.preventDefault();
+    $addDiv = $(this).parent().clone();
+    $addDiv.find('input').each(function () { $(this).val(null); })
+    $(this).parent().after($addDiv);
+    $(this).parent().find('button')
+      .removeClass('btn-success add_attrib').addClass('btn-warning remove_attrib').text('-');
+  });
+
+  $(".attributes").on("click", ".remove_attrib", function (e) {
+    e.preventDefault();
+    $addDiv = $(this).parent().remove();
+  });
+{% endblock %}

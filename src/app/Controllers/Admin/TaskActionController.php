@@ -61,7 +61,7 @@ class TaskActionController extends Controller
     }
 
     $this->container->view->getEnvironment()->addGlobal('current', [
-      'data' => $ticketData,
+      'data' => $taskData,
     ]);
     
     return $this->view->render($response, 'admin/task/edit.html', [
@@ -71,7 +71,7 @@ class TaskActionController extends Controller
   
   public function postEdit($request, $response, $arguments)
   {
-    $task = Ticket::where('id', $arguments['uid'])->first();
+    $task = Task::where('id', $arguments['uid'])->first();
     
     if(!$task) {
       $this->flash->addMessage('error', "No task with ID '{$arguments['uid']}' found.");
@@ -89,7 +89,7 @@ class TaskActionController extends Controller
     
     // update data
     if($task->update($credentials)) {
-      $this->flash->addMessage('success', "Task details for '{$credentials['sku']}' have been changed.");
+      $this->flash->addMessage('success', "Task details for '{$credentials['title']}' have been changed.");
     } else {
       $this->flash->addMessage('error', "The task could not be updated.");
     }
@@ -107,6 +107,10 @@ class TaskActionController extends Controller
   
   public function todo($request, $response, $arguments)
   {
+    //$tasks = $this->container->get('view');
     
+    return $this->view->render($response, 'admin/task/todo.html', [
+      //'tasks' => $tasks
+    ]);
   }
 }

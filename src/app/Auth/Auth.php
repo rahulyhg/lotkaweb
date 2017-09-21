@@ -21,6 +21,13 @@ class Auth
     }
   }
 
+  public function isParticipant()
+  {
+    if ($this->container->sentinel->getUser()) {
+      return $this->container->sentinel->getUser()->inRole('participant') || self::isAdmin();
+    }
+  }
+  
   public function roles()
   {
     $roles = Roles::all();

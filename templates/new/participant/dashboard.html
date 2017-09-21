@@ -1,0 +1,17 @@
+{% extends "/new/layout.html" %}
+
+{% block title %} Participant Page : {{ parent() }} {% endblock %}
+
+{% block moduleClass %}pb-0{% endblock%}
+
+{% block headCover %}
+{{ include('/new/partials/fragments/flash.html') }}
+{% endblock %}
+
+{% block mainClass%}mt-10{% endblock %}
+
+{% block content %}
+{{ include('/new/participant/partials/dashboard_header.html') }}
+</div> {# breaking the parent template row #}
+{{ include('/new/participant/partials/dashboard_sections.html') }}
+{% endblock %}

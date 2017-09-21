@@ -1,0 +1,64 @@
+{% extends 'admin/dashboard/main.twig' %}
+
+{% block title %}Post Manager{% endblock %}
+
+{% block contentHeader %}
+  <div id="content-header">
+    <div id="breadcrumb"> 
+      <a href="{{ path_for('admin.index') }}" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a> 
+      <a href="#" class="current">Posts</a> 
+    </div>
+    
+    <h1>Posts</h1>
+  </div>
+{% endblock %}
+
+{% block content %}
+  <div class="container-fluid">
+    <hr>
+    <div class="row-fluid">
+      <div class="span12">
+        <div class="widget-box">
+          <div class="widget-title"> <span class="icon"><i class="icon-th"></i></span>
+            <h5>Page Posts</h5>
+          </div>
+          <div class="widget-content nopadding">
+            <table class="table table-bordered data-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Category</th>
+                  <th>Title</th>
+                  <th>Description</th>
+                  <th>Published</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for post in posts %}
+                <tr class="gradeA">
+                  <td class="center">{{ post.id }}</td>
+                  <td>{{ post.category.name }}</td>
+                  <td><a href="{{ path_for('admin.post.edit', { 'uid': post.id }) }}" title="Edit Post">{{ post.title }}</a></td>
+                  <td>{{ post.description }}</td>
+                  <td>{{ post.publish_at }}{% if post.unpublish_at and post.unpublish_at != '0000-00-00 00:00:00' %} (un-publish: {{ post.unpublish_at }}){% endif %}</td>
+
+                  <td class="center">
+                    <a href="{{ path_for('admin.post.edit', { 'uid': post.id }) }}" class="btn btn-default" title="Edit Post"><i class="icon-edit"></i></a>
+                    <a href="{{ path_for('admin.post.delete', { 'uid': post.id }) }}" class="btn btn-danger" title="Delete Post"><i class="icon-remove"></i></a>
+{% if "now"|date('Y-m-d') > post.publish_at|date('Y-m-d') or post.unpublish_at < "now"|date('Y-m-d') %}
+                    <a href="{{ path_for('admin.post.publish', { 'uid': post.id }) }}" class="btn btn-success" title="Publish Post"><i class="icon-check"></i></a>
+{% else %}
+                    <a href="{{ path_for('admin.post.unpublish', { 'uid': post.id }) }}" class="btn btn-warning" title="Un-publish Post"><i class="icon-check-empty"></i></a>
+{% endif %}
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

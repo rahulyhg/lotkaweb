@@ -1,8 +1,14 @@
 <div class="container-fluid">
   <div class="quick-actions_homepage">
     <ul class="quick-actions">
-      <li class="bg_lb span3"> <a href="{{ path_for('admin.orders.all') }}"> <i class="icon-money"></i> <span class="label label-important">{{ orderStatus.unattested }}</span> Orders </a> </li>
+      <li class="bg_lb"> <a href="{{ path_for('admin.orders.all') }}"> <i class="icon-money"></i> <span class="label label-important">{{ orderStatus.unattested }}</span> Orders </a> </li>
       <li class="bg_lg"> <a href="{{ path_for('admin.users.all') }}"> <i class="icon-user"></i> Users </a> </li>
+      <li class="bg_dy"> <a href="{{ path_for('admin.posts.all') }}"> <i class="icon-copy"></i> Posts </a> </li>
+
+      <li class="bg_lv"> <a href="{{ path_for('admin.character.list') }}"> <i class="icon-user"></i> <span class="label label-important"></span> Characters </a> </li>
+      <li class="bg_ly"> <a href="{{ path_for('admin.group.list') }}"> <i class="icon-group"></i> <span class="label label-important"></span> Groups </a> </li>    
+      <li class="bg_lo"> <a href="{{ path_for('admin.plot.list') }}"> <i class="icon-comments-alt"></i> <span class="label label-important"></span> Plots </a> </li>
+      <li class="bg_lr"> <a href="{{ path_for('admin.character.list') }}"> <i class="icon-heart-empty"></i> <span class="label label-important"></span> Relations </a> </li>
     </ul>
   </div>
 </div>
