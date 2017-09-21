@@ -63,12 +63,6 @@
     </ul>
   </li>
 
-  <li class="{{ [path_for('admin.participant.dashboard')]|isActive }}">
-    <a href="{{ path_for('admin.participant.dashboard') }}">
-      <i class="icon icon-thumbs-up"></i> <span>Participants</span> <span class="label label-important"></span>
-    </a>
-  </li>
-
   <li class="submenu {{ [path_for('admin.character.list'),path_for('admin.character.add')]|isActive }}">
     <a href="{{ path_for('admin.participant.dashboard') }}">
       <i class="icon icon-user"></i> <span>Characters</span> <span class="label label-important"></span>

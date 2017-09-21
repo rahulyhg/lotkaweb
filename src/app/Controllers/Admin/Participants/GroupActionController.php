@@ -14,13 +14,42 @@ use Slim\Views\Twig as View;
 
 class GroupActionController extends Controller
 {
+  
+  private function attributes() {
+    return [
+      'visible', 'synopsis',
+    ];
+  }
+  
+  private function options() {
+    return [
+      'users' => User::orderBy('displayname')->get(),
+      'characters' => Character::orderBy('name')->get(),
+      'groups' => Group::orderBy('name')->get(),
+      'plots' => Plot::orderBy('name')->get(),
+      'relations' => Relation::orderBy('name')->get(),
+      'set_attr' => self::attributes(),
+    ];
+  }
+
   private function handlePostData($request) {
     $credentials = [
       'name' => $request->getParam('name'),
       'description' => $request->getParam('description'),
     ];   
+
+    $attributes = [ 
+      'keys' => $request->getParam('attrKey'), 
+      'values' => $request->getParam('attrVal')
+    ];
     
-    $attributes = [ 'keys' => $request->getParam('attrKey'), 'values' => $request->getParam('attrVal')];
+    foreach (self::attributes() as $attr) {
+      if ( strlen($request->getParam($attr)) ) {
+        $attributes['keys'][] = $attr;
+        $attributes['values'][] = $request->getParam($attr);
+      }
+    }
+    
     $attribute_ids = [];
     
     foreach ($attributes['keys'] as $i => $attr_key) {
@@ -30,23 +59,45 @@ class GroupActionController extends Controller
       ])->id;
     }
     
-    return [$credentials, $attribute_ids];
+    return [ 
+      'values' => $credentials, 
+      'attributes' => $attribute_ids,
+      'characters' => self::paramToArray($request, 'character_ids'),
+      'groups' => self::paramToArray($request, 'group_ids'),
+      'relations' => self::paramToArray($request, 'relation_ids'),
+      'users' => self::paramToArray($request, 'user_ids'),
+      'plots' => self::paramToArray($request, 'plot_ids'),
+    ];    
+  }
+  
+  private function save($requestData, $request, $response, $arguments) {
+    // update data
+    $item = Group::firstOrCreate(['id' => $arguments['uid']]);
+    $item->update($requestData['values']);
+    
+    if($item->id) {
+      $item->attr()->sync($requestData['attributes']);
+      $item->groups()->sync($requestData['groups']);
+      $item->rel()->sync($requestData['relations']);
+      $item->users()->sync($requestData['users']);
+      $item->characters()->sync($requestData['characters']);
+      $item->plots()->sync($requestData['plots']);
+      
+      $this->flash->addMessage('success', "Details have been saved.");
+    } else {
+      $this->flash->addMessage('error', "The details could not be saved.");
+    }
+    
+    if( $request->getParam('selfsave') == 1 ) {
+      return $response->withRedirect($this->router->pathFor('admin.group.edit', ['uid' => $arguments['uid']]) . "#saved");
+    } else {
+      return $response->withRedirect($this->router->pathFor('admin.group.list'));
+    }    
   }
   
   public function index($request, $response, $arguments)
   {
     $item = Group::orderBy('name');
-    /*
-    //Filter by attribute
-    $item = Group::whereHas(
-        'attr', function ($query) {
-            $query->where([
-              ['name','NPC'], ['value','yes']
-            ]);
-        }
-    )
-    ->with('attr');
-    */
     
     return $this->view->render($response, "admin/participants/groups/list.html", [
       'groups' => $item->get(),
@@ -57,64 +108,27 @@ class GroupActionController extends Controller
   {
     $this->container->view->getEnvironment()->addGlobal('current', [
       'data' => [],
+      'attr' => [],
       'new' => true
     ]);
     
-    return $this->view->render($response, 'admin/participants/groups/edit.html', [
-      'users' => User::orderBy('displayname')->get(),
-    ]);
+    return $this->view->render($response, 'admin/participants/groups/edit.html', self::options());
   }
   
-  public function postAdd($request, $response, $arguments)
+  public function post($request, $response, $arguments)
   {    
-    // update data
-    $requestData = self::handlePostData($request);
-    $item = Group::create($requestData[0]);
-    
-    // update data
-    if($item->id) {
-      $item->attr()->sync($requestData[1]);
-      $this->flash->addMessage('success', "Group details have been saved.");
-    } else {
-      $this->flash->addMessage('error', "The group could not be saved.");
-    }
-    
-    if( $request->getParam('selfsave') == 1 ) {
-      return $response->withRedirect($this->router->pathFor('admin.group.edit', ['uid' => $arguments['uid']]) . "#saved");
-    } else {
-      return $response->withRedirect($this->router->pathFor('admin.group.list'));
-    }
+    return self::save(self::handlePostData($request), $request, $response, $arguments);
   }
   
   public function edit($request, $response, $arguments)
   {
-     $this->container->view->getEnvironment()->addGlobal('current', [
-      'data' => Group::where('id', $arguments['uid'])->first(),
-    ]);
-    
-    return $this->view->render($response, 'admin/participants/groups/edit.html', [
-      'users' => User::orderBy('displayname')->get(),
-    ]);
-  }
-  
-  public function postEdit($request, $response, $arguments)
-  {
     $item = Group::where('id', $arguments['uid'])->first();
-    $requestData = self::handlePostData($request);
+    $this->container->view->getEnvironment()->addGlobal('current', [
+      'data' => $item,
+      'attr' => self::mapAttributes( $item->attr ),
+    ]);
     
-    // update data
-    if($item->update($requestData[0])) {
-      $item->attr()->sync($requestData[1]);
-      $this->flash->addMessage('success', "Group {$requestData[0]['name']} have been saved.");
-    } else {
-      $this->flash->addMessage('error', "The group could not be saved.");
-    }
-    
-    if( $request->getParam('selfsave') == 1 ) {
-      return $response->withRedirect($this->router->pathFor('admin.group.edit', ['uid' => $arguments['uid']]) . "#saved");
-    } else {
-      return $response->withRedirect($this->router->pathFor('admin.group.list'));
-    }
+    return $this->view->render($response, 'admin/participants/groups/edit.html', self::options());
   }
 
   public function delete($request, $response, $arguments)

@@ -29,15 +29,32 @@
                 <tr>
                   <th>#</th>
                   <th>Name</th>
+                  <th>Parent</th>
+                  <th>Characters</th>
+                  <th>Groups</th>
                   <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {% for plot in plots %}
+                {% for plot in list %}
                 <tr class="gradeA">
                   <td class="center">{{ plot.id }}</td>
                   <td><a href="{{ path_for('admin.plot.edit', { 'uid': plot.id }) }}" title="Edit Plot">{{ plot.name }}</a></td>
-
+                  <td>
+                    {% for parent_plots in plot.plots %}
+                    <a href="{{ path_for('admin.plot.edit', { 'uid': parent_plots.id }) }}" title="Edit Plot">{{ parent_plots.name }}</a>{% if loop.last %}{% else %}, {% endif %}
+                    {% endfor %}
+                  </td>
+                  <td>
+                    {% for character in plot.characters %}
+                    <a href="{{ path_for('admin.character.edit', { 'uid': character.id }) }}" title="Edit Character">{{ character.name }}</a>{% if loop.last %}{% else %}, {% endif %}
+                    {% endfor %}
+                  </td>
+                  <td>
+                    {% for group in plot.groups %}
+                    <a href="{{ path_for('admin.group.edit', { 'uid': group.id }) }}" title="Edit Group">{{ group.name }}</a>{% if loop.last %}{% else %}, {% endif %}
+                    {% endfor %}
+                  </td>
                   <td class="center">
                     <a href="{{ path_for('admin.plot.edit', { 'uid': plot.id }) }}" class="btn btn-default" title="Edit Plot"><i class="icon-edit"></i></a>
                     <a href="{{ path_for('admin.plot.delete', { 'uid': plot.id }) }}" class="btn btn-danger" title="Delete Plot"><i class="icon-remove"></i></a>

@@ -27,4 +27,9 @@ class Plot extends Model
   {
       return $this->belongsToMany('App\Models\Group', 'group_plot')->withTimeStamps();
   }
+  
+  public function plots()
+  {
+      return $this->belongsToMany('App\Models\Plot',  'plot_plot', 'plot_id', 'parent_plot_id')->withTimeStamps();
+  }  
 }

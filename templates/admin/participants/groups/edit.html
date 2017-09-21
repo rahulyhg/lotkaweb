@@ -37,10 +37,123 @@
             </div>
             
             <div class="control-group">
+              <label class="control-label">Synopsis :</label>
+              <div class="controls">
+                <textarea class="span11" name="synopsis" rows="5">{{ current.attr.synopsis }}</textarea>
+             </div>
+            </div>
+            
+            <div class="control-group">
               <label class="control-label">Description :</label>
               <div class="controls">
                 <textarea class="span11" name="description" rows="10">{{ current.data.description }}</textarea>
              </div>
+            </div>
+
+            <div class="control-group">
+              <label class="control-label">Characters :</label>
+              <div class="controls">
+                <select name="character_ids[]" multiple="true">
+                {% for item in characters %}
+                  <option value="{{ item.id }}"{% for item_col in current.data.characters %}{% if item.id == item_col.id %} selected="selected"{% endif %}{% endfor %}>
+                    {{ item.name }}
+                  </option>
+                {% endfor %}
+                </select>
+              </div>
+            </div>
+            
+            <div class="control-group">
+              <label class="control-label">Users :</label>
+              <div class="controls">
+                <select name="user_ids[]" multiple="true">
+                {% for item in users %}
+                  <option value="{{ item.id }}"{% for item_col in current.data.users %}{% if item.id == item_col.id %} selected="selected"{% endif %}{% endfor %}>
+                    {{ item.displayname }}
+                  </option>
+                {% endfor %}
+                </select>
+              </div>
+            </div>
+            
+            <div class="control-group">
+              <label class="control-label">Group Plots :</label>
+              <div class="controls">
+                <select name="plot_ids[]" multiple="true">
+                {% for item in plots %}
+                  <option value="{{ item.id }}"{% for item_col in current.data.plots %}{% if item.id == item_col.id %} selected="selected"{% endif %}{% endfor %}>
+                    {{ item.name }}
+                  </option>
+                {% endfor %}
+                </select>
+              </div>
+            </div>
+            
+            <div class="control-group">
+              <label class="control-label">Parent groups :</label>
+              <div class="controls">
+                <select name="group_ids[]" multiple="true">
+                {% for item in groups %}
+                  <option value="{{ item.id }}"{% for item_col in current.data.groups %}{% if item.id == item_col.id %} selected="selected"{% endif %}{% endfor %}>
+                    {{ item.name }}
+                  </option>
+                {% endfor %}
+                </select>
+              </div>
+            </div>            
+            
+            
+            <div class="widget-box" style="margin: .5em;">
+              <div class="widget-title"> <span class="icon"> <i class="icon-th"></i> </span>
+                <h5>Current Relationships</h5>
+              </div>              
+              <div class="widget-content nopadding">
+                <table class="table table-bordered table-striped">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Name</th>
+                      <th>Characters</th>
+                      <th>Groups</th>
+                      <th>Type</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for relationship in current.data.rel %}
+                    <tr class="odd gradeA">
+                      <td class="center"><i class="{{ relationship.attr|key('relationship_icon') }}"></i></td>
+                      <td><a href="{{ path_for('admin.relation.edit', { 'uid': relationship.id }) }}" title="Edit Relationship">{{ relationship.name }}</a></td>
+                      <td>
+                        {% for character in relationship.characters %}
+                        <a href="{{ path_for('admin.character.edit', { 'uid': character.id }) }}" title="Edit Character">{{ character.name }}</a>{% if loop.last %}{% else %}, {% endif %}
+                        {% endfor %}
+                      </td>
+                      <td>
+                        {% for group in relation.groups %}
+                        <a href="{{ path_for('admin.group.edit', { 'uid': group.id }) }}" title="Edit Group">{{ group.name }}</a>{% if loop.last %}{% else %}, {% endif %}
+                        {% endfor %}
+                      </td>                  
+                      <td>{{ relationship.attr|key('relationship_type') }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+              </div>
+              <div class="control-group">
+                <a href="{{ path_for('admin.relation.add') }}" class="btn span20 btn-success">Create new Relation</a>
+              </div>
+            </div>                
+
+            <div class="control-group">
+              <label class="control-label">Group Relations :</label>
+              <div class="controls relationships">            
+                <select name="relations_ids[]" multiple="true">
+                {% for item in relations %}
+                  <option value="{{ item.id }}"{% for item_col in current.data.relations %}{% if item.id == item_col.id %} selected="selected"{% endif %}{% endfor %}>
+                    {{ item.name }}
+                  </option>
+                {% endfor %}
+                </select>
+              </div>
             </div>
             
             <div class="widget-box collapsible">
@@ -53,7 +166,7 @@
               <div class="collapse" id="collapseNotes">
                 <div class="widget-content attributes"> 
                   {% for attribute in current.data.attr %}
-                  {% if attribute.name %}
+                  {% if attribute.name and (attribute.name not in set_attr) %}
                   <div class="attribute">
                     <input type="text" class="span6" name="attrKey[]" placeholder="Name" value="{{ attribute.name }}">
                     <input type="text" class="span5" name="attrVal[]" placeholder="Value" value="{{ attribute.value }}">

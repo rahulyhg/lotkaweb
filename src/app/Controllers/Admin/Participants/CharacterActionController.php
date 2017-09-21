@@ -93,12 +93,27 @@ class CharacterActionController extends Controller
     ];
   }
   
-  private function mapAttributes($collection) {
-    $a = [];
-    foreach ($collection as $name => $value) {
-      $a[$value->name] = $value->value; 
-    }        
-    return $a;
+  private function save($requestData, $request, $response, $arguments) {
+    // update data
+    $item = Character::firstOrCreate(['id' => $arguments['uid']]);
+    $item->update($requestData['values']);
+    
+    // update data
+    if($item->id) {
+      $item->attr()->sync($requestData['attributes']);
+      $item->groups()->sync($requestData['groups']);
+      $item->rel()->sync($requestData['relations']);
+      
+      $this->flash->addMessage('success', "Character details have been saved.");
+    } else {
+      $this->flash->addMessage('error', "The character could not be saved.");
+    }
+    
+    if( $request->getParam('selfsave') == 1 ) {
+      return $response->withRedirect($this->router->pathFor('admin.character.edit', ['uid' => $arguments['uid']]) . "#saved");
+    } else {
+      return $response->withRedirect($this->router->pathFor('admin.character.list'));
+    }
   }
   
   private function characterOrgs() {
@@ -139,31 +154,12 @@ class CharacterActionController extends Controller
     
     return $this->view->render($response, 'admin/participants/characters/edit.html', self::characterOptions());
   }
-  
-  public function postAdd($request, $response, $arguments)
+    
+  public function post($request, $response, $arguments)
   {    
-    // update data
-    $requestData = self::handlePostData($request);
-    $post = Character::create($requestData['values']);
-    
-    // update data
-    if($post->id) {
-      $post->attr()->sync($requestData['attributes']);
-      $post->groups()->sync($requestData['groups']);
-      $post->rel()->sync($requestData['relations']);
-      
-      $this->flash->addMessage('success', "Post details have been saved.");
-    } else {
-      $this->flash->addMessage('error', "The post could not be saved.");
-    }
-    
-    if( $request->getParam('selfsave') == 1 ) {
-      return $response->withRedirect($this->router->pathFor('admin.character.edit', ['uid' => $arguments['uid']]) . "#saved");
-    } else {
-      return $response->withRedirect($this->router->pathFor('admin.character.list'));
-    }
-  }
-  
+    return self::save(self::handlePostData($request), $request, $response, $arguments);
+  }  
+
   public function edit($request, $response, $arguments)
   {
     $character = Character::where('id', $arguments['uid'])->first();
@@ -176,30 +172,6 @@ class CharacterActionController extends Controller
     return $this->view->render($response, 'admin/participants/characters/edit.html', self::characterOptions());
   }
   
-  public function postEdit($request, $response, $arguments)
-  {
-    $character = Character::where('id', $arguments['uid'])->first();
-    $requestData = self::handlePostData($request);
-    
-    // update data
-    if($character->update($requestData['values'])) {
-      $character->attr()->sync($requestData['attributes']);
-      $character->groups()->sync($requestData['groups']);
-      $character->rel()->sync($requestData['relations']);
-      
-      $this->flash->addMessage('success', "Character {$requestData['values']['name']} have been saved.");
-    } else {
-      $this->flash->addMessage('error', "The character could not be saved.");
-    }
-    
-    if( $request->getParam('selfsave') == 1 ) {
-      return $response->withRedirect($this->router->pathFor('admin.character.edit', ['uid' => $arguments['uid']]) . "#saved");
-    } else {
-      return $response->withRedirect($this->router->pathFor('admin.character.list'));
-    }
-  }
-
-
   public function delete($request, $response, $arguments)
   {
     $item = Character::where('id', $arguments['uid'])->first();

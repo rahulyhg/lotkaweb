@@ -31,6 +31,7 @@
                   <th>Name</th>
                   <th>Type</th>
                   <th>Characters</th>
+                  <th>Groups</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -43,7 +44,12 @@
                   <td class="center">
                     {% for character in relation.characters %}
                     <a href="{{ path_for('admin.character.edit', { 'uid': character.id }) }}" title="Edit Character">{{ character.name }}</a>{% if loop.last %}{% else %}, {% endif %}
-                    {% endfor %}                    
+                    {% endfor %}
+                  </td>
+                  <td class="center">
+                    {% for group in relation.groups %}
+                    <a href="{{ path_for('admin.group.edit', { 'uid': group.id }) }}" title="Edit Group">{{ group.name }}</a>{% if loop.last %}{% else %}, {% endif %}
+                    {% endfor %}
                   </td>
                   <td class="center">
                     <a href="{{ path_for('admin.relation.edit', { 'uid': relation.id }) }}" class="btn btn-default" title="Edit Relation"><i class="icon-edit"></i></a>

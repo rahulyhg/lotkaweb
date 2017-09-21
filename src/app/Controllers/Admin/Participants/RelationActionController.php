@@ -32,14 +32,6 @@ class RelationActionController extends Controller
     ];
   }
   
-  private function mapAttributes($collection) {
-    $a = [];
-    foreach ($collection as $name => $value) {
-      $a[$value->name] = $value->value; 
-    }        
-    return $a;
-  }
-  
   private function relationTypes() {
     return Attribute::where('name', 'relationship_type')->get();
   }
@@ -98,6 +90,28 @@ class RelationActionController extends Controller
     ];
   }
   
+  private function save($requestData, $request, $response, $arguments) {
+    // update data
+    $item = Relation::firstOrCreate(['id' => $arguments['uid']]);
+    $item->update($requestData['values']);
+    
+    // update data
+    if($item->id) {
+      $item->attr()->sync($requestData['attributes']);
+      $item->groups()->sync($requestData['groups']);
+      $item->characters()->sync($requestData['characters']);
+      
+      $this->flash->addMessage('success', "Relation details have been saved.");
+    } else {
+      $this->flash->addMessage('error', "The relation could not be saved.");
+    }
+    
+    if( $request->getParam('selfsave') == 1 ) {
+      return $response->withRedirect($this->router->pathFor('admin.relation.edit', ['uid' => $arguments['uid']]) . "#saved");
+    } else {
+      return $response->withRedirect($this->router->pathFor('admin.relation.list'));
+    }    
+  }
   public function index($request, $response, $arguments)
   {
     $item = Relation::orderBy('name');
@@ -129,28 +143,9 @@ class RelationActionController extends Controller
     return $this->view->render($response, 'admin/participants/relations/edit.html', self::relationOptions());
   }
   
-  public function postAdd($request, $response, $arguments)
+  public function post($request, $response, $arguments)
   {    
-    // update data
-    $requestData = self::handlePostData($request);
-    $item = Relation::create($requestData['values']);
-    
-    // update data
-    if($item->id) {
-      $item->attr()->sync($requestData['attributes']);
-      $item->groups()->sync($requestData['groups']);
-      $item->characters()->sync($requestData['characters']);
-      
-      $this->flash->addMessage('success', "Relation details have been saved.");
-    } else {
-      $this->flash->addMessage('error', "The relation could not be saved.");
-    }
-    
-    if( $request->getParam('selfsave') == 1 ) {
-      return $response->withRedirect($this->router->pathFor('admin.relation.edit', ['uid' => $arguments['uid']]) . "#saved");
-    } else {
-      return $response->withRedirect($this->router->pathFor('admin.relation.list'));
-    }
+    return self::save(self::handlePostData($request), $request, $response, $arguments);
   }
   
   public function edit($request, $response, $arguments)
@@ -162,29 +157,6 @@ class RelationActionController extends Controller
     ]);
     
     return $this->view->render($response, 'admin/participants/relations/edit.html', self::relationOptions());
-  }
-  
-  public function postEdit($request, $response, $arguments)
-  {
-    $item = Relation::where('id', $arguments['uid'])->first();
-    $requestData = self::handlePostData($request);
-    
-    // update data
-    if($item->update($requestData['values'])) {
-      $item->attr()->sync($requestData['attributes']);
-      $item->groups()->sync($requestData['groups']);
-      $item->characters()->sync($requestData['characters']);
-      
-      $this->flash->addMessage('success', "Relation {$requestData[0]['name']} have been saved.");
-    } else {
-      $this->flash->addMessage('error', "The relation could not be saved.");
-    }
-    
-    if( $request->getParam('selfsave') == 1 ) {
-      return $response->withRedirect($this->router->pathFor('admin.relation.edit', ['uid' => $arguments['uid']]) . "#saved");
-    } else {
-      return $response->withRedirect($this->router->pathFor('admin.relation.list'));
-    }
   }
 
   public function delete($request, $response, $arguments)

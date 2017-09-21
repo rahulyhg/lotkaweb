@@ -37,10 +37,56 @@
             </div>
             
             <div class="control-group">
+              <label class="control-label">Synopsis :</label>
+              <div class="controls">
+                <textarea class="span11" name="synopsis" rows="5">{{ current.attr.synopsis }}</textarea>
+             </div>
+            </div>
+            
+            <div class="control-group">
               <label class="control-label">Description :</label>
               <div class="controls">
                 <textarea class="span11" name="description" rows="10">{{ current.data.description }}</textarea>
              </div>
+            </div>
+            
+            <div class="control-group">
+              <label class="control-label">Characters :</label>
+              <div class="controls">
+                <select name="character_ids[]" multiple="true">
+                {% for item in characters %}
+                  <option value="{{ item.id }}"{% for item_col in current.data.characters %}{% if item.id == item_col.id %} selected="selected"{% endif %}{% endfor %}>
+                    {{ item.name }}
+                  </option>
+                {% endfor %}
+                </select>
+              </div>
+            </div>
+            
+            <div class="control-group">
+              <label class="control-label">Groups :</label>
+              <div class="controls">
+                <select name="group_ids[]" multiple="true">
+                {% for item in groups %}
+                  <option value="{{ item.id }}"{% for item_col in current.data.groups %}{% if item.id == item_col.id %} selected="selected"{% endif %}{% endfor %}>
+                    {{ item.name }}
+                  </option>
+                {% endfor %}
+                </select>
+              </div>
+            </div>
+            
+            <div class="control-group">
+              <label class="control-label">Parent plots :</label>
+              <div class="controls">
+                <select name="plot_ids[]" multiple="true">
+                {% for item in plots %}
+                  <option value="{{ item.id }}"{% for item_col in current.data.plots %}{% if item.id == item_col.id %} selected="selected"{% endif %}{% endfor %}>
+                    {{ item.name }}
+                  </option>
+                {% endfor %}
+                </select>
+              </div>
             </div>
             
             <div class="widget-box collapsible">
@@ -53,7 +99,7 @@
               <div class="collapse" id="collapseNotes">
                 <div class="widget-content attributes"> 
                   {% for attribute in current.data.attr %}
-                  {% if attribute.name %}
+                  {% if attribute.name and (attribute.name not in set_attr) %}
                   <div class="attribute">
                     <input type="text" class="span6" name="attrKey[]" placeholder="Name" value="{{ attribute.name }}">
                     <input type="text" class="span5" name="attrVal[]" placeholder="Value" value="{{ attribute.value }}">

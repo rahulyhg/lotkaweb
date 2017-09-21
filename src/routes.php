@@ -219,17 +219,18 @@ $app->group('/admin', function() use ($container) {
   
   //Participants
   $this->group('/participants', function() {
-    $this->get('', 'PostActionController:index')->setName('admin.participant.dashboard');
+    //TODO: Fix participant dashboard (for writers)
+    $this->get('','AdminController:index')->setName('admin.participant.dashboard');
     
     //Characters
     $this->group('/characters', function () {
       $this->get('/all', 'CharacterActionController:index')->setName('admin.character.list');
       
       $this->get('/add', 'CharacterActionController:add')->setName('admin.character.add');
-      $this->post('/add', 'CharacterActionController:postAdd');
+      $this->post('/add', 'CharacterActionController:post');
       
       $this->get('/{uid}/edit', 'CharacterActionController:edit')->setName('admin.character.edit');
-      $this->post('/{uid}/edit', 'CharacterActionController:postEdit');
+      $this->post('/{uid}/edit', 'CharacterActionController:post');
       
       $this->get('/{uid}/delete', 'CharacterActionController:delete')->setName('admin.character.delete');
     });
@@ -239,10 +240,10 @@ $app->group('/admin', function() use ($container) {
       $this->get('/all', 'GroupActionController:index')->setName('admin.group.list');
       
       $this->get('/add', 'GroupActionController:add')->setName('admin.group.add');
-      $this->post('/add', 'GroupActionController:postAdd');
+      $this->post('/add', 'GroupActionController:post');
       
       $this->get('/{uid}/edit', 'GroupActionController:edit')->setName('admin.group.edit');
-      $this->post('/{uid}/edit', 'GroupActionController:postEdit');
+      $this->post('/{uid}/edit', 'GroupActionController:post');
       
       $this->get('/{uid}/delete', 'GroupActionController:delete')->setName('admin.group.delete');
     });
@@ -252,10 +253,10 @@ $app->group('/admin', function() use ($container) {
       $this->get('/all', 'PlotActionController:index')->setName('admin.plot.list');
       
       $this->get('/add', 'PlotActionController:add')->setName('admin.plot.add');
-      $this->post('/add', 'PlotActionController:postAdd');
+      $this->post('/add', 'PlotActionController:post');
       
       $this->get('/{uid}/edit', 'PlotActionController:edit')->setName('admin.plot.edit');
-      $this->post('/{uid}/edit', 'PlotActionController:postEdit');
+      $this->post('/{uid}/edit', 'PlotActionController:post');
       
       $this->get('/{uid}/delete', 'PlotActionController:delete')->setName('admin.plot.delete');
     });
@@ -265,10 +266,10 @@ $app->group('/admin', function() use ($container) {
       $this->get('/all', 'RelationActionController:index')->setName('admin.relation.list');
       
       $this->get('/add', 'RelationActionController:add')->setName('admin.relation.add');
-      $this->post('/add', 'RelationActionController:postAdd');
+      $this->post('/add', 'RelationActionController:post');
       
       $this->get('/{uid}/edit', 'RelationActionController:edit')->setName('admin.relation.edit');
-      $this->post('/{uid}/edit', 'RelationActionController:postEdit');
+      $this->post('/{uid}/edit', 'RelationActionController:post');
       
       $this->get('/{uid}/delete', 'RelationActionController:delete')->setName('admin.relation.delete');
     });    

@@ -209,6 +209,7 @@
                       <th>#</th>
                       <th>Name</th>
                       <th>Characters</th>
+                      <th>Groups</th>
                       <th>Type</th>
                     </tr>
                   </thead>
@@ -222,10 +223,18 @@
                         <a href="{{ path_for('admin.character.edit', { 'uid': character.id }) }}" title="Edit Character">{{ character.name }}</a>{% if loop.last %}{% else %}, {% endif %}
                         {% endfor %}
                       </td>
+                      <td>
+                        {% for group in relation.groups %}
+                        <a href="{{ path_for('admin.group.edit', { 'uid': group.id }) }}" title="Edit Group">{{ group.name }}</a>{% if loop.last %}{% else %}, {% endif %}
+                        {% endfor %}
+                      </td>  
                       <td>{{ relationship.attr|key('relationship_type') }}</td>
                     </tr>
                     {% endfor %}
                 </table>
+              </div>
+              <div class="control-group">
+                <a href="{{ path_for('admin.relation.add') }}" target="_new" class="btn span20 btn-success">Create new Relation <i class="icon-external-link"></i></a>
               </div>
             </div>                
 
@@ -239,7 +248,6 @@
                   </option>
                 {% endfor %}
                 </select>
-                
                 
               </div>
             </div>
