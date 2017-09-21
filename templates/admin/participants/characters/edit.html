@@ -40,12 +40,12 @@
               <label class="control-label">Player :</label>
               <div class="controls">
                 <select name="user_id">
+                  <option value=""> - No User Attached - </option>
                 {% for user in users %}
                   <option value="{{ user.id }}" {% if user.id == current.data.user_id %}selected="selected"{% endif %}>
                     {{ user.displayname }}
                   </option>
                 {% endfor %}
-                  <option value=""> - No User Attached - </option>
                 </select>
               </div>
             </div>
@@ -53,20 +53,20 @@
             <div class="control-group">
               <label class="control-label">Quote :</label>
               <div class="controls">
-                <textarea class="span11" name="quote" rows="2">{{ current.data.attr|key('quote') }}</textarea>
+                <textarea class="span11" name="quote" rows="2">{{ current.attr.quote }}</textarea>
              </div>
             </div>            
 
             <div class="control-group">
-              <label class="control-label">Org :</label>
+              <label class="control-label">Group :</label>
               <div class="controls">
                 <select name="org">
+                  <option value=""> - No Group - </option>
                 {% for org in orgs %}
-                  <option value="{{ org.value }}" {% if org.value == current.data.attr|key('org') %}selected="selected"{% endif %}>
+                  <option value="{{ org.value }}" {% if org.value == current.attr.org %}selected="selected"{% endif %}>
                     {{ org.value }}
                   </option>
                 {% endfor %}
-                  <option value=""> - No Org - </option>
                 </select>
                 <input type="text" class="span5" name="new_org" placeholder="Create new Org" style="margin-top: .5em;">
              </div>
@@ -76,12 +76,12 @@
               <label class="control-label">Shift :</label>
               <div class="controls">
                 <select name="shift">
+                  <option value=""> - No Shift - </option>
                 {% for shift in shifts %}
-                  <option value="{{ shift.value }}" {% if shift.value == current.data.attr|key('shift') %}selected="selected"{% endif %}>
+                  <option value="{{ shift.value }}" {% if shift.value == current.attr.shift %}selected="selected"{% endif %}>
                     {{ shift.value }}
                   </option>
                 {% endfor %}
-                  <option value=""> - No Shift - </option>
                 </select>
                 <input type="text" class="span5" name="new_shift" placeholder="Create new Shift" style="margin-top: .5em;">
              </div>
@@ -90,9 +90,38 @@
             <div class="control-group">
               <label class="control-label">Team Role/Specialization :</label>
               <div class="controls">
-                <input type="text" class="span11" name="role" placeholder="Team Role/Specialization" value="{{ current.data.attr|key('role') }}">
+                <input type="text" class="span11" name="role" placeholder="Team Role/Specialization" value="{{ current.attr.role }}">
              </div>
             </div>  
+            
+            <div class="control-group">
+              <label class="control-label">Age :</label>
+              <div class="controls">
+                <input type="text" class="span11" name="age" placeholder="Age" value="{{ current.attr.age }}">
+                <input type="text" class="span5" name="age_nightfall" placeholder="Age at Nighfall" style="margin-top: .5em;" disabled="true" value="{% if current.attr.age %}{{ current.attr.age - 13 }}{% endif %}">
+             </div>
+            </div>
+            
+            <div class="control-group">
+              <label class="control-label">Bunk Budy :</label>
+              <div class="controls">
+                <select name="bunk_budy">
+                  <option value=""> - No Bunk Budy - </option>
+                {% for character in characters %}
+                  <option value="{{ character.id }}" {% if character.id == current.attr.bunk_budy %}selected="selected"{% endif %}>
+                    {{ character.name }}
+                  </option>
+                {% endfor %}
+                </select>
+             </div>
+            </div>
+            
+            <div class="control-group">
+              <label class="control-label">Public Synopsis :</label>
+              <div class="controls">
+                <textarea class="span11" name="synopsis" rows="5">{{ current.attr.synopsis }}</textarea>
+             </div>
+            </div>
             
             <div class="control-group">
               <label class="control-label">Description :</label>
@@ -104,7 +133,7 @@
             <div class="control-group">
               <label class="control-label">Personal traits :</label>
               <div class="controls">
-                <textarea class="span11" name="traits" rows="3">{{ current.data.attr|key('traits') }}</textarea>
+                <textarea class="span11" name="traits" rows="3">{{ current.attr.traits }}</textarea>
              </div>
             </div>
             
@@ -112,34 +141,34 @@
               <label class="control-label">Values :</label>
               <div class="controls">
                 <h5>Isolationist <span class="pull-right" style="margin-right: 40px;">Interventionist</span></h5>
-                <input type="range" class="span11" name="iso_int" value="{{ current.data.attr|key('iso_int') }}" max="100" min="0" step="10">
-                <textarea class="span11" name="iso_int_note" rows="3">{{ current.data.attr|key('iso_int_note') }}</textarea>
+                <input type="range" class="span11" name="iso_int" value="{{ current.attr.iso_int }}" max="100" min="0" step="10">
+                <textarea class="span11" name="iso_int_note" rows="3">{{ current.attr.iso_int_note }}</textarea>
                 
                 <h5>Militarist <span class="pull-right" style="margin-right: 40px;">Democrat</span></h5>
-                <input type="range" class="span11" name="mil_dem" value="{{ current.data.attr|key('mil_dem') }}" max="100" min="0" step="10">
-                <textarea class="span11" name="mil_dem_note" rows="3">{{ current.data.attr|key('mil_dem_note') }}</textarea>
+                <input type="range" class="span11" name="mil_dem" value="{{ current.attr.mil_dem }}" max="100" min="0" step="10">
+                <textarea class="span11" name="mil_dem_note" rows="3">{{ current.attr.mil_dem_note }}</textarea>
                 
                 <h5>Nostalgic <span class="pull-right" style="margin-right: 40px;">Progressive</span></h5>
-                <input type="range" class="span11" name="nos_pro" value="{{ current.data.attr|key('nos_pro') }}" max="100" min="0" step="10">
-                <textarea class="span11" name="nos_pro_note" rows="3">{{ current.data.attr|key('nos_pro_note') }}</textarea>
+                <input type="range" class="span11" name="nos_pro" value="{{ current.attr.nos_pro }}" max="100" min="0" step="10">
+                <textarea class="span11" name="nos_pro_note" rows="3">{{ current.attr.nos_pro_note }}</textarea>
                 
                 <h5>Libertine <span class="pull-right" style="margin-right: 40px;">Collectivist</span></h5>
-                <input type="range" class="span11" name="lib_col" value="{{ current.data.attr|key('lib_col') }}" max="100" min="0" step="10">
-                <textarea class="span11" name="lib_col_note" rows="3">{{ current.data.attr|key('lib_col_note') }}</textarea>
+                <input type="range" class="span11" name="lib_col" value="{{ current.attr.lib_col }}" max="100" min="0" step="10">
+                <textarea class="span11" name="lib_col_note" rows="3">{{ current.attr.lib_col_note }}</textarea>
              </div>
             </div>
             
             <div class="control-group">
               <label class="control-label">How you see yourself :</label>
               <div class="controls">
-                <textarea class="span11" name="self_vision" rows="10">{{ current.data.attr|key('self_vision') }}</textarea>
+                <textarea class="span11" name="self_vision" rows="10">{{ current.attr.self_vision }}</textarea>
              </div>
             </div>            
             
             <div class="control-group">
               <label class="control-label">How others see you :</label>
               <div class="controls">
-                <textarea class="span11" name="others_vision" rows="10">{{ current.data.attr|key('others_vision') }}</textarea>
+                <textarea class="span11" name="others_vision" rows="10">{{ current.attr.others_vision }}</textarea>
              </div>
             </div>
             
@@ -169,9 +198,40 @@
               </div>
             </div>
             
+            <div class="widget-box" style="margin: .5em;">
+              <div class="widget-title"> <span class="icon"> <i class="icon-th"></i> </span>
+                <h5>Current Relationships</h5>
+              </div>              
+              <div class="widget-content nopadding">
+                <table class="table table-bordered table-striped">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Name</th>
+                      <th>Characters</th>
+                      <th>Type</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for relationship in current.data.rel %}
+                    <tr class="odd gradeA">
+                      <td class="center"><i class="{{ relationship.attr|key('relationship_icon') }}"></i></td>
+                      <td><a href="{{ path_for('admin.relation.edit', { 'uid': relationship.id }) }}" title="Edit Relationship">{{ relationship.name }}</a></td>
+                      <td>
+                        {% for character in relationship.characters %}
+                        <a href="{{ path_for('admin.character.edit', { 'uid': character.id }) }}" title="Edit Character">{{ character.name }}</a>{% if loop.last %}{% else %}, {% endif %}
+                        {% endfor %}
+                      </td>
+                      <td>{{ relationship.attr|key('relationship_type') }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+              </div>
+            </div>                
+
             <div class="control-group">
               <label class="control-label">Character Relations :</label>
-              <div class="controls">
+              <div class="controls relationships">            
                 <select name="relations_ids[]" multiple="true">
                 {% for relation in relations %}
                   <option value="{{ relation.id }}"{% for character_relation in current.data.rel %}{% if relation.id == character_relation.id %} selected="selected"{% endif %}{% endfor %}>
@@ -179,13 +239,17 @@
                   </option>
                 {% endfor %}
                 </select>
+                
+                
               </div>
-            </div>              
+            </div>
+            
+            
             
             <div class="control-group">
               <label class="control-label">Design notes & play openings :</label>
               <div class="controls">
-                <textarea class="span11" name="notes" rows="10">{{ current.data.attr|key('notes') }}</textarea>
+                <textarea class="span11" name="notes" rows="10">{{ current.attr.notes }}</textarea>
              </div>
             </div>
             
@@ -241,4 +305,10 @@
     e.preventDefault();
     $addDiv = $(this).parent().remove();
   });
+  
+  $("[name=age]").on("change load keyup", function () {
+    var age = parseInt($(this).val(), 10);
+    $("[name=age_nightfall]").val(isNaN(age)?'':age-13);
+  })
+
 {% endblock %}

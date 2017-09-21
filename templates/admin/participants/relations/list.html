@@ -29,6 +29,8 @@
                 <tr>
                   <th>#</th>
                   <th>Name</th>
+                  <th>Type</th>
+                  <th>Characters</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -37,7 +39,12 @@
                 <tr class="gradeA">
                   <td class="center">{{ relation.id }}</td>
                   <td><a href="{{ path_for('admin.relation.edit', { 'uid': relation.id }) }}" title="Edit Relation">{{ relation.name }}</a></td>
-
+                  <td class="center"><i class="{{ relation.attr|key('relationship_icon') }}"></i> {{ relation.attr|key('relationship_type') }}</td>
+                  <td class="center">
+                    {% for character in relation.characters %}
+                    <a href="{{ path_for('admin.character.edit', { 'uid': character.id }) }}" title="Edit Character">{{ character.name }}</a>{% if loop.last %}{% else %}, {% endif %}
+                    {% endfor %}                    
+                  </td>
                   <td class="center">
                     <a href="{{ path_for('admin.relation.edit', { 'uid': relation.id }) }}" class="btn btn-default" title="Edit Relation"><i class="icon-edit"></i></a>
                     <a href="{{ path_for('admin.relation.delete', { 'uid': relation.id }) }}" class="btn btn-danger" title="Delete Relation"><i class="icon-remove"></i></a>

@@ -14,13 +14,58 @@ use Slim\Views\Twig as View;
 
 class RelationActionController extends Controller
 {
+  
+  private function relationship_attributes() {
+    return [
+      'relationship_icon', 'relationship_type'
+    ];
+  }
+
+  private function relationOptions() {
+    return [
+      'users' => User::orderBy('displayname')->get(),
+      'characters' => Character::orderBy('name')->get(),
+      'groups' => Group::orderBy('name')->get(),
+      'set_attr' => self::relationship_attributes(),
+      'types' => self::relationTypes(),
+      'icons' => self::relationIcons(),
+    ];
+  }
+  
+  private function mapAttributes($collection) {
+    $a = [];
+    foreach ($collection as $name => $value) {
+      $a[$value->name] = $value->value; 
+    }        
+    return $a;
+  }
+  
+  private function relationTypes() {
+    return Attribute::where('name', 'relationship_type')->get();
+  }
+  
+  private function relationIcons() {
+    return ["icon-adjust", "icon-asterisk", "icon-ban-circle", "icon-bar-chart", "icon-barcode", "icon-beaker", "icon-bell", "icon-bolt", "icon-book", "icon-bookmark", "icon-bookmark-empty", "icon-briefcase", "icon-bullhorn", "icon-calendar", "icon-camera", "icon-camera-retro", "icon-certificate", "icon-check", "icon-check-empty", "icon-cloud", "icon-cog", "icon-cogs", "icon-comment", "icon-comment-alt", "icon-comments", "icon-comments-alt", "icon-credit-card", "icon-dashboard", "icon-download", "icon-download-alt", "icon-edit", "icon-envelope", "icon-envelope-alt", "icon-exclamation-sign", "icon-external-link", "icon-eye-close", "icon-eye-open", "icon-facetime-video", "icon-film", "icon-filter", "icon-fire", "icon-flag", "icon-folder-close", "icon-folder-open", "icon-gift", "icon-glass", "icon-globe", "icon-group", "icon-hdd", "icon-headphones", "icon-heart", "icon-heart-empty", "icon-home", "icon-inbox", "icon-info-sign", "icon-key", "icon-leaf", "icon-legal", "icon-lemon", "icon-lock", "icon-unlock", "icon-magic", "icon-magnet", "icon-map-marker", "icon-minus", "icon-minus-sign", "icon-money", "icon-move", "icon-music", "icon-off", "icon-ok", "icon-ok-circle", "icon-ok-sign", "icon-pencil", "icon-picture", "icon-plane", "icon-plus", "icon-plus-sign", "icon-print", "icon-pushpin", "icon-qrcode", "icon-question-sign", "icon-random", "icon-refresh", "icon-remove", "icon-remove-circle", "icon-remove-sign", "icon-reorder", "icon-resize-horizontal", "icon-resize-vertical", "icon-retweet", "icon-road", "icon-rss", "icon-screenshot", "icon-search", "icon-share", "icon-share-alt", "icon-shopping-cart", "icon-signal", "icon-signin", "icon-signout", "icon-sitemap", "icon-sort", "icon-sort-down", "icon-sort-up", "icon-star", "icon-star-empty", "icon-star-half", "icon-tag", "icon-tags", "icon-tasks", "icon-thumbs-down", "icon-thumbs-up", "icon-time", "icon-tint", "icon-trash", "icon-trophy", "icon-truck", "icon-umbrella", "icon-upload", "icon-upload-alt", "icon-user", "icon-user-md", "icon-volume-off", "icon-volume-down", "icon-volume-up", "icon-warning-sign", "icon-wrench", "icon-zoom-in", "icon-zoom-out", "icon-file", "icon-cut", "icon-copy", "icon-paste", "icon-save", "icon-undo", "icon-repeat", "icon-paper-clip", "icon-text-height", "icon-text-width", "icon-align-left", "icon-align-center", "icon-align-right", "icon-align-justify", "icon-indent-left", "icon-indent-right", "icon-font", "icon-bold", "icon-italic", "icon-strikethrough", "icon-underline", "icon-link", "icon-columns", "icon-table", "icon-th-large", "icon-th", "icon-th-list", "icon-list", "icon-list-ol", "icon-list-ul", "icon-list-alt", "icon-arrow-down", "icon-arrow-left", "icon-arrow-right", "icon-arrow-up", "icon-chevron-down", "icon-circle-arrow-down", "icon-circle-arrow-left", "icon-circle-arrow-right", "icon-circle-arrow-up", "icon-chevron-left", "icon-caret-down", "icon-caret-left", "icon-caret-right", "icon-caret-up", "icon-chevron-right", "icon-hand-down", "icon-hand-left", "icon-hand-right", "icon-hand-up", "icon-chevron-up", "icon-play-circle", "icon-play", "icon-pause", "icon-stop", "icon-step-backward", "icon-fast-backward", "icon-backward", "icon-forward", "icon-fast-forward", "icon-step-forward", "icon-eject", "icon-fullscreen", "icon-resize-full", "icon-resize-small", "icon-phone", "icon-phone-sign", "icon-facebook", "icon-facebook-sign", "icon-twitter", "icon-twitter-sign", "icon-github", "icon-github-sign", "icon-linkedin", "icon-linkedin-sign", "icon-pinterest", "icon-pinterest-sign"];
+  }
+  
   private function handlePostData($request) {
     $credentials = [
       'name' => $request->getParam('name'),
       'description' => $request->getParam('description'),
     ];   
     
-    $attributes = [ 'keys' => $request->getParam('attrKey'), 'values' => $request->getParam('attrVal')];
+    $attributes = [ 
+      'keys' => $request->getParam('attrKey'), 
+      'values' => $request->getParam('attrVal')
+    ];
+    
+    foreach (self::relationship_attributes() as $attr) {
+      if ( strlen($request->getParam($attr)) ) {
+        $attributes['keys'][] = $attr;
+        $attributes['values'][] = $request->getParam($attr);
+      }
+    }
+    
     $attribute_ids = [];
     
     foreach ($attributes['keys'] as $i => $attr_key) {
@@ -31,6 +76,13 @@ class RelationActionController extends Controller
         ])->id;
       }
     }
+    
+    if($request->getParam('new_type')) {
+      $attribute_ids[] = Attribute::create([
+        'name' => 'relationship_type', 
+        'value' => $request->getParam('new_type')
+      ])->id;
+    }       
     
     $groups = $request->getParam('group_ids');
     $groups = is_array($groups) ? $groups : [$groups];
@@ -43,9 +95,7 @@ class RelationActionController extends Controller
       'attributes' => $attribute_ids,
       'groups' => $groups,
       'characters' => $characters,
-    ];    
-    
-    return [$credentials, $attribute_ids];
+    ];
   }
   
   public function index($request, $response, $arguments)
@@ -72,13 +122,11 @@ class RelationActionController extends Controller
   {
     $this->container->view->getEnvironment()->addGlobal('current', [
       'data' => [],
+      'attr' => [],
       'new' => true
     ]);
     
-    return $this->view->render($response, 'admin/participants/relations/edit.html', [
-      'characters' => Character::orderBy('name')->get(),
-      'groups' => Group::orderBy('name')->get(),
-    ]);
+    return $this->view->render($response, 'admin/participants/relations/edit.html', self::relationOptions());
   }
   
   public function postAdd($request, $response, $arguments)
@@ -107,14 +155,13 @@ class RelationActionController extends Controller
   
   public function edit($request, $response, $arguments)
   {
+    $relation = Relation::where('id', $arguments['uid'])->first();
      $this->container->view->getEnvironment()->addGlobal('current', [
-      'data' => Relation::where('id', $arguments['uid'])->first(),
+      'data' => $relation,
+      'attr' => self::mapAttributes( $relation->attr ),
     ]);
     
-    return $this->view->render($response, 'admin/participants/relations/edit.html', [
-      'characters' => Character::orderBy('name')->get(),
-      'groups' => Group::orderBy('name')->get(),
-    ]);
+    return $this->view->render($response, 'admin/participants/relations/edit.html', self::relationOptions());
   }
   
   public function postEdit($request, $response, $arguments)

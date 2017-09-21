@@ -37,6 +37,35 @@
             </div>
             
             <div class="control-group">
+              <label class="control-label">Type :</label>
+              <div class="controls">
+                <select name="relationship_type">
+                  <option value=""> - No Type - </option>
+                {% for type in types %}
+                  <option value="{{ type.value }}" {% if type.value == current.attr.relationship_type %}selected="selected"{% endif %}>
+                    {{ type.value }}
+                  </option>
+                {% endfor %}
+                </select>
+                <input type="text" class="span5" name="new_type" placeholder="Create new type" style="margin-top: .5em;">
+             </div>
+            </div>
+            
+            <div class="control-group">
+              <label class="control-label">Icon :</label>
+              <div class="controls">
+                <select name="relationship_icon">
+                  <option value=""> - No Icon - </option>
+                {% for icon in icons %}
+                  <option value="{{ icon }}" {% if icon == current.attr.relationship_icon %}selected="selected"{% endif %}>
+                    <i class="{{ icon }}"></i> {{ icon }}
+                  </option>
+                {% endfor %}
+                </select>
+             </div>
+            </div>             
+            
+            <div class="control-group">
               <label class="control-label">Description :</label>
               <div class="controls">
                 <textarea class="span11" name="description" rows="10">{{ current.data.description }}</textarea>
@@ -79,7 +108,7 @@
               <div class="collapse" id="collapseNotes">
                 <div class="widget-content attributes"> 
                   {% for attribute in current.data.attr %}
-                  {% if attribute.name %}
+                  {% if attribute.name and (attribute.name not in set_attr) %}
                   <div class="attribute">
                     <input type="text" class="span6" name="attrKey[]" placeholder="Name" value="{{ attribute.name }}">
                     <input type="text" class="span5" name="attrVal[]" placeholder="Value" value="{{ attribute.value }}">
