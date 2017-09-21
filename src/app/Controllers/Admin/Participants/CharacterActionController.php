@@ -17,7 +17,7 @@ class CharacterActionController extends Controller
 
   private function character_attributes() {
     return [
-      'quote', 'org', 'shift', 'role', 'traits', 
+      'quote', 'org', 'shift', 'role', 'traits', 'nickname', 
       'iso_int', 'mil_dem', 'nos_pro', 'lib_col', 'synopsis',
       'iso_int_note', 'mil_dem_note', 'nos_pro_note', 'lib_col_note',
       'self_vision', 'others_vision', 'notes', 'bunk_budy', 'age'
