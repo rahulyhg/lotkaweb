@@ -69,16 +69,15 @@
             </div>
             
             <div class="control-group">
-              <label class="control-label">Character Surname : ({{ current.data.name }})</label>
+              <label class="control-label">Character Surname : </label>
               <div class="controls">
                 <select name="name" data-importedName="{{ current.data.name }}">
+                  <option value=""> - No Surnmae - </option>
                 {% for name in order.surnames %}
                   <option value="{{ name.surname }}">{{ name.surname }}</option>
                 {% endfor %}
                 {% if current.data.name %}
                   <option value="{{ current.data.name }}" selected>{{ current.data.name }}</option> 
-                {% else %}
-                  <option value="" selected> - No Surname - </option> 
                 {% endif %}
                 </select>
               </div>
@@ -88,12 +87,12 @@
               <label class="control-label">Shirt Type :</label>
               <div class="controls">
                 <select name="shirt_type">
+                  <option value=""> - No Shirt - </option>
                 {% for shirt in order.shirt_types %}
                   <option value="{{ shirt.type_class }}" {% if shirt.type_class == order.shirt_lookup[current.data.shirt_type] %}selected{% endif %}>
                     {{ shirt.type }}
                   </option>
                 {% endfor %}
-                  <option value=""> - No Shirt - </option>
                 </select>
               </div>
             </div> 
@@ -102,12 +101,12 @@
               <label class="control-label">Shirt Size :</label>
               <div class="controls">
                 <select name="size">
+                  <option value=""> - No Shirt - </option>
                 {% for shirt in order.sizes %}
                   <option value="{{ shirt.size }}" {% if shirt.size == current.data.size %}selected="selected"{% endif %}>
                     {{ shirt.size }}
                   </option>
                 {% endfor %}
-                  <option value=""> - No Shirt - </option>
                 </select>
               </div>
             </div> 
@@ -116,12 +115,12 @@
               <label class="control-label">Team Preference :</label>
               <div class="controls">
                 <select name="preference">
+                  <option value=""> - No Preference - </option>
                 {% for team in order.teams %}
                   <option value="{{ team.type }}" {% if team.type == order.team_lookup[current.data.preference] %}selected{% endif %}>
                     {{ team.name }}
                   </option>
                 {% endfor %}
-                  <option value=""> - No Preference - </option>
                 </select>
               </div>
             </div> 
@@ -130,12 +129,12 @@
               <label class="control-label">User :</label>
               <div class="controls">
                 <select name="user_id">
+                  <option value=""> - No User Attached - </option>
                 {% for user in order.users %}
                   <option value="{{ user.id }}" {% if user.id == current.data.user_id %}selected="selected"{% endif %}>
                     {{ user.displayname }}
                   </option>
                 {% endfor %}
-                  <option value=""> - No User Attached - </option>
                 </select>
               </div>
             </div>
@@ -144,12 +143,12 @@
               <label class="control-label">Attested By :</label>
               <div class="controls">
                 <select name="attested_id">
+                  <option value=""> - Not Attested - </option>
                 {% for user in order.users %}
                   <option value="{{ user.id }}" {% if user.id == current.data.attested_id %}selected="selected"{% endif %}>
                     {{ user.displayname }}
                   </option>
                 {% endfor %}
-                  <option value=""> - Not Attested - </option>
                 </select>
               </div>
             </div>

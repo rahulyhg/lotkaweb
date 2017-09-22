@@ -71,9 +71,39 @@
                 <textarea class="span11" name="description" rows="10">{{ current.data.description }}</textarea>
              </div>
             </div>
+
+            <div class="control-group">
+              <label class="control-label">Relation Source :</label>
+              <div class="controls">
+                <select name="source">
+                  <option value=""> - No Source - </option>
+                {% for character in characters %}
+                  <option value="{{ character.id }}"{% if character.id == current.attr.source %} selected="selected"{% endif %}>
+                    {{ character.name }}
+                  </option>
+                {% endfor %}
+                </select>
+                <span class="inline-info span11">Add source character for this relation (e.g. character that idolize the target)</span>
+              </div>
+            </div>
             
             <div class="control-group">
-              <label class="control-label">Character Relations :</label>
+              <label class="control-label">Relation Target :</label>
+              <div class="controls">
+                <select name="target">
+                  <option value=""> - No Target - </option>                  
+                {% for character in characters %}
+                  <option value="{{ character.id }}"{% if character.id == current.attr.target %} selected="selected"{% endif %}>
+                    {{ character.name }}
+                  </option>
+                {% endfor %}
+                </select>
+                <span class="inline-info span11">Add target character for this relation (e.g. the subject for the idolization)</span>
+              </div>
+            </div>
+            
+            <div class="control-group">
+              <label class="control-label">Relation Characters :</label>
               <div class="controls">
                 <select name="character_ids[]" multiple="true">
                 {% for character in characters %}
@@ -82,6 +112,7 @@
                   </option>
                 {% endfor %}
                 </select>
+                <span class="inline-info span11">Add character(s) that share a relation (e.g. a group shift friends)</span>
               </div>
             </div>               
             

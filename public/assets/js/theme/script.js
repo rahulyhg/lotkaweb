@@ -50,6 +50,9 @@ window.onload = function() {
   $("#shirt_type").on("change", function() {
     var selected_type = $("#shirt_type option:selected").attr('class');
     var selected_size = $("#shirt_size option:selected").val();
+    
+    console.log(selected_type, selected_size)
+    
     $("#shirt_size").val([]);
     $("#shirt_size option").hide();
     $("#shirt_size option." + selected_type).show();

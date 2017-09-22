@@ -17,7 +17,7 @@ class RelationActionController extends Controller
   
   private function relationship_attributes() {
     return [
-      'relationship_icon', 'relationship_type'
+      'relationship_icon', 'relationship_type', 'source', 'target',
     ];
   }
 
@@ -81,6 +81,8 @@ class RelationActionController extends Controller
 
     $characters = $request->getParam('character_ids');
     $characters = is_array($characters) ? $characters : [$characters];   
+    if($request->getParam('source')) $characters = array_merge($characters, [$request->getParam('source')]);
+    if($request->getParam('target')) $characters = array_merge($characters, [$request->getParam('target')]);
     
     return [ 
       'values' => $credentials, 
