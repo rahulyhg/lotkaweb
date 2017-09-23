@@ -29,6 +29,16 @@
           <form action="{{ current.new ? path_for('admin.ticket.add') : path_for('admin.ticket.edit', { 'uid': current.data.id }) }}" method="post" autocomplete="on" class="form-horizontal">
             {{ csrf.field | raw }}
             
+            {% if current.new %}
+            <div class="control-group error">
+              <div class="controls">
+                <h4><span class="help-inline">
+                When creating a new ticket type, make sure it's created in Stripe as well.
+              </span></h4>
+              </div>
+            </div>            
+            {% endif %}
+            
             <div class="control-group warning">
               <label class="control-label">Ticket SKU :</label>
               <div class="controls">

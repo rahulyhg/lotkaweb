@@ -39,11 +39,25 @@ class TicketActionController extends Controller
   public function add($request, $response, $arguments)
   {
     
+    $this->container->view->getEnvironment()->addGlobal('current', [
+      'data' => [],
+      'new' => true
+    ]);
+    
+    $this->container->view->getEnvironment()->addGlobal('settings', [
+      'name' => 'Edit ticket',
+      'title' => 'Ticket Management',
+      'breadcrumb' => [
+        ['name' => 'Tickets', 'path' => 'admin.tickets.all']
+      ],
+    ]);
+    
+    return $this->view->render($response, 'admin/ticket/edit.html');     
   }
   
   public function postAdd($request, $response, $arguments)
   {
-    
+    return self::postEdit($request, $response, ['uid' => null]);
   }
   
   public function edit($request, $response, $arguments)
@@ -72,7 +86,7 @@ class TicketActionController extends Controller
   
   public function postEdit($request, $response, $arguments)
   {
-    $ticket = Ticket::where('id', $arguments['uid'])->first();
+    $ticket = Ticket::firstOrCreate(['id' => $arguments['uid']]);
     
     if(!$ticket) {
       $this->flash->addMessage('error', "No ticket with ID '{$arguments['uid']}' found.");
