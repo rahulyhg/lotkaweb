@@ -24,14 +24,7 @@
   </ul>
 </li>
 <li class="dropdown"><a class="dropdown-toggle" href="{{ path_for('open.page', { 'category': 'experience' }) }}" data-toggle="dropdown">The Experience</a>
-  <ul class="dropdown-menu">
-    <li class="dropdown"><a class="dropdown-toggle" href="{{ path_for('open.page', { 'category': 'aestethics' }) }}" data-toggle="dropdown">Aestethics</a>
-      <ul class="dropdown-menu" role="menu">
-        <li><a href="{{ path_for('open.page', { 'category': 'aestethics' }) }}#location">Location</a></li>
-        <li><a href="{{ path_for('open.page', { 'category': 'aestethics' }) }}#clothing">Clothing & Costume</a></li>
-        <li><a href="{{ path_for('open.page', { 'category': 'aestethics' }) }}#scenography">Tech & Scenography</a></li>
-      </ul>
-    </li>                
+  <ul class="dropdown-menu">             
     <li><a href="{{ path_for('open.page', { 'category': 'experience' }) }}#scifi">Naturalistic science fiction</a></li>
     <li><a href="{{ path_for('open.page', { 'category': 'experience' }) }}#play_style">Collaborative play-style</a></li>
     <li><a href="{{ path_for('open.page', { 'category': 'experience' }) }}#ideal360">360 design ideals</a></li>
@@ -40,6 +33,13 @@
     <li><a href="{{ path_for('open.page', { 'category': 'experience' }) }}#work">Work & shifts</a></li>
     <li><a href="{{ path_for('open.page', { 'category': 'experience' }) }}#conflict">Conflict & Drama</a></li>
     <li><a href="{{ path_for('open.page', { 'category': 'experience', 'page': 'characters' }) }}">Characters</a></li>
+    <li class="dropdown"><a class="dropdown-toggle" href="{{ path_for('open.page', { 'category': 'aestethics' }) }}" data-toggle="dropdown">Aestethics</a>
+      <ul class="dropdown-menu" role="menu">
+        <li><a href="{{ path_for('open.page', { 'category': 'aestethics' }) }}#location">Location</a></li>
+        <li><a href="{{ path_for('open.page', { 'category': 'aestethics' }) }}#clothing">Clothing & Costume</a></li>
+        <li><a href="{{ path_for('open.page', { 'category': 'aestethics' }) }}#scenography">Tech & Scenography</a></li>
+      </ul>
+    </li>       
   </ul>
 </li>
 
