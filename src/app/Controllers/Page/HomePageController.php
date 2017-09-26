@@ -54,7 +54,7 @@ class HomePageController extends Controller
   public function ticket($request, $response, $arguments)
   {
     $sku = filter_var($arguments['sku'], FILTER_SANITIZE_STRING);
-    $ticket_data = self::populateTicketInfo([['available', '=', 1],['sku', $sku]]);    
+    $ticket_data = self::populateTicketInfo([['available', '=', 1],['sku', 'like', "{$sku}%"]]);    
     $this->container->view->getEnvironment()->addGlobal(
       'tickets', $ticket_data);
     

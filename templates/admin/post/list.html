@@ -46,7 +46,7 @@
                   <td class="center">
                     <a href="{{ path_for('admin.post.edit', { 'uid': post.id }) }}" class="btn btn-default" title="Edit Post"><i class="icon-edit"></i></a>
                     <a href="{{ path_for('admin.post.delete', { 'uid': post.id }) }}" class="btn btn-danger" title="Delete Post"><i class="icon-remove"></i></a>
-{% if "now"|date('Y-m-d') > post.publish_at|date('Y-m-d') or post.unpublish_at < "now"|date('Y-m-d') %}
+{% if (post.publish_at|date('Y-m-d') > "now"|date('Y-m-d')) and (post.unpublish_at and post.unpublish_at != '0000-00-00 00:00:00') and post.unpublish_at < "now"|date('Y-m-d') %}
                     <a href="{{ path_for('admin.post.publish', { 'uid': post.id }) }}" class="btn btn-success" title="Publish Post"><i class="icon-check"></i></a>
 {% else %}
                     <a href="{{ path_for('admin.post.unpublish', { 'uid': post.id }) }}" class="btn btn-warning" title="Un-publish Post"><i class="icon-check-empty"></i></a>

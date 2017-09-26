@@ -140,16 +140,38 @@ class PostActionController extends Controller
   
   public function publish($request, $response, $arguments)
   {
+    $post = Post::where('id', $arguments['uid'])->first();
     
+    // update data
+    if($post && $post->update(['publish_at' => date("Y-m-d H:i:s"), 'unpublish_at' => null])) {
+      $this->flash->addMessage('success', "The post has been published.");
+    } else {
+      $this->flash->addMessage('error', "The post could not be published.");
+    }
+    return $response->withRedirect($this->router->pathFor('admin.posts.all'));    
   }
   
   public function unpublish($request, $response, $arguments)
   {
+    $post = Post::where('id', $arguments['uid'])->first();
     
+    // update data
+    if($post && $post->update(['unpublish_at' => date("Y-m-d H:i:s")])) {
+      $this->flash->addMessage('success', "The post has been unpublished.");
+    } else {
+      $this->flash->addMessage('error', "The post could not be unpublished.");
+    }
+    return $response->withRedirect($this->router->pathFor('admin.posts.all'));    
   }  
   
   public function delete($request, $response, $arguments)
   {
+    $item = Post::where('id', $arguments['uid'])->first();
     
+    $item->attr()->sync([]);
+
+    $item->delete();
+    $this->flash->addMessage('warning', "{$item->title} was deleted.");
+    return $response->withRedirect($this->router->pathFor('admin.posts.all'));
   }
 }
