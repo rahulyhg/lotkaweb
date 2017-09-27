@@ -248,11 +248,23 @@ class OrderActionController extends Controller
   {
     return $this->view->render($response, 'admin/order/external/index.html');
   }
+  
+  private function getStripeBatches($stripe_order_data = [], $last_obj) {
+    $charge_args = array("limit" => 100);
+    if($last_object) $charge_args["starting_after"] = $last_object;
+    
+    $stripe_orders = \Stripe\Charge::all($charge_args);
+    if($stripe_orders->has_more) {
+      return self::getStripeBatches(array_merge($stripe_order_data, $stripe_orders->data), end($stripe_orders->data)->id);
+    } else {
+      return array_merge($stripe_order_data, $stripe_orders->data);
+    }
+  }
     
   //Handle external order platforms
   public function extrenalStripe($request, $response, $arguments) 
   {
-    $stripe_orders = \Stripe\Charge::all(array("limit" => 100));
+    $stripe_orders = ["data" => self::getStripeBatches()];
     
     //Making a few quick lookup objects
     $stripe_products = \Stripe\Product::all(array("limit" => 100));
@@ -304,7 +316,7 @@ class OrderActionController extends Controller
     
     $this->flash->addMessage('success', 
       $inserts . " of " . count($posts['import']) . " Stripe orders added to the local database.");
-    return $response->withRedirect($this->router->pathFor('admin.orders.external.stripe')); 
+    return $response->withRedirect($this->router->pathFor('admin.orders.external')); 
   }
 
   public function extrenalTextTalk($request, $response, $arguments) 
@@ -397,6 +409,6 @@ class OrderActionController extends Controller
     
     $this->flash->addMessage('success', 
       $inserts . " of " . count($posts['import']) . " TextTalk orders added to the local database.");
-    return $response->withRedirect($this->router->pathFor('admin.orders.external.texttalk')); 
+    return $response->withRedirect($this->router->pathFor('admin.orders.external')); 
   }  
 }
