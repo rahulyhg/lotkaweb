@@ -197,19 +197,15 @@ form.ticket article em {
 
 svg.loading path.lights {
   fill: none;
-  stroke: #FFF;
-  stroke-width: 1;
-  stroke-dasharray: 300;
-  stroke-dashoffset: 600;
-  animation: dash 3s linear;
+  stroke: #0FC;
+  stroke-width: .5;
+  stroke-dasharray: 141;
+  stroke-dashoffset: 282;
+  animation: dash 2.5s linear;
   animation-iteration-count: infinite;
 }
 
-@keyframes dash {
-  to {
-    stroke-dashoffset: 0;
-  }
-}
+@keyframes 
 
 @-webkit-keyframes dash {
   to {
