@@ -56,7 +56,7 @@
           <tbody>
           {% for charge in orders.data %}
             {% if charge.description %}
-            {% set lookup_key = "#{products[charge.description].id }#{ charge.receipt_email}#{ charge.amount}" %}
+            {% set lookup_key = "#{products[charge.description].id }#{ charge.receipt_email}" %}
             {% set order_id = exising[lookup_key] %}
             {% set payed = ((charge.paid) and not (charge.refunded)) %}
             <tr>

@@ -273,10 +273,10 @@ class OrderActionController extends Controller
       $products[$product['caption']] = $product;
     }
     
-    $existing_orders = Order::query()->select('id', 'type', 'email', 'amount')->get();
+    $existing_orders = Order::query()->select('id', 'type', 'email')->get();
     $orders = [];
     foreach ($existing_orders as $order) {
-      $orders[$order->type . $order->email . $order->amount] = $order->id;
+      $orders[$order->type . $order->email] = $order->id;
     }
     
     $this->container->view->getEnvironment()->addGlobal('orders', $stripe_orders);
