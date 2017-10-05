@@ -81,15 +81,17 @@
             {% set origin = order.type == "STANDARD" and order.choices ? order.choices[0] : "" %}
             {% set paidSum = 0 %}
             {% set payments = ["Payments:"] %}
+            {% set bg_col = order_id ? 'style="background-color: rgba(40, 183, 121, 0.31) !important;"' : '' %}
             {% for payment in order.payments %}
               {% set paidSum = paidSum + payment.amount %}
               {% set payments = payments|merge([payment.amount ~ order.currency]) %}
             {% endfor %}
             <tr>
               <td class="taskStatus">{{ loop.index }}</td>
-              <td class="taskStatus importCheck {% if not order_id %}notInSystem{% endif %}">
+              <td {{ bg_col|raw }} class="taskStatus importCheck {% if not order_id %}notInSystem{% endif %}">
                 <input type="checkbox" {% if not order_id and order.paymentStatus == "paid" %}checked{% endif %} name="import[{{ loop.index0 }}]" value="{{ lookup_key }}">
-                <input type="hidden" name="ticket_type[{{ loop.index0 }}]" value="{{order.type }}">
+                <input type="hidden" name="id[{{ loop.index0 }}]" value="{{ order_id }}">
+                <input type="hidden" name="ticket_type[{{ loop.index0 }}]" value="{{ order.type }}">
                 <input type="hidden" name="email[{{ loop.index0 }}]" value="{{ order.customer.info.email }}">
                 <input type="hidden" name="amount[{{ loop.index0 }}]" value="{{ paidSum*100 }}">
                 <input type="hidden" name="origin[{{ loop.index0 }}]" value="{{ origin|default('TextTalk') }}">

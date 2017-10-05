@@ -146,6 +146,7 @@ $app->group('/admin', function() use ($container) {
     $this->get('/attested', 'OrderActionController:listAttested')->setName('admin.orders.attested');
     $this->get('/unattested', 'OrderActionController:listUnattested')->setName('admin.orders.unattested');
     $this->get('/partial', 'OrderActionController:listPartialPayments')->setName('admin.orders.partial');
+    $this->get('/multiples', 'OrderActionController:listMultiples')->setName('admin.orders.multiples');
 
     $this->get('/add', 'OrderActionController:addOrder')->setName('admin.order.add');
     $this->post('/add', 'OrderActionController:postAddOrder');

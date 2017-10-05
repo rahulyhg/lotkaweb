@@ -97,6 +97,28 @@ class OrderActionController extends Controller
     ]);
   }
 
+  public function listMultiples($request, $response)
+  {
+    $DB = $this->db->getDatabaseManager();
+    $multi_rows = Order::query()
+                 ->select('email', $DB->raw('count(*) as `count`'))
+                 ->groupBy('email')
+                 ->having('count', '>', 1);
+    
+    $multi_emails = [];
+    foreach ($multi_rows->get() as $order) {
+      $multi_emails[] = $order->email;
+    }
+
+    $orders_query = self::listOrdersQuery();
+    $orders_query->whereIn('orders.email', $multi_emails)      
+      ->orderBy('orders.email', 'desc');
+    
+    return self::renderList($response, [
+      'listOrdes' => $orders_query->get(),
+    ]);
+  }
+  
   public function listAttested($request, $response)
   {
     $orders_query = self::listOrdersQuery();
@@ -106,7 +128,7 @@ class OrderActionController extends Controller
     return self::renderList($response, [
       'listOrdes' => $orders_query->get(),
     ]);
-  }   
+  }     
   
   public function listUnattested($request, $response)
   {
@@ -122,7 +144,7 @@ class OrderActionController extends Controller
   public function listPartialPayments($request, $response)
   {
     $orders_query = self::listOrdersQuery();
-    $orders_query->whereIn('type', ['STD_1','STD_2','STD_3'])
+    $orders_query->whereIn('type', ['STD_1', 'SUBSIDIZED_1', 'SUBSIDIZED_2', 'STD_2', 'STD_3'])
       ->orderBy('email');
     
     return self::renderList($response, [
@@ -249,8 +271,8 @@ class OrderActionController extends Controller
     return $this->view->render($response, 'admin/order/external/index.html');
   }
   
-  private function getStripeBatches($stripe_order_data = [], $last_obj) {
-    $charge_args = array("limit" => 100);
+  private function getStripeBatches($stripe_order_data = [], $last_object = false) {
+    $charge_args = array("limit" => 10);
     if($last_object) $charge_args["starting_after"] = $last_object;
     
     $stripe_orders = \Stripe\Charge::all($charge_args);
@@ -267,7 +289,7 @@ class OrderActionController extends Controller
     $stripe_orders = ["data" => self::getStripeBatches()];
     
     //Making a few quick lookup objects
-    $stripe_products = \Stripe\Product::all(array("limit" => 100));
+    $stripe_products = \Stripe\Product::all(array("limit" => 10));
     $products = [];
     foreach ($stripe_products->data as $product) {
       $products[$product['caption']] = $product;
@@ -340,12 +362,14 @@ class OrderActionController extends Controller
       );
 
       $choices = [];
+      /*
       $items = array_values($res2["choices"]);
       foreach ($items as $item) {
         if((int)$item == 0) continue;
         $choices[] = $api->ArticleChoiceOption->get($item)["name"]["en"];
       }
-
+      */
+      
       $payments = [];
       foreach ($order["payments"] as $item) {
         if((int)$item == 0) continue;
@@ -357,7 +381,7 @@ class OrderActionController extends Controller
       $order["payments"] = $payments;
       $texttalk_orders[] = $order;
     }
-
+    
 //  $texttalk_orders["paymentSchema"] = $api->Payment->getSchema(null);
     
     $tickets = Ticket::select('sku', 'price')->distinct('sku')->orderBy('sku')->get();

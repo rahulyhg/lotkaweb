@@ -3,7 +3,7 @@
     <a href="{{ path_for('admin.index') }}"><i class="icon icon-home"></i> <span>Dashboard</span></a>
   </li>
 
-  <li class="submenu {{ [path_for('admin.orders.all'),path_for('admin.orders.attested'),path_for('admin.orders.unattested'),path_for('admin.orders.partial'),path_for('admin.order.add')]|isActive }}">
+  <li class="submenu {{ [path_for('admin.orders.all'),path_for('admin.orders.attested'),path_for('admin.orders.unattested'),path_for('admin.orders.partial'),path_for('admin.order.add'),path_for('admin.orders.multiples')]|isActive }}">
     <a href="{{ path_for('admin.orders.all') }}">
       <i class="icon icon-money"></i> <span>Orders</span> <span class="label label-important"></span>
     </a>
@@ -14,6 +14,8 @@
         <a href="{{ path_for('admin.orders.unattested') }}">Unattested</a></li>
       <li class="{{ path_for('admin.orders.partial')|isActive }}">
         <a href="{{ path_for('admin.orders.partial') }}">Partial</a></li>
+      <li class="{{ path_for('admin.orders.multiples')|isActive }}">
+        <a href="{{ path_for('admin.orders.multiples') }}">Multiple</a></li>      
       <li class="{{ path_for('admin.orders.all')|isActive }}">
         <a href="{{ path_for('admin.orders.all') }}">All</a></li>
       <li class="{{ path_for('admin.order.add')|isActive }}">
