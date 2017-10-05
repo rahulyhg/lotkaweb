@@ -412,27 +412,48 @@ class OrderActionController extends Controller
       'preference' => 'preference', 
       'surname' => 'name'
     ];
-    $inserts = 0;
-    
-    foreach ($posts['import'] as $index => $lookup_key) {
-      $data = [
-        'type' => $posts['ticket_type'][$index],
-        'amount' => $posts['amount'][$index],
-        'email' => $posts['email'][$index],
-        'origin' => $posts['origin'][$index],
-        'orderdate' => $posts['orderdate'][$index],
-      ]; 
+
+    if(isset($posts['import'])) {
       
-      foreach ($meta_data_keys as $meta_key => $db_key) {
-        if ( strlen($posts[$meta_key][$index]) ) 
-          $data[$db_key] = $posts[$meta_key][$index];
+      $inserts = 0;
+      $fails = [];      
+      foreach ($posts['import'] as $index => $lookup_key) {
+        $data = [
+          'type' => $posts['ticket_type'][$index],
+          'amount' => $posts['amount'][$index],
+          'email' => $posts['email'][$index],
+          'origin' => $posts['origin'][$index],
+          'orderdate' => $posts['orderdate'][$index],
+        ]; 
+
+        foreach ($meta_data_keys as $meta_key => $db_key) {
+          if ( strlen($posts[$meta_key][$index]) ) 
+            $data[$db_key] = $posts[$meta_key][$index];
+        }
+
+        if(Order::create($data)) $inserts++;
+        else $fails[] = $data;
       }
-      
-      if(Order::create($data)) $inserts++;
+
+      if(count($fails)) {
+        $this->flash->addMessage('debug', $fails);
+
+        $this->flash->addMessage('error', 
+          count($fails) . "TextTalk orders failed to be imported into the local database.");    
+        
+        die(var_dump($fails));
+        
+      }    
+
+      if($inserts) {
+      $this->flash->addMessage('success', 
+        $inserts . " of " . count($posts['import']) . " TextTalk orders added to the local database.");
+      }
+
+    } else {
+      die(var_dump($posts));
     }
     
-    $this->flash->addMessage('success', 
-      $inserts . " of " . count($posts['import']) . " TextTalk orders added to the local database.");
     return $response->withRedirect($this->router->pathFor('admin.orders.external')); 
   }  
 }
