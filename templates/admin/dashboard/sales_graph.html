@@ -55,8 +55,20 @@ window.onload = function () {
             label: "Subsidized Ticket",
             data: emptyDates()
         },
+        "SUBSIDIZED_1": {
+            label: "Subsidized Ticket, 1st payment",
+            data: emptyDates()
+        },      
+        "SUBSIDIZED_2": {
+            label: "Subsidized Ticket, 2nd payment",
+            data: emptyDates()
+        },      
         "LVTEST": {
             label: "Live Test Ticket",
+            data: emptyDates()
+        },      
+        "ORG": {
+            label: "Organizers",
             data: emptyDates()
         }
     }; 
@@ -80,7 +92,7 @@ datasets['{{sale.TicketType}}'].data['{{sale.OrderDay}}'] = {{sale.Tickets}};
     
     // insert checkboxes 
     var choiceContainer = $("#choices");
-    var default_hidden = ['LVTEST'];
+    var default_hidden = ['LVTEST','ORG'];
     $.each(datasets, function(key, val) {
         choiceContainer.append('<br/><input type="checkbox" name="' + key +
                                '" ' + (default_hidden.indexOf(key) === -1 ? 'checked="checked"' : '')
