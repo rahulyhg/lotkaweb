@@ -34,7 +34,7 @@ class OrderActionController extends Controller
   private function orderData() {
     return [
       'sizes' => Shirt::select('size')->distinct('size')->orderBy('id')->get(),
-      'types' => Ticket::query()->where('available', 1)->distinct('sku')->orderBy('sku')->get(),
+      'types' => Ticket::query()->distinct('sku')->orderBy('sku')->get(),
       'shirt_types' => Shirt::select('type', 'type_class')->where('available', 1)->distinct('type')->get(),
       'teams' => Team::query()->where('available', 1)->distinct('type')->orderBy('id')->get(),
       'users' => User::query()->orderBy('displayname')->get(),
