@@ -26,18 +26,26 @@
         <div class="widget-content nopadding">
           <form action="{{ current.new ? path_for('admin.user.add') : path_for('admin.user.edit', { 'uid': current.data.username }) }}" method="post" autocomplete="on" class="form-horizontal">
             {{ csrf.field | raw }}
+            <h6 style="margin-left: 1.5em;">Login and display information</h6>
             <div class="control-group">
               <label class="control-label">User Name :</label>
               <div class="controls">
                 <input type="text" class="span11" name="username" placeholder="User name" value="{{ current.data.username }}">
               </div>
-            </div>
+            </div>            
             <div class="control-group">
               <label class="control-label">Display Name :</label>
               <div class="controls">
                 <input type="text" class="span11" name="displayname" placeholder="Display name" value="{{ current.data.displayname }}">
               </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label">Password input :</label>
+              <div class="controls">
+                <input type="password" class="span11" name="password" placeholder="Enter Password">
+              </div>
             </div>            
+            <h6 style="margin-left: 1.5em;">Participant information</h6>
             <div class="control-group">
               <label class="control-label">First Name :</label>
               <div class="controls">
@@ -51,26 +59,89 @@
               </div>
             </div>
             <div class="control-group">
+              <label class="control-label">Gender :</label>
+              <div class="controls">
+                <select name="gender">
+                {% for gender in genders %}
+                  <option value="{{ gender }}" {% if gender == current.attr.gender %}selected="selected"{% endif %}>
+                    {{ gender }}
+                  </option>
+                {% endfor %}    
+                </select>
+             </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label">ID Number (Swe) :</label>
+              <div class="controls">
+                <input type="text" class="span11" name="id_number_swe" placeholder="YYYYMMDDNNNN" value="{{ current.attr.id_number_swe }}">
+              </div>
+            </div>            
+            <div class="control-group">
+              <label class="control-label">Membership Fee (SEK) :</label>
+              <div class="controls">
+                <input type="text" class="span11" name="membership_fee" placeholder="50" value="{{ current.attr.membership_fee }}">
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label">Membership Date :</label>
+              <div class="controls">
+                <input type="text" class="span11" name="membership_date" placeholder="20180101" value="{{ current.attr.membership_date }}">
+              </div>
+            </div>
+            <h6 style="margin-left: 1.5em;">Address</h6>
+            <div class="control-group">
+              <label class="control-label">C/O : </label>
+              <div class="controls">
+                <input type="text" class="span11" name="care_of" placeholder="c/o" value="{{ current.attr.care_of }}">
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label">Street Address : </label>
+              <div class="controls">
+                <input type="text" class="span11" name="street_adress_1" placeholder="Line one" value="{{ current.attr.street_adress_1 }}">
+                <input type="text" class="span11" name="street_adress_2" placeholder="Line two" value="{{ current.attr.street_adress_2 }}" style="margin-top: .5em;">                
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label">Postal code : </label>
+              <div class="controls">
+                <input type="text" class="span11" name="postal_code" placeholder="Postal code" value="{{ current.attr.postal_code }}">
+              </div>
+            </div>            
+            <div class="control-group">
+              <label class="control-label">City/Suburb : </label>
+              <div class="controls">
+                <input type="text" class="span11" name="city" placeholder="City/Suburb" value="{{ current.attr.city }}">
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label">State/Region : </label>
+              <div class="controls">
+                <input type="text" class="span11" name="state" placeholder="State/Region" value="{{ current.attr.state }}">
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label">Country : </label>
+              <div class="controls">
+                <input type="text" class="span11" name="country" placeholder="Country" value="{{ current.attr.country }}">
+              </div>
+            </div>          
+            <h6 style="margin-left: 1.5em;">Contact information</h6>
+            <div class="control-group">
               <label class="control-label">E-mail :</label>
               <div class="controls">
                 <input type="text" class="span11" name="email" placeholder="E-mail" value="{{ current.data.email }}">
               </div>
             </div>
             <div class="control-group">
-              <label class="control-label">Password input</label>
+              <label class="control-label">Phone number :</label>
               <div class="controls">
-                <input type="password" class="span11" name="password" placeholder="Enter Password">
+                <input type="text" class="span11" name="phone" placeholder="E-mail" value="{{ current.attr.phone }}">
               </div>
             </div>
+            <h6 style="margin-left: 1.5em;">Site information</h6>
             <div class="control-group">
-              <label class="control-label">Organizers Notes:</label>
-              <div class="controls">
-                <textarea class="span11" name="org_notes">{{ current.data.org_notes }}</textarea>
-              </div>
-            </div>
-
-            <div class="control-group">
-              <label class="control-label">Select input</label>
+              <label class="control-label">User role :</label>
               <div class="controls">
                 <select name="role"{{current.new ? ' disabled' : '' }}>
                 {% for role in auth.getRoles %}
@@ -80,7 +151,41 @@
                 {% endfor %}
                 </select>
               </div>
+            </div>            
+            <div class="control-group">
+              <label class="control-label">User Groups :</label>
+              <div class="controls">
+                <select name="group_ids[]" multiple="true">
+                {% for group in groups %}
+                  <option value="{{ group.id }}"{% for user_group in current.data.groups %}{% if group.id == user_group.id %} selected="selected"{% endif %}{% endfor %}>
+                    {{ group.name }}
+                  </option>
+                {% endfor %}
+                </select>
+              </div>
             </div>
+            <h6 style="margin-left: 1.5em;">Additional information</h6>
+            <div class="control-group">
+              <label class="control-label">Completed Onboarding :</label>
+              <div class="controls">
+                <input type="checkbox" class="span11" name="onboarding_complete" {% if current.attr.onboarding_complete %}checked{% endif %}>
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label">Last login :</label>
+              <div class="controls">
+                <input type="text" class="span11" disabled value="{{ current.data.last_login }}">
+              </div>
+            </div>            
+            <div class="control-group">
+              <label class="control-label">Organizers Notes :</label>
+              <div class="controls">
+                <textarea class="span11" name="org_notes" rows="5">{{ current.data.org_notes }}</textarea>
+              </div>
+            </div>
+            
+            {{ include('/admin/partials/fragments/attributes.html') }}
+            
             <div class="form-actions">
               <button type="submit" class="btn btn-success">Save</button>
             </div>
@@ -90,4 +195,20 @@
     </div>
   </div>
 </div>
+{% endblock %}
+
+{% block inlinejs %}
+  $(".attributes").on("click", ".add_attrib", function (e) {
+    e.preventDefault();
+    $addDiv = $(this).parent().clone();
+    $addDiv.find('input').each(function () { $(this).val(null); })
+    $(this).parent().after($addDiv);
+    $(this).parent().find('button')
+      .removeClass('btn-success add_attrib').addClass('btn-warning remove_attrib').text('-');
+  });
+
+  $(".attributes").on("click", ".remove_attrib", function (e) {
+    e.preventDefault();
+    $addDiv = $(this).parent().remove();
+  });  
 {% endblock %}

@@ -322,7 +322,8 @@ $app->get('/setup', function () {
 $app->group('/participants', function () { 
   $this->get('', 'ParticipantPageController:index')->setName('participant.home');
   
-  $this->get('/start', 'ParticipantPageController:onboarding')->setName('participant.onboarding');  
+  $this->get('/start[/{stage}]', 'ParticipantPageController:onboarding')->setName('participant.onboarding');  
+  $this->post('/start[/{stage}]', 'ParticipantPageController:save_stage');  
   
   $this->get('/{page}', 'ParticipantPageController:page')->setName('participant.page');
 })->add(new ParticipantMiddleware($container));

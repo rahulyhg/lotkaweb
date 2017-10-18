@@ -5,12 +5,78 @@ namespace App\Controllers\Admin;
 use App\Models\User;
 use App\Models\Roles;
 use App\Models\Order;
+use App\Models\Group;
+use App\Models\Attribute;
+use App\Models\Character;
+use App\Models\Task;
+
 use App\Controllers\Controller;
+
 use Respect\Validation\Validator as v;
 use Slim\Views\Twig as View;
 
+
 class UserActionController extends Controller
 {
+  
+  private function user_attributes() {
+    return [
+      'onboarding_complete',
+      'gender',
+      'id_number_swe', #(inte relevant för ej svenska medborgare)
+      'membership_fee', #(behöver inte synas, men skall finnas med dolt med värdet 50kr)
+      'membership_date', #(kan finnas med dolt med datum 20180101)
+      'care_of', #(ej tvingande)
+      'street_address_1',
+      'street_address_2',
+      'postal_code',
+      'state',
+      'city',
+      'country',
+      'phone',
+    ];
+  }
+  
+  private function userOptions() {
+    return [
+      'character' => Character::orderBy('name')->get(),
+      'groups' => Group::orderBy('name')->get(),
+      'set_attr' => self::user_attributes(),
+      'genders' => ['Nonbinary','Female','Male','Other'],
+    ];
+  }  
+  
+  private function handlePostData($request) {
+    $attributes = [ 
+      'keys' => $request->getParam('attrKey'), 
+      'values' => $request->getParam('attrVal')
+    ];
+    
+    foreach (self::user_attributes() as $attr) {
+      if ( strlen($request->getParam($attr)) ) {
+        $attributes['keys'][] = $attr;
+        $attributes['values'][] = $request->getParam($attr);
+      }
+    }
+    
+    $attribute_ids = [];
+    
+    foreach ($attributes['keys'] as $i => $attr_key) {
+      $attribute_ids[] = Attribute::firstOrCreate([
+        'name' => $attr_key, 
+        'value' => $attributes['values'][$i]
+      ])->id;
+    }
+    
+    $groups = $request->getParam('group_ids');
+    $groups = is_array($groups) ? $groups : [$groups];
+
+    return [ 
+      'attributes' => $attribute_ids,
+      'groups' => $groups,
+    ];
+  }
+  
   public function index($request, $response, $arguments)
   {
     $users = User::all();
@@ -34,6 +100,10 @@ class UserActionController extends Controller
     }
 
     $user = User::where('username', $arguments['uid']);
+    
+    $user->attr()->sync([]);
+    $user->groups()->sync([]);
+    
     $user->delete();
 
     $this->flash->addMessage('success', "User has been deleted.");
@@ -53,10 +123,11 @@ class UserActionController extends Controller
 
     $this->container->view->getEnvironment()->addGlobal('current', [
       'data' => $getCurrentUserData,
+      'attr' => self::mapAttributes( $getCurrentUserData->attr ),
       'role' => $getCurrentUserRole->slug
     ]);
 
-    return $this->view->render($response, 'admin/user/edit.html');
+    return $this->view->render($response, 'admin/user/edit.html', self::userOptions());
   }
 
   public function postEditUser($request, $response, $arguments)
@@ -93,8 +164,11 @@ class UserActionController extends Controller
 
     // update user data
     $this->container->sentinel->update($getCurrentUserData, $credentials);
-    //$getCurrentUserData->
 
+    $requestData = self::handlePostData($request);
+    $getCurrentUserData->attr()->sync($requestData['attributes']);
+    $getCurrentUserData->groups()->sync($requestData['groups']);
+    
     $this->flash->addMessage('success', "User details for '{$credentials['username']}' have been changed.");
     return $response->withRedirect($this->router->pathFor('admin.users.all'));
   }
@@ -103,11 +177,12 @@ class UserActionController extends Controller
   {
     $this->container->view->getEnvironment()->addGlobal('current', [
       'data' => [],
+      'attr' => [],
       'role' => 'user',
       'new' => true
     ]);
 
-    return $this->view->render($response, 'admin/user/edit.html');
+    return $this->view->render($response, 'admin/user/edit.html', self::userOptions());
   }
   
   public function postAddUser($request, $response, $arguments){
@@ -135,6 +210,10 @@ class UserActionController extends Controller
     $user = $this->container->sentinel->registerAndActivate($credentials);
     $role = $this->container->sentinel->findRoleByName('User');
     $role->users()->attach($user);
+    
+    $requestData = self::handlePostData($request);
+    $user->attr()->sync($requestData['attributes']);
+    $user->groups()->sync($requestData['groups']);
 
     $this->flash->addMessage('success', "User '{$credentials['username']}' have been successfully registered.");
     return $response->withRedirect($this->router->pathFor('admin.users.all'));
