@@ -319,19 +319,17 @@ $app->get('/setup', function () {
 | PARTICIPANT PAGE ROUTES
 */
 
+$app->get('/welcome/{hash}[/{stage}]', 'OnboardingPageController:onboarding')->setName('participant.onboarding'); 
+$app->post('/welcome/{hash}[/{stage}]', 'OnboardingPageController:save'); 
+
 $app->group('/participants', function () { 
-  $this->get('', 'ParticipantPageController:index')->setName('participant.home');
-  
-  $this->get('/start[/{stage}]', 'ParticipantPageController:onboarding')->setName('participant.onboarding');  
-  $this->post('/start[/{stage}]', 'ParticipantPageController:save_stage');  
-  
+  $this->get('[/]', 'ParticipantPageController:index')->setName('participant.home');
   $this->get('/{page}', 'ParticipantPageController:page')->setName('participant.page');
 })->add(new ParticipantMiddleware($container));
 
 /*
 | OPEN PAGE ROUTES
 */
-
 
 $app->group('/', function () use ($container) {
   $this->get('', 'HomePageController:index')->setName('home');              

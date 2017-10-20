@@ -1,1 +1,41 @@
-{{ stage }}
+{% extends "/new/layout.html" %}
+
+{% block title %} Welcome to Lotka-Volterra [ {{ stage.title }} ]: {{ parent() }} {% endblock %}
+
+{% block menu %}
+  <div class="progress col-sm-7">
+      <div class="bar" style="width: {{ stage_nr/stages_total * 100 }}%;"></div>
+      <span>{{ stage_nr }}/{{ stages_total }}</span>
+  </div>
+{% endblock %}
+
+{% block headCover %}{% endblock %}
+
+{% block mainClass%}pt-20 mb-20{% endblock %}
+
+{% block content %}
+<div class="col-sm-8 col-sm-offset-2 mt-20">
+  {{ include(template_from_string(stage.content|raw)) }}
+</div>
+{% endblock %}
+
+{% block footerContainer %}{% endblock %}
+
+{% block inlineBody %}
+<script type='text/javascript'>//<![CDATA[
+window.onload=function(){
+  $("#country-selector").on("change", function (e) {
+    $(".dob").hide();
+    if($(this).val() == "Sweden") {
+      $(".pnr").show();
+      $(".dob").hide();
+    } else {
+      $(".pnr").hide();
+      $(".dob").show();
+    }
+  });
+  $(".pnr").hide();
+}
+//]]>
+</script>
+{% endblock %}

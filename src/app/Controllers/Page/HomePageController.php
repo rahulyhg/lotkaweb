@@ -61,7 +61,7 @@ class HomePageController extends Controller
     return $this->view->render($response, '/new/page.html', [
       'hideHead' => true,
       'PUBLIC_KEY' => $this->container->get('stripe')['PUBLIC_KEY'],
-      'post' =>$post = Post::where('slug', 'single_ticket')->first(),
+      'post' => Post::where('slug', 'single_ticket')->first(),
     ]);
   }
   
@@ -75,7 +75,7 @@ class HomePageController extends Controller
   public function press($request, $response, $arguments)
   {
     return $this->view->render($response, '/new/barebones.html', [
-      'content' =>$post = Post::where('slug', 'press')->first()->content,
+      'content' => Post::where('slug', 'press')->first()->content,
     ]);  
   }  
 }

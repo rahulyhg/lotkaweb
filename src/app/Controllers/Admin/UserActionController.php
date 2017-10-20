@@ -24,6 +24,7 @@ class UserActionController extends Controller
       'onboarding_complete',
       'gender',
       'id_number_swe', #(inte relevant för ej svenska medborgare)
+      'birth_date',
       'membership_fee', #(behöver inte synas, men skall finnas med dolt med värdet 50kr)
       'membership_date', #(kan finnas med dolt med datum 20180101)
       'care_of', #(ej tvingande)
@@ -34,6 +35,8 @@ class UserActionController extends Controller
       'city',
       'country',
       'phone',
+      'emergency_contact',
+      'emergency_phone',
     ];
   }
   
@@ -109,7 +112,7 @@ class UserActionController extends Controller
     $this->flash->addMessage('success', "User has been deleted.");
     return $response->withRedirect($this->router->pathFor('admin.users.all'));
   }
-
+  
   public function editUser($request, $response, $arguments)
   {
     $getCurrentUserData = User::where('username', $arguments['uid'])->first();
@@ -135,6 +138,10 @@ class UserActionController extends Controller
     $getCurrentUserData = User::where('username', $arguments['uid'])->first();
     
     $getCurrentUserRole = $this->container->sentinel->findById($getCurrentUserData->id);
+    
+    $systemSalt = $this->container->get('settings')['default_salt'];
+    $defaultPassword = substr( base64_encode($request->getParam('email') . $systemSalt), 3, 8);  
+    
     if($getCurrentUserRole) {
       $getCurrentUserRole = $getCurrentUserRole->roles()->get()->first();
     }
@@ -146,6 +153,7 @@ class UserActionController extends Controller
       'first_name' => $request->getParam('first_name'),
       'last_name' => $request->getParam('last_name'),
       'org_notes' => $request->getParam('org_notes'),
+      'hash' => substr( hash_hmac('sha1', $request->getParam('email'), $systemSalt.$defaultPassword), 12, 36),
     ];
 
     // change users password
@@ -207,7 +215,12 @@ class UserActionController extends Controller
       return $response->withRedirect($this->router->pathFor('admin.users.all'));
     }
 
+    $systemSalt = $this->container->get('settings')['default_salt'];
+    $defaultPassword = substr( base64_encode($credentials["email"] . $systemSalt), 3, 8);
+    $credentials['hash'] = substr( hash_hmac('sha1', $credentials["email"], $systemSalt.$defaultPassword), 12, 36);
+    
     $user = $this->container->sentinel->registerAndActivate($credentials);
+    
     $role = $this->container->sentinel->findRoleByName('User');
     $role->users()->attach($user);
     
@@ -227,12 +240,14 @@ class UserActionController extends Controller
       $this->flash->addMessage('error', "No such order found.");
       return $response->withRedirect($this->router->pathFor('admin.order.attest', [ 'uid' => $arguments['uid'] ]));      
     }
+
+    $defaultPassword = substr( base64_encode($order->email . $systemSalt), 3, 8);
     
     $credentials = [
       'username' => $order->email,
       'email' => $order->email,
-      //This generates the users default password, to be changed later
-      'password' => substr( base64_encode($order->email . $this->container->get('settings')['default_salt']), 3, 8),
+      //This generates the users default password, to be changed later - unsecure
+      'password' => $defaultPassword,
     ];
 
     $validators = [
@@ -251,8 +266,14 @@ class UserActionController extends Controller
       $this->flash->addMessage('error', "Validation of user '{$credentials['username']}' failed.");
       return $response->withRedirect($this->router->pathFor('admin.order.attest', [ 'uid' => $order->id ]));
     }
-
+    
+    $systemSalt = $this->container->get('settings')['default_salt'];
+    
     $user = $this->container->sentinel->registerAndActivate($credentials);
+    $user->update([
+      'hash' => substr( hash_hmac('sha1', $order->email, $systemSalt.$defaultPassword), 12, 36)
+    ]);
+      
     $role = $this->container->sentinel->findRoleByName('User');
     $role->users()->attach($user);
     

@@ -13,7 +13,7 @@ use Slim\Views\Twig as View;
 class PostActionController extends Controller
 {
   private function slugify($string, $us = "-") {
-    return strtolower(preg_replace('/(?<!^)[A-Z]+|(?<!^|\d)[\d]+/', $us.'$0', $string));  
+    return strtolower(preg_replace("/[^A-Za-z0-9-]+/", $us, $string));  
   }
   
   private function handlePostData($request) {

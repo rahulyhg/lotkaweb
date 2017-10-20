@@ -14,8 +14,6 @@ use App\Models\Task;
 use App\Controllers\Controller;
 use Slim\Views\Twig as View;
 
-use App\Controllers\Admin\UserActionController;
-
 class ParticipantPageController extends Controller
 {
   private function getCurrentUser() {
@@ -31,7 +29,7 @@ class ParticipantPageController extends Controller
   {
     $participant = self::getCurrentUser();
     if(!isset($participant["attributes"]["onboarding_complete"])) 
-      return $response->withRedirect($this->router->pathFor('participant.onboarding'));
+      return $response->withRedirect($this->router->pathFor('participant.onboarding', ['hash' => $participant["user"]->hash]));
     
     return $this->view->render($response, '/new/participant/dashboard.html', [
       'debug' => $participant
@@ -46,29 +44,5 @@ class ParticipantPageController extends Controller
     return $this->view->render($response, '/new/participant/page.html', [
       'post' => $post
     ]);
-  }
-  
-  #Onboarding process
-  public function onboarding($request, $response, $arguments)
-  {
-    $participant = self::getCurrentUser();
-    $stage = isset($participant["attributes"]["onboarding_stage"]) ?
-        $participant["attributes"]["onboarding_stage"] : 1;
-    
-    return $this->view->render($response, '/new/participant/onboarding/stages.html', [
-      'stage' => $stage
-    ]);
-  }
-
-  public function save_stage($request, $response, $arguments)
-  {
-    $participant = self::getCurrentUser();
-    $stage = isset($participant["attributes"]["onboarding_stage"]) 
-        && $participant["attributes"]["onboarding_stage"] == $arguments['stage'] ?
-        $participant["attributes"]["onboarding_stage"] : 1;
-    
-    return $this->view->render($response, '/new/participant/onboarding/stages.html', [
-      'stage' => $stage
-    ]);    
-  }    
+  }  
 }

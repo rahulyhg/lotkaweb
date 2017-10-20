@@ -216,3 +216,43 @@ svg.loading path.lights {
     stroke-dashoffset: 0;
   }
 }
+
+.onboarding .two-col:nth-child(odd) {
+  margin-left: 1em;
+}
+
+.onboarding .two-col {
+  width: calc(50% - 1em);
+  display: inline-block;
+  box-sizing: border-box;
+}
+
+.onboarding .input-lg.required {
+  box-shadow: 0 .2em 0 0 #F20; 
+}
+
+.onboarding .input-lg.inline {
+  displat: inline-block;
+  margin-right: 1em;
+}
+
+.progress {
+  height: 3em;
+  background: rgba(126,126,126,.15);
+  padding: 1em;
+  margin: 1em 1em 2em;
+}
+.progress span {
+  display: block;
+  text-align: center;
+  padding: 1em;
+}
+
+.bar {
+  height: 100%;
+  background: rgba(255,255,255,1);
+  width: 10%;
+  box-shadow: 4px 4px 0 rgba(126,126,126,.5);
+  text-align: center;
+  line-height: 3em;
+}

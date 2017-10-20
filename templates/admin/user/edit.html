@@ -26,6 +26,7 @@
         <div class="widget-content nopadding">
           <form action="{{ current.new ? path_for('admin.user.add') : path_for('admin.user.edit', { 'uid': current.data.username }) }}" method="post" autocomplete="on" class="form-horizontal">
             {{ csrf.field | raw }}
+            
             <h6 style="margin-left: 1.5em;">Login and display information</h6>
             <div class="control-group">
               <label class="control-label">User Name :</label>
@@ -44,7 +45,8 @@
               <div class="controls">
                 <input type="password" class="span11" name="password" placeholder="Enter Password">
               </div>
-            </div>            
+            </div>
+            
             <h6 style="margin-left: 1.5em;">Participant information</h6>
             <div class="control-group">
               <label class="control-label">First Name :</label>
@@ -88,6 +90,7 @@
                 <input type="text" class="span11" name="membership_date" placeholder="20180101" value="{{ current.attr.membership_date }}">
               </div>
             </div>
+            
             <h6 style="margin-left: 1.5em;">Address</h6>
             <div class="control-group">
               <label class="control-label">C/O : </label>
@@ -125,7 +128,8 @@
               <div class="controls">
                 <input type="text" class="span11" name="country" placeholder="Country" value="{{ current.attr.country }}">
               </div>
-            </div>          
+            </div>
+            
             <h6 style="margin-left: 1.5em;">Contact information</h6>
             <div class="control-group">
               <label class="control-label">E-mail :</label>
@@ -136,9 +140,22 @@
             <div class="control-group">
               <label class="control-label">Phone number :</label>
               <div class="controls">
-                <input type="text" class="span11" name="phone" placeholder="E-mail" value="{{ current.attr.phone }}">
+                <input type="text" class="span11" name="phone" placeholder="+## ######" value="{{ current.attr.phone }}">
               </div>
             </div>
+            <div class="control-group">
+              <label class="control-label">Emergency contact :</label>
+              <div class="controls">
+                <input type="text" class="span11" name="emergency_contact" placeholder="Contact name" value="{{ current.attr.emergency_contact }}">
+              </div>
+            </div>            
+            <div class="control-group">
+              <label class="control-label">Emergency phone :</label>
+              <div class="controls">
+                <input type="text" class="span11" name="emergency_phone" placeholder="+## ######" value="{{ current.attr.emergency_phone }}">
+              </div>
+            </div>
+            
             <h6 style="margin-left: 1.5em;">Site information</h6>
             <div class="control-group">
               <label class="control-label">User role :</label>
@@ -151,7 +168,7 @@
                 {% endfor %}
                 </select>
               </div>
-            </div>            
+            </div>
             <div class="control-group">
               <label class="control-label">User Groups :</label>
               <div class="controls">
@@ -164,6 +181,7 @@
                 </select>
               </div>
             </div>
+            
             <h6 style="margin-left: 1.5em;">Additional information</h6>
             <div class="control-group">
               <label class="control-label">Completed Onboarding :</label>
@@ -176,7 +194,13 @@
               <div class="controls">
                 <input type="text" class="span11" disabled value="{{ current.data.last_login }}">
               </div>
-            </div>            
+            </div>
+            <div class="control-group">
+              <label class="control-label">User hash :</label>
+              <div class="controls">
+                <input type="text" class="span11" disabled value="{{ current.data.hash }}">
+              </div>
+            </div>
             <div class="control-group">
               <label class="control-label">Organizers Notes :</label>
               <div class="controls">

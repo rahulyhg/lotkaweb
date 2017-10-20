@@ -18,6 +18,7 @@ class User extends SentinelUser
     'org_notes',
     'permissions',
     'character_id',
+    'hash',
   ];
 
   protected $loginNames = ['email', 'username'];
