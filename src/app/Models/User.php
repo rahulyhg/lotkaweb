@@ -41,5 +41,10 @@ class User extends SentinelUser
   public function attr()
   {
       return $this->belongsToMany('App\Models\Attribute', 'user_attribute')->withTimeStamps(); 
-  } 
+  }
+  
+  public function order()
+  {
+      return $this->belongsTo('App\Models\Order');
+  }  
 }

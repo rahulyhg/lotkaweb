@@ -37,6 +37,8 @@ class UserActionController extends Controller
       'phone',
       'emergency_contact',
       'emergency_phone',
+      'allergies',
+      'medical_conditions',
     ];
   }
   
@@ -129,7 +131,11 @@ class UserActionController extends Controller
       'attr' => self::mapAttributes( $getCurrentUserData->attr ),
       'role' => $getCurrentUserRole->slug
     ]);
-
+/*
+    die(
+      var_dump(self::mapAttributes( $getCurrentUserData->attr ))
+    );
+*/    
     return $this->view->render($response, 'admin/user/edit.html', self::userOptions());
   }
 

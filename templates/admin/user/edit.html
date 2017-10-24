@@ -77,7 +77,13 @@
               <div class="controls">
                 <input type="text" class="span11" name="id_number_swe" placeholder="YYYYMMDDNNNN" value="{{ current.attr.id_number_swe }}">
               </div>
-            </div>            
+            </div>
+            <div class="control-group">
+              <label class="control-label">Date Of Birth :</label>
+              <div class="controls">
+                <input type="text" class="span11" name="birth_date" placeholder="YYYYMMDD" value="{{ current.attr.birth_date }}">
+              </div>
+            </div>              
             <div class="control-group">
               <label class="control-label">Membership Fee (SEK) :</label>
               <div class="controls">
@@ -101,8 +107,8 @@
             <div class="control-group">
               <label class="control-label">Street Address : </label>
               <div class="controls">
-                <input type="text" class="span11" name="street_adress_1" placeholder="Line one" value="{{ current.attr.street_adress_1 }}">
-                <input type="text" class="span11" name="street_adress_2" placeholder="Line two" value="{{ current.attr.street_adress_2 }}" style="margin-top: .5em;">                
+                <input type="text" class="span11" name="street_address_1" placeholder="Line one" value="{{ current.attr.street_address_1 }}">
+                <input type="text" class="span11" name="street_address_2" placeholder="Line two" value="{{ current.attr.street_address_2 }}" style="margin-top: .5em;">                
               </div>
             </div>
             <div class="control-group">
@@ -155,6 +161,18 @@
                 <input type="text" class="span11" name="emergency_phone" placeholder="+## ######" value="{{ current.attr.emergency_phone }}">
               </div>
             </div>
+            <div class="control-group">
+              <label class="control-label">Allergies :</label>
+              <div class="controls">
+                <textarea class="span11" name="allergies" rows="5">{{ current.attr.allergies }}</textarea>
+              </div>
+            </div>
+            <div class="control-group">
+              <label class="control-label">Medical Conditions :</label>
+              <div class="controls">
+                <textarea class="span11" name="medical_conditions" rows="5">{{ current.attr.medical_conditions }}</textarea>
+              </div>
+            </div>            
             
             <h6 style="margin-left: 1.5em;">Site information</h6>
             <div class="control-group">

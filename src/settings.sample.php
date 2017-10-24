@@ -3,7 +3,8 @@ return [
   'settings' => [
     'displayErrorDetails' => true, // set to false in production
     'addContentLengthHeader' => false, // Allow the web server to send the content-length header
-    'default_salt' => '<OUT_DEFALT_PASSWORD_SALT>', //Used to create default passwords to generated users
+    'default_salt' => '<OUR_DEFALT_PASSWORD_SALT>', //Used to create default passwords to generated users
+    'user_images' => __DIR__ . '/../public/assets/portraits/',
     
     // Renderer settings
     'renderer' => [

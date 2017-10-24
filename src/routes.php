@@ -319,8 +319,8 @@ $app->get('/setup', function () {
 | PARTICIPANT PAGE ROUTES
 */
 
-$app->get('/welcome/{hash}[/{stage}]', 'OnboardingPageController:onboarding')->setName('participant.onboarding'); 
-$app->post('/welcome/{hash}[/{stage}]', 'OnboardingPageController:save'); 
+$app->get('/welcome/{hash}/[{stage}]', 'OnboardingPageController:onboarding')->setName('participant.onboarding'); 
+$app->post('/welcome/{hash}/[{stage}]', 'OnboardingPageController:save'); 
 
 $app->group('/participants', function () { 
   $this->get('[/]', 'ParticipantPageController:index')->setName('participant.home');
