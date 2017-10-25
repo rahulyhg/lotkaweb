@@ -324,7 +324,7 @@ svg.loading path.lights {
 .check > label:hover {
   opacity: 0.5;
 }
-.check > input[disabled] + label {
+.check > input[disabled][name] + label {
   opacity: 0.25;
 }
 
@@ -420,4 +420,17 @@ svg.loading path.lights {
 }
 .range input[type=range]:focus::-ms-fill-upper {
   background: #333;
+}
+.range input[type=range] {
+  border-bottom: .15em solid rgb(0,255,0);
+}
+.range label {
+  display: block;
+}
+.range label > span {
+  float: right;
+}
+
+.well {
+  background-color: #444;
 }

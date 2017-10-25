@@ -21,7 +21,57 @@ class OnboardingPageController extends Controller
 {
   private function onboardingAttributes() {
     return [
-
+'allergies', 
+'aspects', 
+'birth_date', 
+'care_of', 
+'char_dir_avo', 
+'char_gender', 
+'char_ind_col', 
+'char_iso_int', 
+'char_log_int', 
+'char_mal_con', 
+'char_mil_dem', 
+'char_nos_pro', 
+'char_phy_non', 
+'city', 
+'country', 
+'emergency_contact', 
+'emergency_phone', 
+'gender', 
+'group',
+'id_number_swe', 
+'medical_conditions',
+'membership_date', 
+'membership_fee', 
+'onboarding_complete', 
+'onboarding_stage',
+'phone', 
+'player_connections', 
+'portrait',       
+'postal_code', 
+'pref_conflict_ideological', 
+'pref_conflict_intrapersonal', 
+'pref_counselling', 
+'pref_everyday', 
+'pref_friendships', 
+'pref_interrupted_sleep', 
+'pref_late_arival', 
+'pref_ooc_leader',
+'pref_ooc_medic', 
+'pref_ooc_radio',
+'pref_player_def_1', 
+'pref_player_def_2', 
+'pref_player_def_3', 
+'pref_responsibilities', 
+'pref_romance', 
+'pref_secrets', 
+'pref_work', 
+'size', 
+'state', 
+'street_address_1', 
+'street_address_2',
+'terms_accepted',
     ];
   }
   
@@ -47,7 +97,7 @@ class OnboardingPageController extends Controller
   }
   
   
-  private function fetchAttributeIdsFromDB($attributes = [ 'keys' => [], 'values' => [] ]) {
+  private function getAttributeIds($attributes = [ 'keys' => [], 'values' => [] ]) {
     $attribute_ids = [];
     foreach ($attributes['keys'] as $i => $attr_key) {
       $attribute_ids[] = Attribute::firstOrCreate([
@@ -58,25 +108,23 @@ class OnboardingPageController extends Controller
     return $attribute_ids;
   }
   
-  private function getUserAttributeIds($request) {
-    $user_attribute_set = [ 
-      'gender', 'id_number_swe', 'birth_date', 
-      'membership_fee', 'membership_date', 'care_of', 'street_address_1', 
-      'street_address_2', 'postal_code', 'state', 'city', 'country', 'phone', 
-      'emergency_contact', 'emergency_phone', 'allergies', 'medical_conditions',
-      'player_connections', 'char_gender', 
-      'char_iso_int', 'char_mil_dem', 'char_nos_pro', 'char_ind_col', 
-      'char_log_int', 'char_dir_avo', 'char_phy_non', 'char_mal_con', 
-      'late_arival', 'interrupted_sleep', 'radio', 'off_medic', 'occ_leader',
-      'pref_counselling', 'pref_romance', 'pref_responsibilities', 
-      'pref_conflict_ideological', 'pref_conflict_intrapersonal', 
-      'pref_work', 'pref_everyday', 'pref_friendships', 'pref_secrets', 
-      'pref_player_def_1', 'pref_player_def_2', 'pref_player_def_3', 
-    ];
+  private function setUserAttributes($request, $participant) {
+    $user_attribute_set = self::onboardingAttributes();
+    $user_attributes = $participant["attributes"];
+    $request_attributes = $request->getParsedBody();
 
-    $attributes = [ 'keys' => [], 'values' => [] ];
+    # We prepopulate boolean attributes so they can be deactivated, otherwise they are not even sent
+    if( $request_attributes["boolean_attributes"] ) {
+      $boolean_attributes = explode(',', $request->getParam("boolean_attributes"));
+      foreach ($boolean_attributes as $a) {
+        $request_attributes[$a] = isset($request_attributes[$a]) ? $request_attributes[$a] : 'false';
+      }
+    }
+    
+    $attributes = [ 'keys' => [], 'values' => [] ];    
     foreach ($user_attribute_set as $attr) {
-      $attribute_value = $request->getParam($attr);
+      $attribute_value = isset($request_attributes[$attr]) ? 
+        $request_attributes[$attr] : $user_attributes[$attr];
 
       if ( is_array($attribute_value) ? count($attribute_value) : strlen($attribute_value) ) {
         if(is_array($attribute_value)) {
@@ -88,16 +136,47 @@ class OnboardingPageController extends Controller
           $attributes['keys'][] = $attr;
           $attributes['values'][] = $attribute_value;          
         }
-          
       }
     }
     
-    return self::fetchAttributeIdsFromDB( $attributes );
+    $updated_attribute_ids = self::getAttributeIds( $attributes );
+    
+    return $participant["user"]->attr()->sync($updated_attribute_ids);
   }
-  
-  private function getCharacterData($request) {
 
-  }
+  private function updateAttributes($attributes, $user) {
+    foreach ($attributes as $name => $value) {
+      $existing_attribute = $user->attr()->where('name', $name)->get();
+      if(!$existing_attribute->isEmpty()) {
+        $user->attr()->detach($existing_attribute); 
+      }
+      
+      if(is_array($value)) {
+        foreach ($value as $i => $val) {
+          $user->attr()->attach(Attribute::firstOrCreate(['name' => $name, 'value' => $val]));
+        }
+      } else {
+        $user->attr()->attach(Attribute::firstOrCreate(['name' => $name, 'value' => $value]));
+      }
+    }
+  }  
+  
+  private function uploadFile($uploadedFiles, $user) {
+    $directory = $this->container->get('settings')['user_images'];
+
+    // handle single input with single file upload
+    $uploadedFile = $uploadedFiles['portrait'];
+    
+    if ($uploadedFile->getError() === UPLOAD_ERR_OK) {
+      $extension = pathinfo($uploadedFile->getClientFilename(), PATHINFO_EXTENSION);
+      $basename = bin2hex(random_bytes(8)); // see http://php.net/manual/en/function.random-bytes.php
+      $filename = sprintf('%s.%0.8s', $basename, $extension);
+
+      $uploadedFile->moveTo($directory . DIRECTORY_SEPARATOR . $filename);
+      
+      self::updateAttributes(['portrait' => $filename], $user);
+    }
+  }  
   
   private function getCurrentUser($hash) {
     $participant = User::where('hash', $hash)->first();
@@ -108,12 +187,26 @@ class OnboardingPageController extends Controller
     ] : false;
   }
   
+  private function getStageData($arguments, $participant) {
+    $stage = isset($arguments['stage']) ? $arguments['stage'] : 1;
+    $stage = filter_var($stage, FILTER_SANITIZE_NUMBER_INT);
+    $user_stage = isset($participant["attributes"]["onboarding_stage"]) ? 
+      $participant["attributes"]["onboarding_stage"] : 1;
+    $stage_nr = $user_stage == $stage ? $user_stage : min($user_stage, $stage);
+    
+    return [
+      'stage' => $stage,
+      'stage_nr' => $stage_nr,
+      'total' => Post::where('slug', 'like', "stage-%")->get()->count(),
+    ];
+  }
+  
   public function onboarding($request, $response, $arguments)
   {    
     $user_hash = filter_var($arguments['hash'], FILTER_SANITIZE_STRING);
     $participant = self::getCurrentUser($user_hash);
 
-    if(!$participant || $participant["attributes"]["onboarding_complete"]) {
+    if(!$participant || (isset($participant["attributes"]["onboarding_complete"]) && $participant["attributes"]["onboarding_complete"])) {
       $this->flash->addMessage(
         'error', 
         "Sorry, this participant could not be found for onboarding or the link has allready been used."
@@ -131,76 +224,30 @@ class OnboardingPageController extends Controller
       return $response->withRedirect($this->router->pathFor('home'));
     }
     
-    $stage = isset($arguments['stage']) ? $arguments['stage'] : 1;
-    $stage = filter_var($stage, FILTER_SANITIZE_NUMBER_INT);
-    $user_stage = isset($participant["attributes"]["onboarding_stage"]) ? 
-      $participant["attributes"]["onboarding_stage"] : 1;
-    $stage_nr = $user_stage == $stage ? $user_stage : min($user_stage, $stage);
+    $stage_data = self::getStageData($arguments, $participant);
 
-    $stages_total = Post::where('slug', 'like', "stage-%")->get()->count();
-    $stage = Post::where('slug', "stage-$stage_nr")->first();
+    $stage = Post::where('slug', "stage-{$stage_data['stage_nr']}")->first();
 
     $this->container->view->getEnvironment()->addGlobal('data', [
       'genders' => ['Nonbinary','Female','Male','Other'],
+      'sizes' => [
+        [ 'code' => 'SMALL',  'description' => "up to 165cm and 60kg"   ],
+        [ 'code' => 'MEDIUM', 'description' => "165-175cm, up to 85kg"  ],
+        [ 'code' => 'LARGE',  'description' => "175-190cm, up to 100kg" ],
+        [ 'code' => 'XLARGE', 'description' => "over 190cm, over 100kg" ], 
+      ],
       'user_order' => $user_order,
     ]);
             
     return $this->view->render($response, '/new/participant/onboarding/stages.html', [
-      'stage_nr' => $stage_nr,
-      'stages_total' => $stages_total,
+      'stage_nr' => $stage_data['stage_nr'],
+      'stages_total' => $stage_data['total'],
       'stage' => $stage,
       'participant' => $participant,
       'hash' => $user_hash,
     ]);
   }
-
-  private function uploadFile($uploadedFiles, $user) {
-    $directory = $this->container->get('settings')['user_images'];
-
-    // handle single input with single file upload
-    $uploadedFile = $uploadedFiles['portrait'];
-    
-    if ($uploadedFile->getError() === UPLOAD_ERR_OK) {
-      $extension = pathinfo($uploadedFile->getClientFilename(), PATHINFO_EXTENSION);
-      $basename = bin2hex(random_bytes(8)); // see http://php.net/manual/en/function.random-bytes.php
-      $filename = sprintf('%s.%0.8s', $basename, $extension);
-
-      $uploadedFile->moveTo($directory . DIRECTORY_SEPARATOR . $filename);
-      
-      self::updateAttributes(['portrait' => $filename], $user);
-    }
-  }
   
-  private function updateAttributes($attributes, $user) {
-    foreach ($attributes as $name => $value) {
-      $existing_attribute = $user->attr()->where('name', $name)->get();
-      if(!$existing_attribute->isEmpty()) {
-        $user->attr()->detach($existing_attribute); 
-      }
-      
-      if(is_array($value)) {
-        foreach ($value as $i => $val) {
-          $user->attr()->attach(Attribute::firstOrCreate(['name' => $name, 'value' => $val]));
-        }
-      } else {
-        $user->attr()->attach(Attribute::firstOrCreate(['name' => $name, 'value' => $value]));
-      }
-    }
-  }
-  
-  private function updateUser($user_data, $user_attributes, $user, $stage, $stages_total) {
-    $onboarding_attributes = [ 
-      'onboarding_stage' => $stage + 1, 
-      'onboarding_complete' => $stages_total == $stage
-    ];
-    
-    $this->container->sentinel->update($user, $user_data);
-    $user->attr()->syncWithoutDetaching($user_attributes);
-    self::updateAttributes($onboarding_attributes, $user);
-    
-    return true;
-  }  
-
   public function save($request, $response, $arguments)
   {
     $user_hash = filter_var($arguments['hash'], FILTER_SANITIZE_STRING);
@@ -210,49 +257,40 @@ class OnboardingPageController extends Controller
       return $response->withRedirect($this->router->pathFor('home'));
     }
     
-    $stages_total = Post::where('slug', 'like', "stage-%")->get()->count();
+    $stage_data = self::getStageData($arguments, $participant);
     
-    $stage = isset($arguments['stage']) ? $arguments['stage'] : 1;
-    $stage = filter_var($stage, FILTER_SANITIZE_NUMBER_INT);
-    $user_stage = isset($participant["attributes"]["onboarding_stage"]) ? $participant["attributes"]["onboarding_stage"] : 1;
-    $stage_nr = $user_stage == $stage ? $user_stage : min($user_stage, $stage);
+    $participant['attributes']['onboarding_stage'] = $stage_data['stage'] + 1;
+    $participant['attributes']['onboarding_complete'] = $stage_data['total'] == $stage_data['stage'];
     
     $user_data = self::getUserData($request);
-    $user_attributes = self::getUserAttributeIds($request, $stage_nr);
-
+    
+    self::setUserAttributes($request, $participant);
+    
+    # Check if we have updated data
     $hasUpload = $request->getUploadedFiles();
     if( isset($hasUpload['portrait']) ) {
-      self::uploadFile($hasUpload, $participant["user"]);
+      self::uploadFile($hasUpload, $participant['user']);
     }
     
-    if(strlen($request->getParam('aspects'))) {
-      $aspects_attributes = [
-        'aspects' => $request->getParam('aspects'), 
-      ];
-      
-      $groups = $request->getParam('group');
-      if(is_array($groups)) {
-        foreach ($groups as $i => $val) {
-          $aspects_attributes['group'][] = $groups[$i];
-        }
-      }
-      
-      self::updateAttributes($aspects_attributes, $participant["user"]);
-    }
- 
-    if(!self::updateUser($user_data, $user_attributes, $participant["user"], $stage_nr, $stages_total)) {
+    if( !$this->container->sentinel->update($participant['user'], $user_data) ) {
       $this->flash->addMessage('error', "Something seems to be out of wack, " . 
                                "have a look and make sure that you have filled out all the required fields.");
     }
     
-    if($stage_nr == $stages_total) {
-      self::updateAttributes(['onboarding_complete' => true], $participant["user"]);
+    if($participant['attributes']['onboarding_complete']) {
+      
+      $user_role = $this->container->sentinel->findRoleBySlug('user');
+      $user_role->users()->detach($participant["user"]);
+      
+      $participant_role = $this->container->sentinel->findRoleBySlug('participant');
+      $participant_role->users()->attach($participant["user"]);      
+      
       return $response->withRedirect($this->router->pathFor('participant.home'));
     }
     
     return $response->withRedirect($this->router->pathFor(
       'participant.onboarding', 
-      ['hash' => $user_hash, 'stage' => $stage_nr + 1]
+      ['hash' => $user_hash, 'stage' => $participant['attributes']['onboarding_stage']]
     ));
   }  
 }
