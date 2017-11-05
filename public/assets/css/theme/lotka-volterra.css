@@ -227,7 +227,10 @@ svg.loading path.lights {
   box-sizing: border-box;
 }
 
-.onboarding .input-lg.required {
+.onboarding .required:valid  { 
+  box-shadow: 0 .2em 0 0 #0A2; 
+}
+.onboarding .required:invalid  {
   box-shadow: 0 .2em 0 0 #F20; 
 }
 
@@ -433,4 +436,10 @@ svg.loading path.lights {
 
 .well {
   background-color: #444;
+}
+
+.nav>li>a {
+  position: relative;
+  display: block;
+  padding: 15px 1.25vw;
 }

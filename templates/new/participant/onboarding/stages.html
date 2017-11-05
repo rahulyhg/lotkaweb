@@ -47,11 +47,11 @@ window.onload=function(){
   $("#country-selector").on("change", function (e) {
     $(".dob").hide();
     if($(this).val() == "Sweden") {
-      $(".pnr").show();
-      $(".dob").hide();
+      $(".pnr").show().prop('required', true);
+      $(".dob").hide().prop('required', false);
     } else {
-      $(".pnr").hide();
-      $(".dob").show();
+      $(".pnr").hide().prop('required', false);
+      $(".dob").show().prop('required', true);
     }
   }).trigger("change");
   

@@ -80,7 +80,7 @@ class AuthController extends Controller
     ]);    
     
     if ($validation->failed()) { //we have a user with this email
-
+      
     }
     
     $this->flash->addMessage('success', "Check you email for login reset information.");

@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Controllers\Page\Participant;
 
 use App\Models\Post;
@@ -46,6 +45,7 @@ class OnboardingPageController extends Controller
 'membership_fee', 
 'onboarding_complete', 
 'onboarding_stage',
+'password_set',
 'phone', 
 'player_connections', 
 'portrait',       
@@ -75,7 +75,7 @@ class OnboardingPageController extends Controller
     ];
   }
   
-  private function getUserData($request) {
+  private function getUserData($request, $user) {
     $user_data_set = [ 'username', 'email', 'first_name', 'last_name' ];
     $user_data = [];
     foreach ($user_data_set as $attr) {
@@ -91,6 +91,7 @@ class OnboardingPageController extends Controller
     if (($request->getParam('password') && $request->getParam('password_repeat')) && 
         ($request->getParam('password') == $request->getParam('password_repeat'))) {
       $user_data['password'] = $request->getParam('password');
+      self::updateAttributes(['password_set' => true], $user);
     }
     
     return $user_data;
@@ -114,17 +115,19 @@ class OnboardingPageController extends Controller
     $request_attributes = $request->getParsedBody();
 
     # We prepopulate boolean attributes so they can be deactivated, otherwise they are not even sent
-    if( $request_attributes["boolean_attributes"] ) {
+    if( isset($request_attributes["boolean_attributes"]) ) {
       $boolean_attributes = explode(',', $request->getParam("boolean_attributes"));
       foreach ($boolean_attributes as $a) {
         $request_attributes[$a] = isset($request_attributes[$a]) ? $request_attributes[$a] : 'false';
       }
     }
     
-    $attributes = [ 'keys' => [], 'values' => [] ];    
+    $attributes = [ 'keys' => [], 'values' => [] ];   
+
     foreach ($user_attribute_set as $attr) {
-      $attribute_value = isset($request_attributes[$attr]) ? 
-        $request_attributes[$attr] : $user_attributes[$attr];
+      $attribute_value = null;
+      if(isset($request_attributes[$attr])) $attribute_value = $request_attributes[$attr];
+      if(array_key_exists($attr, $user_attributes)) $attribute_value = $user_attributes[$attr];
 
       if ( is_array($attribute_value) ? count($attribute_value) : strlen($attribute_value) ) {
         if(is_array($attribute_value)) {
@@ -188,10 +191,12 @@ class OnboardingPageController extends Controller
   }
   
   private function getStageData($arguments, $participant) {
-    $stage = isset($arguments['stage']) ? $arguments['stage'] : 1;
+    $min_stage = isset($participant["attributes"]["password_set"]) ? 2 : 1;
+    $stage = isset($arguments['stage']) ? $arguments['stage'] : $min_stage;
     $stage = filter_var($stage, FILTER_SANITIZE_NUMBER_INT);
     $user_stage = isset($participant["attributes"]["onboarding_stage"]) ? 
-      $participant["attributes"]["onboarding_stage"] : 1;
+      $participant["attributes"]["onboarding_stage"] : $min_stage;
+      
     $stage_nr = $user_stage == $stage ? $user_stage : min($user_stage, $stage);
     
     return [
@@ -229,7 +234,7 @@ class OnboardingPageController extends Controller
     $stage = Post::where('slug', "stage-{$stage_data['stage_nr']}")->first();
 
     $this->container->view->getEnvironment()->addGlobal('data', [
-      'genders' => ['Nonbinary','Female','Male','Other'],
+      'genders' => ['Non-binary','Female','Male','Other'],
       'sizes' => [
         [ 'code' => 'SMALL',  'description' => "up to 165cm and 60kg"   ],
         [ 'code' => 'MEDIUM', 'description' => "165-175cm, up to 85kg"  ],
@@ -262,7 +267,7 @@ class OnboardingPageController extends Controller
     $participant['attributes']['onboarding_stage'] = $stage_data['stage'] + 1;
     $participant['attributes']['onboarding_complete'] = $stage_data['total'] == $stage_data['stage'];
     
-    $user_data = self::getUserData($request);
+    $user_data = self::getUserData($request, $participant['user']);
     
     self::setUserAttributes($request, $participant);
     
