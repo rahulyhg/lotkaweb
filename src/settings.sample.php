@@ -32,6 +32,20 @@ return [
       'prefix'    => '',
     ],
 
+    'mail' => [
+      'from' => [
+        'email' => <FROM_MAIL>,
+        'name' => <FROM_NAME>
+      ],
+
+      'smtp' => [
+        'server' =>	  'smtp.gmail.com', 
+        'email' => 	  <SENDER_EMAIL>, 
+        'password' =>	<SENDER_EMAIL_PASWORD>, 
+        'port' =>    	587,
+      ],
+    ],
+    
     'stripe' => [
       'SECRET_KEY' => '<OUR_SECRET_STRIPE_KEY_HERE>',
       'PUBLIC_KEY' => '<OUR_PUBLIC_STRIPE_KEY_HERE>',

@@ -1,13 +1,22 @@
 <?php
-
 namespace App\Controllers\Auth;
 
 use App\Models\User;
+use App\Models\Post;
+
 use App\Controllers\Controller;
 use Respect\Validation\Validator as v;
 
+use App\Mail\Sender;
+use App\Mail\Templater;
+  
 class AuthController extends Controller
 {
+  private function sendEmail($recipient, $subject, $body, $vars) {
+    $mail = new Sender($this->container->get('settings'));
+    return $mail->send($recipient, $subject, $body, $vars);
+  }
+  
   public function getLogin($request, $response)
   {
     return $this->view->render($response, 'new/user/login.html');
@@ -80,10 +89,23 @@ class AuthController extends Controller
     ]);    
     
     if ($validation->failed()) { //we have a user with this email
+      $template = Post::where('slug', 'password-reminder')->first();
+      
+      if( self::sendEmail(
+        $credentials['email'], // Recipiant
+        $template->title,      // Subject Line
+        $template->content,    // E-mail Body
+        [                      // Values ([{###}] where ### is the KEY)
+          "CODE" => 'KODEKODEKODEKODEO'
+        ]
+      ) ) {
+        $this->flash->addMessage('success', "Check you email for login reset information.");
+      } else {
+        $this->flash->addMessage('error', "There's a problem with the email function. (Sorry)");
+      };
       
     }
     
-    $this->flash->addMessage('success', "Check you email for login reset information.");
     return $response->withRedirect($this->router->pathFor('user.login'));
   }
 }

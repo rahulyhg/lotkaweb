@@ -37,12 +37,15 @@ class HomePageController extends Controller
   {
     $slug = isset($arguments['page']) ? $arguments['page'] : $arguments['category'];
     $slug = filter_var($slug, FILTER_SANITIZE_STRING);
-    $post = Post::where('slug', $slug)->first();
+    $post = Post::where('slug', $slug)->visibleTo('public')->published()->first();
     
     if($slug == 'tickets') {
       $this->container->view->getEnvironment()->addGlobal(
         'tickets', self::populateTicketInfo());
     }
+    
+    if(!$post) 
+      return  $response->withRedirect($this->router->pathFor('home'));
     
     return $this->view->render($response, '/new/page.html', [
       'PUBLIC_KEY' => $this->container->get('stripe')['PUBLIC_KEY'],

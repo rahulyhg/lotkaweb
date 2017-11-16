@@ -23,6 +23,7 @@ class PostActionController extends Controller
       'description' => $request->getParam('description'),
       'publish_at' => $request->getParam('publish_at'),
       'unpublish_at' => $request->getParam('unpublish_at'),
+      'visible_to' => $request->getParam('visible_to'),
       'content' => $request->getParam('content'),
       'note' => $request->getParam('note'),
       'user_id' =>  $this->container->get('view')->getEnvironment()->getGlobals()['auth']['user']->id,
