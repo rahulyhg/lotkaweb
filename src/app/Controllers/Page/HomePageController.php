@@ -71,7 +71,7 @@ class HomePageController extends Controller
   public function devPosts($count = 2) 
   {
     $devBlogEndpoint = $this->container->get('settings')['event']['devBlog'];
-    $json_data = file_get_contents($devBlogEndpoint . '?json=get_recent_posts&count=' . $count);
+    $json_data = "{}"; //file_get_contents($devBlogEndpoint . '?json=get_recent_posts&count=' . $count);
     return json_decode($json_data);
   }
 

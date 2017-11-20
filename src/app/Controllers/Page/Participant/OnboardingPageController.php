@@ -68,6 +68,8 @@ class OnboardingPageController extends Controller
 'pref_secrets', 
 'pref_work', 
 'size', 
+'torso_circumference', 
+'onefifty_plus', 
 'state', 
 'street_address_1', 
 'street_address_2',
@@ -233,14 +235,24 @@ class OnboardingPageController extends Controller
 
     $stage = Post::where('slug', "stage-{$stage_data['stage_nr']}")->first();
 
+    $torso_size = [];
+    for ($i = 70; $i <= 200; $i+=5) {
+      $torso_size[] = [ 
+        'code' => $i+5, 
+        'description' => "$i to " . ($i+5) . "cm (" . ceil($i/2.54) . "-" . ceil(($i+5)/2.54) . "\")" 
+      ];
+    }
+
+    
     $this->container->view->getEnvironment()->addGlobal('data', [
       'genders' => ['Non-binary','Female','Male','Other'],
       'sizes' => [
-        [ 'code' => 'SMALL',  'description' => "up to 165cm and 60kg"   ],
-        [ 'code' => 'MEDIUM', 'description' => "165-175cm, up to 85kg"  ],
-        [ 'code' => 'LARGE',  'description' => "175-190cm, up to 100kg" ],
-        [ 'code' => 'XLARGE', 'description' => "over 190cm, over 100kg" ], 
+        [ 'code' => 'SMALL',  'description' => "up to 165cm (<5'5\") and 60kg (<130lbs)"   ],
+        [ 'code' => 'MEDIUM', 'description' => "165-175cm (5'9\"), up to 85kg (187lbs)"  ],
+        [ 'code' => 'LARGE',  'description' => "175-190cm (6'3\"), up to 100kg (220lbs)" ],
+        [ 'code' => 'XLARGE', 'description' => "over 190cm (>6'3\"), over 100kg (>220lbs)" ], 
       ],
+      'torso_circumference' => $torso_size,
       'user_order' => $user_order,
     ]);
             

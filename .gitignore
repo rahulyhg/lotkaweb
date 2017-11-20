@@ -6,3 +6,4 @@
 /public/dev*
 /phinx.yml
 /composer.lock
+**/public/assets/portraits/
