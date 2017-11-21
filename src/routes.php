@@ -94,6 +94,10 @@ $app->group('/user', function() {
   $this->get('/logout', 'AuthController:logout')->setName('user.logout');
   
   $this->post('/forgot', 'AuthController:postReminder')->setName('user.reminder');
+
+  $this->get('/reset/{code}', 'AuthController:getResetPassword')->setName('user.reset');
+  $this->post('/reset/{code}', 'AuthController:resetPassword');
+
 });
 
 //Admin

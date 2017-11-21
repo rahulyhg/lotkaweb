@@ -108,4 +108,16 @@ class AuthController extends Controller
     
     return $response->withRedirect($this->router->pathFor('user.login'));
   }
+  
+  public function getResetPassword($request, $response)
+  {
+    return $this->view->render($response, 'new/user/reset.html', [
+      
+    ]);
+  }
+  
+  public function resetPassword($request, $response)
+  {
+    
+  }  
 }

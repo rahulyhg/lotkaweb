@@ -9,8 +9,12 @@ use App\Models\Group;
 use App\Models\Attribute;
 use App\Models\Character;
 use App\Models\Task;
+use App\Models\Post;
 
 use App\Controllers\Controller;
+
+use App\Mail\Sender;
+use App\Mail\Templater;
 
 use Respect\Validation\Validator as v;
 use Slim\Views\Twig as View;
@@ -18,6 +22,11 @@ use Slim\Views\Twig as View;
 
 class UserActionController extends Controller
 {
+  
+  private function sendEmail($recipient, $subject, $body, $vars) {
+    $mail = new Sender($this->container->get('settings'));
+    return $mail->send($recipient, $subject, $body, $vars);
+  }  
   
   private function user_attributes() {
     return [
@@ -104,7 +113,7 @@ class UserActionController extends Controller
       return $response->withRedirect($this->router->pathFor('admin.users.all'));
     }
 
-    $user = User::where('username', $arguments['uid']);
+    $user = User::where('username', $arguments['uid'])->first();
     
     $user->attr()->sync([]);
     $user->groups()->sync([]);
@@ -247,6 +256,7 @@ class UserActionController extends Controller
       return $response->withRedirect($this->router->pathFor('admin.order.attest', [ 'uid' => $arguments['uid'] ]));      
     }
 
+    $systemSalt = $this->container->get('settings')['default_salt'];
     $defaultPassword = substr( base64_encode($order->email . $systemSalt), 3, 8);
     
     $credentials = [
@@ -291,6 +301,22 @@ class UserActionController extends Controller
     
     if($res) {
       $attest_info = " and the order has been attested.";
+      
+      $template = Post::where('slug', 'welcome-email')->first();
+      
+      if( self::sendEmail(
+        $user->email, // Recipiant
+        $template->title,      // Subject Line
+        $template->content,    // E-mail Body
+        [                      // Values ([{###}] where ### is the KEY)
+          "INVITE_CODE" => $user->hash,
+        ]
+      ) ) {
+        $attest_info += " Email invite sent to " . $user->email;
+      } else {
+        $attest_info += " Email invite could not be sent to " . $user->email . " (Sorry)";
+      };
+            
     } else {
       $attest_info = ", but the order could not be attested.";
     }    
