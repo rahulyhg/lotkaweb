@@ -14,10 +14,19 @@ use App\Models\Task;
 use App\Controllers\Controller;
 use App\Controllers\Admin\UserActionController;
 
+use App\Mail\Sender;
+use App\Mail\Templater;
+
 use Slim\Views\Twig as View;
 
 class OnboardingPageController extends Controller
 {
+  
+  private function sendEmail($recipient, $subject, $body, $vars) {
+    $mail = new Sender($this->container->get('settings'));
+    return $mail->send($recipient, $subject, $body, $vars);
+  }
+  
   private function onboardingAttributes() {
     return [
 'allergies', 
@@ -301,6 +310,21 @@ class OnboardingPageController extends Controller
       
       $participant_role = $this->container->sentinel->findRoleBySlug('participant');
       $participant_role->users()->attach($participant["user"]);      
+      
+      $template = Post::where('slug', 'post-register-email')->first();
+      
+      if( self::sendEmail(
+        $participant["user"]->email, // Recipiant
+        $template->title,      // Subject Line
+        $template->content,    // E-mail Body
+        [                      // Values ([{###}] where ### is the KEY)
+          
+        ]
+      ) ) {
+        $this->flash->addMessage('success', "You have successfully been registered!");
+      } else {
+        $this->flash->addMessage('error', "Something went wrong, you could not be registered. PLease contact the Organizers.");
+      };
       
       return $response->withRedirect($this->router->pathFor('participant.home'));
     }
