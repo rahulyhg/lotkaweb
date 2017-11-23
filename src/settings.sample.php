@@ -68,6 +68,10 @@ return [
         'target' => <OUR_TICKET_TARGET_AMOUNT>,
         'goal' => <OUR_TICKET_SALES_GOAL>,
       ],
+      'devBlog' => [
+        'active' => false,
+        'uri' => 'https://lotka-volterra.se/dev/',        
+      ]      
     ],    
   ],
   'json_provider' => function() { return new SJsonResponseProvider(); }

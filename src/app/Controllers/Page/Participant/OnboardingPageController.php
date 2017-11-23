@@ -245,13 +245,18 @@ class OnboardingPageController extends Controller
     $stage = Post::where('slug', "stage-{$stage_data['stage_nr']}")->first();
 
     $torso_size = [];
+    $torso_size[] = [
+      'code' => 70, 'description' => 'Up to 70cm (28")'
+    ];
     for ($i = 70; $i <= 200; $i+=5) {
       $torso_size[] = [ 
         'code' => $i+5, 
         'description' => "$i to " . ($i+5) . "cm (" . ceil($i/2.54) . "-" . ceil(($i+5)/2.54) . "\")" 
       ];
     }
-
+    $torso_size[] = [
+      'code' => 210, 'description' => 'Over 205cm (81")'
+    ];
     
     $this->container->view->getEnvironment()->addGlobal('data', [
       'genders' => ['Non-binary','Female','Male','Other'],
