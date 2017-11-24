@@ -331,7 +331,7 @@ class OnboardingPageController extends Controller
         $this->flash->addMessage('error', "Something went wrong, you could not be registered. PLease contact the Organizers.");
       };
       
-      return $response->withRedirect($this->router->pathFor('participant.home'));
+      return $response->withRedirect($this->router->pathFor('participant.onboarding-complete'));
     }
     
     return $response->withRedirect($this->router->pathFor(

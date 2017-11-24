@@ -325,6 +325,7 @@ $app->get('/setup', function () {
 
 $app->get('/welcome/{hash}/[{stage}]', 'OnboardingPageController:onboarding')->setName('participant.onboarding'); 
 $app->post('/welcome/{hash}/[{stage}]', 'OnboardingPageController:save'); 
+$app->get('/welcome/completed', 'OnboardingPageController:onboarding')->setName('participant.onboarding-complete');
 
 $app->group('/participants', function () { 
   $this->get('[/]', 'ParticipantPageController:index')->setName('participant.home');
