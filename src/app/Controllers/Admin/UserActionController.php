@@ -312,9 +312,9 @@ class UserActionController extends Controller
           "INVITE_CODE" => $user->hash,
         ]
       ) ) {
-        $attest_info += " Email invite sent to " . $user->email;
+        $attest_info .= " Email invite sent to " . $user->email;
       } else {
-        $attest_info += " Email invite could not be sent to " . $user->email . " (Sorry)";
+        $attest_info .= " Email invite could not be sent to " . $user->email . " (Sorry)";
       };
             
     } else {
