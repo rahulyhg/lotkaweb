@@ -13,14 +13,24 @@ use Slim\Views\Twig as View;
 
 class HomePageController extends Controller
 {
-  private function populateTicketInfo( $ticket_filter = [['available', '=', 1],['visibility', '=', 1]] ) {
+  private function populateTicketInfo( $ticket_filter = [['available', '=', 1],['visibility', '=', 1]], $multiples = false ) {
+    
+    $ticket_selection = Ticket::orderBy('weight')->where($ticket_filter);
+    if ($multiples) {
+      foreach ($array as &$value) {
+        $value = $value.'%';
+      }
+      unset($value);
+      $ticket_selection = $ticket_selection->whereIn('sku', $multiples);
+    }
+    
     return [
       'surnames' =>     Surname::where('available', '=', 1)->get(),
       'shirt_styles' => Shirt::where('available', '=', 1)->groupBy('type')->get(),
       'shirt_sizes' =>  Shirt::orderBy('id')->groupBy('size')->get(),
       'shirts' =>       Shirt::where('available', '=', 1),
       'teams' =>        Team::where('available', '=', 1)->get(),
-      'ticket_types' => Ticket::orderBy('weight')->where($ticket_filter)->get()
+      'ticket_types' => $ticket_selection->get()
     ];
   }
   
@@ -57,7 +67,7 @@ class HomePageController extends Controller
   public function ticket($request, $response, $arguments)
   {
     $sku = filter_var($arguments['sku'], FILTER_SANITIZE_STRING);
-    $ticket_data = self::populateTicketInfo([['available', '=', 1],['sku', 'like', "{$sku}%"]]);    
+    $ticket_data = self::populateTicketInfo([['available', '=', 1]], explode(',', $sku));    
     $this->container->view->getEnvironment()->addGlobal(
       'tickets', $ticket_data);
     
