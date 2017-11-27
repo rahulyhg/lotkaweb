@@ -813,13 +813,18 @@ a,
 /* Forms common style */
 .form-control {
   font-family: "Roboto Condensed", sans-serif;
-  text-transform: uppercase;
+  /*text-transform: uppercase;*/
   letter-spacing: 2px;
   font-size: 11px;
   height: 33px;
   border: 1px solid #EAEAEA;
   border-radius: 2px;
   transition: all 0.4s ease-in-out 0s;
+}
+
+.form-control input[type=text], 
+.form-control textarea {
+  text-transform: normal !important;
 }
 
 .form-control:focus {

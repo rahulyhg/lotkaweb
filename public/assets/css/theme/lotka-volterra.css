@@ -336,6 +336,11 @@ svg.loading path.lights {
   display: none;
 }
 
+.form-control input[type=text], 
+.form-control textarea {
+  text-transform: unset;
+}
+
 .range input[type=range] {
   -webkit-appearance: none;
   margin: 10px 0;
