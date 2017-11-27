@@ -46,6 +46,7 @@ class OnboardingPageController extends Controller
 'country', 
 'emergency_contact', 
 'emergency_phone', 
+'feedback',
 'gender', 
 'group',
 'id_number_swe', 
