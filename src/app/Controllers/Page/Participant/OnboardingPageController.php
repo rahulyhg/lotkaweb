@@ -330,11 +330,10 @@ class OnboardingPageController extends Controller
         ]
       ) ) {
         $this->flash->addMessage('success', "You have successfully been registered!");
+        return $response->withRedirect($this->router->pathFor('open.page',['category' => 'onboarding-complete']));
       } else {
         $this->flash->addMessage('error', "Something went wrong, you could not be registered. Please contact the Organizers.");
-      };
-      
-      return $response->withRedirect($this->router->pathFor('participant.onboarding-complete'));
+      };      
     }
     
     return $response->withRedirect($this->router->pathFor(
