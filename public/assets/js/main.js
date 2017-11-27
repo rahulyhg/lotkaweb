@@ -848,6 +848,15 @@
     });
 
 
+
+/*
+scroll to top on load, if at onboarding
+*/
+if($('.onboarding').length) {
+  $(".container h3:first").css("padding-top","90px");
+  $("html, body").animate({ scrollTop: 0 }, "slow");
+}
+
 /*
   Display descriptions of ideologies and personal traits
  */
@@ -857,7 +866,10 @@
     var add = "<b>Note! This is a just an example, your characters view might differ.</b><br>";
     desc[0] = add + "Forget the old world. The fucking Enemy can have the surface for all you care. We are finally self-sufficient, and will prosper underground. We need to stop living in the past and stop risking bringing the Enemy down on us. Dig where we stand, and make Haven our new permanent home. We're never going back topside.";
     desc[100] = add + "We have to make a stand, for humanity. The surface belongs to us, and if we just push hard and employ good tactics we can make it so hard on the Enemy that they can't reasonably sustain their surface occupation any more. Strike hard, strike fast, and strike often. Take the fight to them, we've been cowering in the dark for too long, living like rats.";
-    $("#ideology_descbox").html('').html(desc[$(this).val()] + add);
+    $("#ideology_descbox").html('');
+    if($(this).val() == 0 || $(this).val() == 100) {
+      $("#ideology_descbox").html(desc[$(this).val()]);
+    }
   });
 
   $('#char_mil_dem').change(function() {
@@ -865,7 +877,10 @@
     var add = "<b>Note! This is a just an example, your characters view might differ.</b><br>";
     desc[0] = add + "Humanity has almost been wiped out, and we can't afford dissention and division. We could still be wiped out, and the only thing that keeps that from happening is military discipline and everyone pulling in the same direction. Democracy will have to wait until the Enemy is no longer a threat.";
     desc[100] = add + "The critical stage of survival is now over, and it's time we start thinking about our society and the needs of the citizens, not just basic survival. Martial law and military hierarchy was necessary after Nightfall, but now? We need a freer society, where everyone gets to decide their own future, otherwise we're just as bad as the Enemy.";
-    $("#ideology_descbox").html('').html(desc[$(this).val()] + add);
+    $("#ideology_descbox").html('');
+    if($(this).val() == 0 || $(this).val() == 100) {
+      $("#ideology_descbox").html(desc[$(this).val()]);
+    }
   });
 
   $('#char_nos_pro').change(function() {
@@ -873,7 +888,10 @@
     var add = "<b>Note! This is a just an example, your characters view might differ.</b><br>";
     desc[0] = add + "So much has been lost and forgotten. We have to remember, we have to keep what little is left from before alive, otherwise we'll have been truly defeated. If we don't, then what's the point to society? Did all those people die just to be forgotten?";
     desc[100] = add + "What's been lost is lost, and will never be rebuilt. The old world is dead or dying, and there's no point clinging to the past when we can have a new start right here. Build something of our own making, free from centuries of stagnation and nostalgia. Let's build a new future, and and lay the old one to rest.";
-    $("#ideology_descbox").html('').html(desc[$(this).val()]);
+    $("#ideology_descbox").html('');
+    if($(this).val() == 0 || $(this).val() == 100) {
+      $("#ideology_descbox").html(desc[$(this).val()]);
+    }
   });
 
   $('#char_ind_col').change(function() {
@@ -881,7 +899,10 @@
     var add = "<b>Note! This is a just an example, your characters view might differ.</b><br>";
     desc[0] = add + "Are we humans or robots? We all have different needs, different dreams and hopes. We can't all be forced to do the same things, like the same things, say the same things. If we don't allow the individual to prosper, how are we ever going to prosper as a society?";
     desc[100] = add + "The needs of the many outweigh the needs of the few. We rely on each other, and our society must put the well being of the majority above individual wishes. We can't afford to pull in different directions. Together we will prosper, divided we will fall.";
-    $("#ideology_descbox").html('').html(desc[$(this).val()]);
+    $("#ideology_descbox").html('');
+    if($(this).val() == 0 || $(this).val() == 100) {
+      $("#ideology_descbox").html(desc[$(this).val()]);
+    }
   });
 
   $('#char_log_int').change(function() {
@@ -889,7 +910,10 @@
     var add = "<b>Note! This is a just an example, your characters view might differ.</b><br>";
     desc[0] = add + "Extremely rational or logical in your approach, at the expense of most other things. You can come off as very square, cold or dogmatic. Decisions need to be made on facts, not letting emotions or preconceptions get in the way.";
     desc[100] = add + "You rely completely on your intuition and feeling, often at the expense of rational thought. You what \"feels right\" even if the facts might dictate otherwise.";
-    $("#personal_descbox").html('').html(desc[$(this).val()]);
+    $("#personal_descbox").html('');
+    if($(this).val() == 0 || $(this).val() == 100) {
+      $("#personal_descbox").html(desc[$(this).val()]);
+    }
   });
 
   $('#char_dir_avo').change(function() {
@@ -897,7 +921,10 @@
     var add = "<b>Note! This is a just an example, your characters view might differ.</b><br>";
     desc[0] = add + "You use an extremely direct approach at all times, limiting your other choices. You act first and think later. Action speaks louder than words.";
     desc[100] = add + "You never face a problem, often ignoring them hoping they will go away. You hate confrontations and have problems standing up for your views. You probably get pushed around a lot.";
-    $("#personal_descbox").html('').html(desc[$(this).val()]);
+    $("#personal_descbox").html('');
+    if($(this).val() == 0 || $(this).val() == 100) {
+      $("#personal_descbox").html(desc[$(this).val()]);
+    }
   });
 
   $('#char_phy_non').change(function() {
@@ -905,7 +932,10 @@
     var add = "<b>Note! This is a just an example, your characters view might differ.</b><br>";
     desc[0] = add + "You are very physical to the exclusion of other means, always expressing things with your body and in contact with others. You take up a lot of space and energy, and you are up in peoples faces all the time.";
     desc[100] = add + "You actively dislike physical touch and getting too close to people, and prefer to keep conversations and interactions to the terminal or phone. You come off as introvert or shy.";
-    $("#personal_descbox").html('').html(desc[$(this).val()]);
+    $("#personal_descbox").html('');
+    if($(this).val() == 0 || $(this).val() == 100) {
+      $("#personal_descbox").html(desc[$(this).val()]);
+    }
   });
 
   $('#char_mal_con').change(function() {
@@ -913,7 +943,10 @@
     var add = "<b>Note! This is a just an example, your characters view might differ.</b><br>";
     desc[0] = add + "You are constantly angry or frustrated with all the things you perceive as being wrong. You have a lot of resentment growing inside you, and it more than often spills over into harsh words, smack talk and airing your grievances to anyone close by. People no doubt see you as angry, frustrated and a bit of a troublemaker.";
     desc[100] = add + "You are mellow, happy-go-lucky. People see you as positive and easy going. You rarely voice a negative opinion, and for the most part you feel quite at home with your life and work. You feel like you're at the right place, at the right time, doing what you love. The downside is you accept things you perhaps shouldn't but you feel ok anyway. You are the one to cheer others up.";
-    $("#personal_descbox").html('').html(desc[$(this).val()]);
+    $("#personal_descbox").html('');
+    if($(this).val() == 0 || $(this).val() == 100) {
+      $("#personal_descbox").html(desc[$(this).val()]);
+    }
   });
 
 function fileSizeValidate(fdata) {
