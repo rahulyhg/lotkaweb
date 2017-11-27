@@ -54,11 +54,13 @@ class OnboardingPageController extends Controller
 'membership_fee', 
 'onboarding_complete', 
 'onboarding_stage',
+'onefifty_plus', 
 'password_set',
 'phone', 
 'player_connections', 
 'portrait',       
 'postal_code', 
+'pref_bus',
 'pref_conflict_ideological', 
 'pref_conflict_intrapersonal', 
 'pref_counselling', 
@@ -77,16 +79,16 @@ class OnboardingPageController extends Controller
 'pref_secrets', 
 'pref_work', 
 'size', 
-'torso_circumference', 
-'onefifty_plus', 
 'state', 
 'street_address_1', 
 'street_address_2',
 'terms_accepted',
+'torso_circumference', 
     ];
   }
   
-  private function getUserData($request, $user) {
+  private function getUserData($request, $participant) {
+    $user = $participant['user'];
     $user_data_set = [ 'username', 'email', 'first_name', 'last_name' ];
     $user_data = [];
     foreach ($user_data_set as $attr) {
@@ -102,6 +104,7 @@ class OnboardingPageController extends Controller
     if (($request->getParam('password') && $request->getParam('password_repeat')) && 
         ($request->getParam('password') == $request->getParam('password_repeat'))) {
       $user_data['password'] = $request->getParam('password');
+      $participant["attributes"]["password_set"] = true;
       self::updateAttributes(['password_set' => true], $user);
     }
     
@@ -133,7 +136,7 @@ class OnboardingPageController extends Controller
       }
     }
     
-    $attributes = [ 'keys' => [], 'values' => [] ];   
+    $attributes = [ 'keys' => [], 'values' => [] ];
 
     foreach ($user_attribute_set as $attr) {
       $attribute_value = null;
@@ -144,15 +147,15 @@ class OnboardingPageController extends Controller
         if(is_array($attribute_value)) {
           foreach ($attribute_value as $i => $val) {
             $attributes['keys'][] = $attr;
-            $attributes['values'][] = $attribute_value[$i]; 
+            $attributes['values'][] = $attribute_value[$i];
           }
         } else {
           $attributes['keys'][] = $attr;
-          $attributes['values'][] = $attribute_value;          
+          $attributes['values'][] = $attribute_value;
         }
       }
     }
-    
+
     $updated_attribute_ids = self::getAttributeIds( $attributes );
     
     return $participant["user"]->attr()->sync($updated_attribute_ids);
@@ -293,7 +296,7 @@ class OnboardingPageController extends Controller
     $participant['attributes']['onboarding_stage'] = $stage_data['stage'] + 1;
     $participant['attributes']['onboarding_complete'] = $stage_data['total'] == $stage_data['stage'];
     
-    $user_data = self::getUserData($request, $participant['user']);
+    $user_data = self::getUserData($request, $participant);
     
     self::setUserAttributes($request, $participant);
     
@@ -328,7 +331,7 @@ class OnboardingPageController extends Controller
       ) ) {
         $this->flash->addMessage('success', "You have successfully been registered!");
       } else {
-        $this->flash->addMessage('error', "Something went wrong, you could not be registered. PLease contact the Organizers.");
+        $this->flash->addMessage('error', "Something went wrong, you could not be registered. Please contact the Organizers.");
       };
       
       return $response->withRedirect($this->router->pathFor('participant.onboarding-complete'));

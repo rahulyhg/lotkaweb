@@ -62,7 +62,7 @@ window.onload=function(){
  $("[name='group[]']").on("change", function () {
    $("[name='group[]']:not(:checked)").prop(
      "disabled", 
-     $("[name='group[]']:checked").length > 2
+     $("[name='group[]']:checked").length == 3
    );
  }).trigger("change");
  
