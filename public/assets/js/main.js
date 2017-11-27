@@ -916,6 +916,22 @@
     $("#personal_descbox").html('').html(desc[$(this).val()]);
   });
 
+function fileSizeValidate(fdata) {
+  var maxSize = '8192';
+  if (fdata.files && fdata.files[0]) {
+    var fsize = fdata.files[0].size/1024;
+    if(fsize > maxSize) {
+      alert("Maximum file size exceed, max size is " + maxSize + " KB!");
+      return false;
+    } else {
+      return true;
+    }
+  }
+}
+
+$("#portrait").change(function() {
+  fileSizeValidate(this);
+});
 
 })(jQuery);
 
