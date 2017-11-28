@@ -3,7 +3,8 @@ return [
   'settings' => [
     'displayErrorDetails' => true, // set to false in production
     'addContentLengthHeader' => false, // Allow the web server to send the content-length header
-    'default_salt' => '<OUT_DEFALT_PASSWORD_SALT>', //Used to create default passwords to generated users
+    'default_salt' => '<OUR_DEFALT_PASSWORD_SALT>', //Used to create default passwords to generated users
+    'user_images' => __DIR__ . '/../public/assets/portraits/',
     
     // Renderer settings
     'renderer' => [
@@ -31,6 +32,20 @@ return [
       'prefix'    => '',
     ],
 
+    'mail' => [
+      'from' => [
+        'email' => <FROM_MAIL>,
+        'name' => <FROM_NAME>
+      ],
+
+      'smtp' => [
+        'server' =>	  'smtp.gmail.com', 
+        'email' => 	  <SENDER_EMAIL>, 
+        'password' =>	<SENDER_EMAIL_PASWORD>, 
+        'port' =>    	587,
+      ],
+    ],
+    
     'stripe' => [
       'SECRET_KEY' => '<OUR_SECRET_STRIPE_KEY_HERE>',
       'PUBLIC_KEY' => '<OUR_PUBLIC_STRIPE_KEY_HERE>',
@@ -53,6 +68,10 @@ return [
         'target' => <OUR_TICKET_TARGET_AMOUNT>,
         'goal' => <OUR_TICKET_SALES_GOAL>,
       ],
+      'devBlog' => [
+        'active' => false,
+        'uri' => 'https://lotka-volterra.se/dev/',        
+      ]      
     ],    
   ],
   'json_provider' => function() { return new SJsonResponseProvider(); }

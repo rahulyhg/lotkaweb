@@ -8,6 +8,7 @@ use App\Models\Plot;
 use App\Models\Group;
 use App\Models\Relation;
 use App\Models\Attribute;
+use App\Models\User;
 use App\Models\Task;
 
 use App\Controllers\Controller;
@@ -15,20 +16,26 @@ use Slim\Views\Twig as View;
 
 class ParticipantPageController extends Controller
 {
+  private function getCurrentUser() {
+    $participant = User::where('username', $this->container->sentinel->getUser()->username)->first();
+    
+    return [
+      "user" => $participant,
+      "attributes" => self::mapAttributes( $participant->attr ),
+    ];
+  }
+  
   public function index($request, $response, $arguments)
   {
-    $participant = $this->container->sentinel->getUser();
-    $sections = '';
+    $participant = self::getCurrentUser();
+    if(!isset($participant["attributes"]["onboarding_complete"])) 
+      return $response->withRedirect($this->router->pathFor('participant.onboarding', ['hash' => $participant["user"]->hash]));
     
     return $this->view->render($response, '/new/participant/dashboard.html', [
       'debug' => $participant
     ]);
   }
   
-  public function onboarding($request, $response, $arguments)
-  {
-  }
-    
   public function page($request, $response, $arguments)
   {
     $slug = filter_var($arguments['page'], FILTER_SANITIZE_STRING);

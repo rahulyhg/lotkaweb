@@ -144,27 +144,30 @@ $container['auth'] = function($container) {
 | CONTROLLERS
 */
 
-$container[App\Tickets\Stripe::class] = function ($c) { return new \App\Tickets\Stripe($c); };
-$container[App\API\Names::class]      = function ($c) { return new \App\API\Names($c); };
-$container[App\Pages\OpenPage::class] = function ($c) { return new \App\Pages\OpenPage($c); };
+$container[App\Tickets\Stripe::class]   = function ($c) { return new \App\Tickets\Stripe($c); };
+$container[App\API\Names::class]        = function ($c) { return new \App\API\Names($c); };
+$container[App\Pages\OpenPage::class]   = function ($c) { return new \App\Pages\OpenPage($c); };
 
 $container['HomePageController']        = function($c) { return new \App\Controllers\Page\HomePageController($c); };
 $container['ParticipantPageController'] = function($c) { return new \App\Controllers\Page\Participant\ParticipantPageController($c); };
-
+$container['OnboardingPageController']  = function($c) { return new \App\Controllers\Page\Participant\OnboardingPageController($c); };
 // Admin
-$container['AuthController']          = function($c) { return new \App\Controllers\Auth\AuthController($c); };
-$container['AdminController']         = function($c) { return new \App\Controllers\Admin\AdminController($c); };
-$container['UserActionController']    = function($c) { return new \App\Controllers\Admin\UserActionController($c); };
-$container['OrderActionController']   = function($c) { return new \App\Controllers\Admin\OrderActionController($c); };
+$container['AuthController']            = function($c) { return new \App\Controllers\Auth\AuthController($c); };
+$container['AdminController']           = function($c) { return new \App\Controllers\Admin\AdminController($c); };
+$container['UserActionController']      = function($c) { return new \App\Controllers\Admin\UserActionController($c); };
+$container['OrderActionController']     = function($c) { return new \App\Controllers\Admin\OrderActionController($c); };
 
-$container['RolesActionController']   = function($c) { return new \App\Controllers\Admin\RolesActionController($c); };
-$container['ShirtActionController']   = function($c) { return new \App\Controllers\Admin\ShirtActionController($c); };
-$container['SurnameActionController'] = function($c) { return new \App\Controllers\Admin\SurnameActionController($c); };
-$container['TeamActionController']    = function($c) { return new \App\Controllers\Admin\TeamActionController($c); };
-$container['TicketActionController']  = function($c) { return new \App\Controllers\Admin\TicketActionController($c); };
-$container['TaskActionController']    = function($c) { return new \App\Controllers\Admin\TaskActionController($c); };
-$container['PostActionController']    = function($c) { return new \App\Controllers\Admin\PostActionController($c); };
+// Participant admin
+$container['RolesActionController']     = function($c) { return new \App\Controllers\Admin\RolesActionController($c); };
+$container['ShirtActionController']     = function($c) { return new \App\Controllers\Admin\ShirtActionController($c); };
+$container['SurnameActionController']   = function($c) { return new \App\Controllers\Admin\SurnameActionController($c); };
+$container['TeamActionController']      = function($c) { return new \App\Controllers\Admin\TeamActionController($c); };
+$container['TicketActionController']    = function($c) { return new \App\Controllers\Admin\TicketActionController($c); };
+$container['TaskActionController']      = function($c) { return new \App\Controllers\Admin\TaskActionController($c); };
+$container['PostActionController']      = function($c) { return new \App\Controllers\Admin\PostActionController($c); };
 $container['CharacterActionController'] = function($c) { return new \App\Controllers\Admin\Participants\CharacterActionController($c); };
-$container['GroupActionController'] = function($c) { return new \App\Controllers\Admin\Participants\GroupActionController($c); };
-$container['PlotActionController'] = function($c) { return new \App\Controllers\Admin\Participants\PlotActionController($c); };
-$container['RelationActionController'] = function($c) { return new \App\Controllers\Admin\Participants\RelationActionController($c); };
+$container['GroupActionController']     = function($c) { return new \App\Controllers\Admin\Participants\GroupActionController($c); };
+$container['PlotActionController']      = function($c) { return new \App\Controllers\Admin\Participants\PlotActionController($c); };
+$container['RelationActionController']  = function($c) { return new \App\Controllers\Admin\Participants\RelationActionController($c); };
+
+

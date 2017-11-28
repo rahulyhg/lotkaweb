@@ -9,11 +9,22 @@
     <div class="widget-content attributes"> 
       {% for attribute in current.data.attr %}
       {% if attribute.name and (attribute.name not in set_attr) %}
+      {% if attribute.value is iterable %}
+      {% for value in attribute.value %}
+      <div class="attribute">
+        <input type="text" class="span6" name="attrKey[]" placeholder="Name" value="{{ attribute.name }}">
+        <input type="text" class="span5" name="attrVal[]" placeholder="Value" value="{{ value }}">
+        <button class="btn btn-warning remove_attrib span1 pull-right">-</button>
+      </div>
+      {% endfor %}
+      {% else %}
       <div class="attribute">
         <input type="text" class="span6" name="attrKey[]" placeholder="Name" value="{{ attribute.name }}">
         <input type="text" class="span5" name="attrVal[]" placeholder="Value" value="{{ attribute.value }}">
         <button class="btn btn-warning remove_attrib span1 pull-right">-</button>
       </div>
+      {% endif %}      
+
       {% endif %}
       {% endfor %}
       <div class="attribute">
