@@ -59,6 +59,7 @@ class OnboardingPageController extends Controller
 'password_set',
 'phone', 
 'player_connections', 
+'player_unwanted', 
 'portrait',       
 'postal_code', 
 'pref_bus',
