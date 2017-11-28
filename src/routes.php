@@ -94,6 +94,10 @@ $app->group('/user', function() {
   $this->get('/logout', 'AuthController:logout')->setName('user.logout');
   
   $this->post('/forgot', 'AuthController:postReminder')->setName('user.reminder');
+
+  $this->get('/reset/{code}', 'AuthController:getResetPassword')->setName('user.reset');
+  $this->post('/reset/{code}', 'AuthController:resetPassword');
+
 });
 
 //Admin
@@ -319,18 +323,17 @@ $app->get('/setup', function () {
 | PARTICIPANT PAGE ROUTES
 */
 
+$app->get('/welcome/{hash}/[{stage}]', 'OnboardingPageController:onboarding')->setName('participant.onboarding'); 
+$app->post('/welcome/{hash}/[{stage}]', 'OnboardingPageController:save'); 
+
 $app->group('/participants', function () { 
-  $this->get('', 'ParticipantPageController:index')->setName('participant.home');
-  
-  $this->get('/start', 'ParticipantPageController:onboarding')->setName('participant.onboarding');  
-  
+  $this->get('[/]', 'ParticipantPageController:index')->setName('participant.home');
   $this->get('/{page}', 'ParticipantPageController:page')->setName('participant.page');
 })->add(new ParticipantMiddleware($container));
 
 /*
 | OPEN PAGE ROUTES
 */
-
 
 $app->group('/', function () use ($container) {
   $this->get('', 'HomePageController:index')->setName('home');              

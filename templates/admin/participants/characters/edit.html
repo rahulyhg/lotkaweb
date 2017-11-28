@@ -41,6 +41,19 @@
               <div class="controls">
                 <input type="text" class="span11" name="nickname" placeholder="First/Nickname" value="{{ current.attr.nickname }}">
              </div>
+            </div>
+            
+            <div class="control-group">
+              <label class="control-label">Gender :</label>
+              <div class="controls">
+                <select name="gender">
+                {% for gender in genders %}
+                  <option value="{{ gender }}" {% if gender == current.attr.gender %}selected="selected"{% endif %}>
+                    {{ gender }}
+                  </option>
+                {% endfor %}    
+                </select>
+             </div>
             </div>            
             
             <div class="control-group{% if (current.data.user_id == null) and (current.new != true) %} error{% endif %}">
@@ -62,8 +75,8 @@
               <div class="controls">
                 <textarea class="span11" name="quote" rows="2">{{ current.attr.quote }}</textarea>
              </div>
-            </div>            
-
+            </div>
+            
             <div class="control-group">
               <label class="control-label">Group :</label>
               <div class="controls">

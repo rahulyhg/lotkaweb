@@ -135,6 +135,18 @@
               </div>
 
               <div class="widget-title"> 
+                <a href="#collapseVisibility" data-toggle="collapse"> 
+                  <span class="icon"><i class="icon-eye-open"></i></span>
+                  <h5>Visiblility</h5>
+                </a> 
+              </div>
+              <div class="collapse" id="collapseVisibility">
+                <div class="widget-content">
+                  <input type="text" class="span20" name="visible_to" placeholder="comma separated list" value="{{ current.data.visible_to }}">
+                </div>
+              </div>              
+              
+              <div class="widget-title"> 
                 <a href="#collapseAttr" data-toggle="collapse"> 
                   <span class="icon"><i class="icon-tags"></i></span>
                   <h5>Attributes</h5>

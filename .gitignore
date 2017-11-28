@@ -1,3 +1,4 @@
+/cache/*
 /vendor/
 **/settings.*
 /logs/*
@@ -6,3 +7,4 @@
 /public/dev*
 /phinx.yml
 /composer.lock
+**/public/assets/portraits/

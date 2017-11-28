@@ -59,6 +59,7 @@
     <li><a href="{{ path_for('open.page', { 'category': 'practical' }) }}#accessibility">Accessibility</a></li>
     <li><a href="{{ path_for('open.page', { 'category': 'practical' }) }}#toilets">Toilets</a></li>
     <li><a href="{{ path_for('open.page', { 'category': 'practical' }) }}#transportation">Transportation</a></li>
+    <li><a href="{{ path_for('open.page', { 'category': 'practical' }) }}#timetable">Timetable</a></li>
   </ul>
 </li>
 
@@ -83,6 +84,7 @@
 </li>
 {% else %}
 <li><a href="{{ path_for('user.login') }}"><span class="icon-key"></span> Participants</a></li>
-
+<!--
 <li><a href="{{ path_for('open.page', { 'category': 'tickets' }) }}" class="btn btn-d btn-round btn-block" type="submit">TICKETS</a></li>
+//-->
 {% endif %}

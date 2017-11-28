@@ -26,7 +26,12 @@ class Controller
   public function mapAttributes($collection) {
     $a = [];
     foreach ($collection as $name => $value) {
-      $a[$value->name] = $value->value; 
+      if(isset($a[$value->name])) {
+        if(!is_array($a[$value->name])) $a[$value->name] = [$a[$value->name]];
+        $a[$value->name][] = $value->value;
+      } else {     
+        $a[$value->name] = $value->value; 
+      }
     }        
     return $a;
   }  

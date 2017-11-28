@@ -20,4 +20,9 @@ class Order extends Model
     "orderdate",
     "origin",
   ]; 
+  
+  public function user()
+  {
+      return $this->hasOne('App\Models\User');
+  }   
 }
