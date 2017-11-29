@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "cartalyst/sentinel",
-            "version": "v2.0.16",
+            "version": "v2.0.17",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cartalyst/sentinel.git",
-                "reference": "7b4b210ee98c38f4310ae428b74955da58c5133d"
+                "reference": "8ee7778f96ab6193f4be118a52d265c6861de0a5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cartalyst/sentinel/zipball/7b4b210ee98c38f4310ae428b74955da58c5133d",
-                "reference": "7b4b210ee98c38f4310ae428b74955da58c5133d",
+                "url": "https://api.github.com/repos/cartalyst/sentinel/zipball/8ee7778f96ab6193f4be118a52d265c6861de0a5",
+                "reference": "8ee7778f96ab6193f4be118a52d265c6861de0a5",
                 "shasum": ""
             },
             "require": {
@@ -85,7 +85,7 @@
                 "php",
                 "security"
             ],
-            "time": "2017-10-09T01:03:12+00:00"
+            "time": "2017-11-28T13:10:46+00:00"
         },
         {
             "name": "cartalyst/support",
@@ -1426,16 +1426,16 @@
         },
         {
             "name": "stripe/stripe-php",
-            "version": "v5.6.0",
+            "version": "v5.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stripe/stripe-php.git",
-                "reference": "0922533c9db11292c7a0aeafc27638f8f31b7fb6"
+                "reference": "82228e4c9cc682219a234fa35cffa509793ecf9f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stripe/stripe-php/zipball/0922533c9db11292c7a0aeafc27638f8f31b7fb6",
-                "reference": "0922533c9db11292c7a0aeafc27638f8f31b7fb6",
+                "url": "https://api.github.com/repos/stripe/stripe-php/zipball/82228e4c9cc682219a234fa35cffa509793ecf9f",
+                "reference": "82228e4c9cc682219a234fa35cffa509793ecf9f",
                 "shasum": ""
             },
             "require": {
@@ -1477,7 +1477,7 @@
                 "payment processing",
                 "stripe"
             ],
-            "time": "2017-10-31T18:52:25+00:00"
+            "time": "2017-11-28T17:22:06+00:00"
         },
         {
             "name": "symfony/config",
