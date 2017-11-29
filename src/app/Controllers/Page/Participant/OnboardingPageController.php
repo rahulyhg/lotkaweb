@@ -142,8 +142,9 @@ class OnboardingPageController extends Controller
 
     foreach ($user_attribute_set as $attr) {
       $attribute_value = null;
-      if(isset($request_attributes[$attr])) $attribute_value = $request_attributes[$attr];
-      if(array_key_exists($attr, $user_attributes)) $attribute_value = $user_attributes[$attr];
+      
+      if(array_key_exists($attr, $user_attributes)) $attribute_value = $user_attributes[$attr]; //Prepolulate existing attr
+      if(isset($request_attributes[$attr])) $attribute_value = $request_attributes[$attr]; //Update if we have new values
 
       if ( is_array($attribute_value) ? count($attribute_value) : strlen($attribute_value) ) {
         if(is_array($attribute_value)) {
