@@ -1,0 +1,161 @@
+{% extends 'admin/dashboard/main.twig' %}
+
+{% block title %}{{ settings.title }}{% endblock %}
+
+{% block contentHeader %}
+  <div id="content-header">
+    <div id="breadcrumb"> 
+      <a href="#" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a> 
+      {% for nav in settings.breadcrumb %}
+      <a href="{{ path_for(nav.path) }}">{{ nav.name }}</a>
+      {% endfor %}
+      <a href="#" class="current">{{ settings.name }}</a>
+    </div>
+    
+    <h1>{{ settings.name }} {{ current.data.sku }}</h1>
+  </div>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  <hr>
+  <div class="row-fluid">
+    <div class="span8">
+      <div class="widget-box">
+        <div class="widget-title"> <span class="icon"> <i class="icon-align-justify"></i> </span>
+          <h5>Edit Media</h5>
+        </div>
+        <div class="widget-content nopadding">
+          <form action="{{ current.new ? path_for('admin.media.add') : path_for('admin.media.edit', { 'uid': current.data.id }) }}" method="post" autocomplete="on" class="form-horizontal" enctype="multipart/form-data">
+            <input type="hidden" name="selfsave">
+            {{ csrf.field | raw }}
+            
+            <div class="control-group">
+              <label class="control-label">Name :</label>
+              <div class="controls">
+                <input type="text" class="span11" name="name" placeholder="Name" value="{{ current.data.name }}">
+             </div>
+            </div>
+            
+            <div class="control-group">
+              <label class="control-label">File :</label>
+              <div class="controls">
+                <div id="preview" class="mb-20"><img src="/assets/{{ current.data.filename ? 'media/' ~ current.data.filename : 'images/logos/lotka-volterra-logo.svg'}}" class="{{current.data.filename ? '' : 'unloaded' }}"></div>
+                <input id="file" name="file" type="file" class="form-control input-lg mb-20 mt-20"/>
+             </div>
+            </div>            
+            
+            <div class="control-group">
+              <label class="control-label">Description :</label>
+              <div class="controls">
+                <input type="text" class="span11" name="description" placeholder="description" value="{{ current.data.description }}">
+             </div>
+            </div>
+
+            <div class="widget-box collapsible">
+              <div class="widget-title"> 
+                <a href="#collapseNotes" data-toggle="collapse"> 
+                  <span class="icon"><i class="icon-pencil"></i></span>
+                  <h5>Organizer Notes</h5>
+                </a> 
+              </div>
+              <div class="collapse" id="collapseNotes">
+                <div class="widget-content"> 
+                    <textarea class="span20" rows="10" name="notes">{{ current.data.notes }}</textarea>
+                </div>
+              </div>
+
+              <div class="widget-title"> 
+                <a href="#collapseVisibility" data-toggle="collapse"> 
+                  <span class="icon"><i class="icon-eye-open"></i></span>
+                  <h5>Visiblility</h5>
+                </a> 
+              </div>
+              <div class="collapse" id="collapseVisibility">
+                <div class="widget-content">
+                  <input type="text" class="span20" name="visible_to" placeholder="comma separated list" value="{{ current.data.visible_to }}">
+                </div>
+              </div>              
+              
+              <div class="widget-title"> 
+                <a href="#collapseAttr" data-toggle="collapse"> 
+                  <span class="icon"><i class="icon-tags"></i></span>
+                  <h5>Attributes</h5>
+                </a> 
+              </div>
+              <div class="collapse" id="collapseAttr">
+                <div class="widget-content attributes">
+                  {% for attribute in current.data.attr %}
+                  <div class="attribute">
+                    <input type="text" class="span6" name="attrKey[]" placeholder="Name" value="{{ attribute.name }}">
+                    <input type="text" class="span5" name="attrVal[]" placeholder="Value" value="{{ attribute.value }}">
+                    <button class="btn btn-warning remove_attrib span1 pull-right">-</button>
+                  </div>
+                  {% endfor %}
+                  <div class="attribute">
+                    <input type="text" class="span6" name="attrKey[]" placeholder="Name" value="">
+                    <input type="text" class="span5" name="attrVal[]" placeholder="Value" value="">
+                    <button class="btn btn-success add_attrib span1 pull-right">+</button>
+                  </div>
+                </div>
+              </div>            
+              
+              <div class="widget-title"> 
+                <a href="#collapsePublish" data-toggle="collapse"> 
+                  <span class="icon"><i class="icon-time"></i></span>
+                  <h5>Publish Date</h5>
+                </a> 
+              </div>
+              <div class="collapse" id="collapsePublish">
+                <div class="widget-content">
+                  <div class="">
+                <div  data-date="{{ current.data.publish_at }}" class="input-append date datepicker">
+                  <input type="datetime-local" name="publish_at" value="{{ (current.data.publish_at|default('now'))|date('Y-m-d\\TH:i:s') }}" class="span11" >
+                  <span class="add-on"><i class="icon-th"></i></span> </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="widget-title"> 
+                <a href="#collapseUnpublish" data-toggle="collapse"> 
+                  <span class="icon"><i class="icon-time"></i></span>
+                  <h5>Unpublish Date</h5>
+                </a> 
+              </div>
+              <div class="collapse" id="collapseUnpublish">
+                <div class="widget-content">
+                  <div class="">
+                    <div  data-date="{% if current.data.unpublish_at and current.data.unpublish_at != '0000-00-00 00:00:00' %}{{ current.data.unpublish_at }}{% endif %}" class="input-append date datepicker">
+                      <input type="datetime-local" name="unpublish_at" {% if current.data.unpublish_at and current.data.unpublish_at != '0000-00-00 00:00:00' %}value="{{ current.data.unpublish_by|date('Y-m-d\\TH:i:s') }}"{% endif %} class="span20" >
+                      <span class="add-on"><i class="icon-th"></i></span> </div>
+                  </div>
+                </div>
+              </div>
+            </div>            
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn-success">Save</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block inlinejs %}
+  $(".attributes").on("click", ".add_attrib", function (e) {
+    e.preventDefault();
+    $addDiv = $(this).parent().clone();
+    $addDiv.find('input').each(function () { $(this).val(null); })
+    $(this).parent().after($addDiv);
+    $(this).parent().find('button')
+      .removeClass('btn-success add_attrib').addClass('btn-warning remove_attrib').text('-');
+  });
+
+  $(".attributes").on("click", ".remove_attrib", function (e) {
+    e.preventDefault();
+    $addDiv = $(this).parent().remove();
+  });
+{% endblock %}
