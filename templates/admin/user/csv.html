@@ -1,0 +1,8 @@
+{%
+set user_values, user_attr, containers  = ['id','username','displayname','email','password','first_name','last_name','org_notes','permissions','character_id','hash'], ['allergies','aspects','birth_date','care_of','char_dir_avo','char_gender','char_ind_col','char_iso_int','char_log_int','char_mal_con','char_mil_dem','char_nos_pro','char_phy_non','city','country','emergency_contact','emergency_phone','feedback','gender','group','id_number_swe','medical_conditions','membership_date','membership_fee','onboarding_complete','onboarding_stage','onefifty_plus','password_set','phone','player_connections','player_unwanted','portrait','postal_code','pref_bus','pref_conflict_ideological','pref_conflict_intrapersonal','pref_counselling','pref_everyday','pref_friendships','pref_interrupted_sleep','pref_late_arival','pref_ooc_leader','pref_ooc_medic','pref_ooc_radio','pref_player_def_1','pref_player_def_2','pref_player_def_3','pref_responsibilities','pref_romance','pref_secrets','pref_work','size','state','street_address_1','street_address_2','terms_accepted','torso_circumference'], ['data','attr']
+%}
+{{ user_values|join(',') }},{{ user_attr|join(',') }}
+{% spaceless %}{% for user in listUsers %} 
+{% for data in user_values %}{% if user.data[data] is iterable %}({{user.data[data]|join(' and ')}}){% else %}{{user.data[data]}}{% endif %},{% endfor %}
+{% for data in user_attr %}{% if user.attr[data] is iterable %}({{user.attr[data]|join(' or ')}}){% else %}{{user.attr[data]}}{% endif %},{% endfor %}
+{% endfor %}{% endspaceless %}

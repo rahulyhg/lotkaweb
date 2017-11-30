@@ -576,7 +576,10 @@ hr{ border-top-color:#dadada;}
 }
 .widget-title span.icon {
 	padding: 9px 10px 7px 11px;
-	float: left; border-right:1px solid #dadada;
+	float: left; 
+	border-right:1px solid #dadada;
+	min-width: 15px;
+  text-align: center;	
 }
 .widget-title h5 {
 	color: #666;
