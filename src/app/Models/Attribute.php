@@ -41,5 +41,8 @@ class Attribute extends Model
   {
       return $this->belongsToMany('App\Models\User')->withTimeStamps();
   }
-  
+  public function media()
+  {
+      return $this->belongsToMany('App\Models\Media')->withTimeStamps();
+  }
 }

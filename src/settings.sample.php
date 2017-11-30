@@ -5,6 +5,7 @@ return [
     'addContentLengthHeader' => false, // Allow the web server to send the content-length header
     'default_salt' => '<OUR_DEFALT_PASSWORD_SALT>', //Used to create default passwords to generated users
     'user_images' => __DIR__ . '/../public/assets/portraits/',
+    'media_directory' => __DIR__ . '/../public/assets/media/',
     
     // Renderer settings
     'renderer' => [

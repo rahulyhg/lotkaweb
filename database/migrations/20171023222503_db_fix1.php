@@ -11,12 +11,12 @@ class DbFix1 extends AbstractMigration
     public function change()
     {
       $table = $this->table('throttle');
-      $table->changeColumn('user_id', ['null' => true]);
-      $table->changeColumn('user_id', ['default' => null]);
-      $table->changeColumn('ip', ['null' => true]);
-      $table->changeColumn('ip', ['default' => null]);
-      $table->changeColumn('type', ['null' => true]);
-      $table->changeColumn('type', ['default' => null]);
+      $table->changeColumn('user_id', 'integer', ['null' => true]);
+      $table->changeColumn('user_id', 'integer', ['default' => null]);
+      $table->changeColumn('ip', 'string', ['null' => true]);
+      $table->changeColumn('ip', 'string', ['default' => null]);
+      $table->changeColumn('type', 'string', ['null' => true]);
+      $table->changeColumn('type', 'string', ['default' => null]);
 
     }
 }

@@ -278,7 +278,21 @@ $app->group('/admin', function() use ($container) {
       
       $this->get('/{uid}/delete', 'RelationActionController:delete')->setName('admin.relation.delete');
     });    
+  });
+  
+  //Media
+  $this->group('/media', function() {
+    $this->get('', 'MediaActionController:index')->setName('admin.media.all');
+    
+    $this->get('/add', 'MediaActionController:add')->setName('admin.media.add');
+    $this->post('/add', 'MediaActionController:postAdd');
+    
+    $this->get('/{uid}/edit', 'MediaActionController:edit')->setName('admin.media.edit');
+    $this->post('/{uid}/edit', 'MediaActionController:postEdit');
+
+    $this->get('/{uid}/delete', 'MediaActionController:delete')->setName('admin.media.delete');
   });  
+  
   
 })->add(new AdminMiddleware($container));
 
