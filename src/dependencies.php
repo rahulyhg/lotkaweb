@@ -151,11 +151,13 @@ $container[App\Pages\OpenPage::class]   = function ($c) { return new \App\Pages\
 $container['HomePageController']        = function($c) { return new \App\Controllers\Page\HomePageController($c); };
 $container['ParticipantPageController'] = function($c) { return new \App\Controllers\Page\Participant\ParticipantPageController($c); };
 $container['OnboardingPageController']  = function($c) { return new \App\Controllers\Page\Participant\OnboardingPageController($c); };
+
 // Admin
 $container['AuthController']            = function($c) { return new \App\Controllers\Auth\AuthController($c); };
 $container['AdminController']           = function($c) { return new \App\Controllers\Admin\AdminController($c); };
 $container['UserActionController']      = function($c) { return new \App\Controllers\Admin\UserActionController($c); };
 $container['OrderActionController']     = function($c) { return new \App\Controllers\Admin\OrderActionController($c); };
+$container['MediaActionController']     = function($c) { return new \App\Controllers\Admin\MediaActionController($c); };
 
 // Participant admin
 $container['RolesActionController']     = function($c) { return new \App\Controllers\Admin\RolesActionController($c); };
