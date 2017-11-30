@@ -139,7 +139,9 @@ $app->group('/admin', function() use ($container) {
 
     $this->get('/{uid}/delete', 'UserActionController:deleteUser')->setName('admin.user.delete');
     
-    $this->get('/create-from-order/{uid}', 'UserActionController:createFromOrderAndAttest')->setName('admin.order.create.user');    
+    $this->get('/create-from-order/{uid}', 'UserActionController:createFromOrderAndAttest')->setName('admin.order.create.user'); 
+    
+    $this->get('/export', 'UserActionController:csv')->setName('admin.users.export'); 
   });
   
   //Orders

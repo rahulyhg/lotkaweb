@@ -106,6 +106,22 @@ class UserActionController extends Controller
     ]);
   }
   
+  public function csv($request, $response, $arguments)
+  {
+    $users = User::all();
+    $userList = [];
+    foreach ($users as $user) {
+      $userList[] = [
+        "data" => $user,
+        "attr" => self::mapAttributes( $user->attr )
+      ];
+    }
+    
+    return $this->view->render($response, 'admin/user/csv.html', [
+      'listUsers' => $userList
+    ])->withHeader('Content-Type', 'text/csv');
+  }  
+  
   public function deleteUser($request, $response, $arguments)
   {
     if ($arguments['uid'] === $this->container->sentinel->getUser()->username) {
