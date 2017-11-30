@@ -3,6 +3,6 @@ set user_values, user_attr, containers  = ['id','username','displayname','email'
 %}
 {{ user_values|join(',') }},{{ user_attr|join(',') }}
 {% spaceless %}{% for user in listUsers %} 
-{% for data in user_values %}{% if user.data[data] is iterable %}({{user.data[data]|join(' and ')}}){% else %}{{user.data[data] | replace({"\n": "", "\r\n": "", "\t": "", "\n\r": ""})}}{% endif %},{% endfor %}
-{% for data in user_attr %}{% if user.attr[data] is iterable %}({{user.attr[data]|join(' or ')}}){% else %}{{user.attr[data] | replace({"\n": "", "\r\n": "", "\t": "", "\n\r": ""})}}{% endif %},{% endfor %}
+{% for data in user_values %}{% if user.data[data] is iterable %}({{user.data[data]|join(' and ')}}){% else %}{{user.data[data] | replace({"\n": " ", "\r\n": " ", "\t": " ", "\n\r": " ", "'": " "})}}{% endif %},{% endfor %}
+{% for data in user_attr %}{% if user.attr[data] is iterable %}({{user.attr[data]|join(' or ')}}){% else %}{{user.attr[data] | replace({"\n": " ", "\r\n": " ", "\t": " ", "\n\r": " ", "'": " "})}}{% endif %},{% endfor %}
 {% endfor %}{% endspaceless %}
