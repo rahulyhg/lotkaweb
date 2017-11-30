@@ -113,13 +113,14 @@ class UserActionController extends Controller
     foreach ($users as $user) {
       $userList[] = [
         "data" => $user,
+        "order" => Order::where('user_id', $user->id)->first(),
         "attr" => self::mapAttributes( $user->attr )
       ];
     }
     
     return $this->view->render($response, 'admin/user/csv.html', [
       'listUsers' => $userList
-    ])->withHeader('Content-Type', 'text/csv');
+    ]); #->withHeader('Content-Type', 'text/csv');
   }  
   
   public function deleteUser($request, $response, $arguments)
