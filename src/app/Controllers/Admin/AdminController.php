@@ -9,6 +9,14 @@ use Slim\Views\Twig as View;
 
 class AdminController extends Controller
 {
+  
+  private function getAge($dob) {
+    $then = "{$dob['year']}{$dob['month']}{$dob['day']}";
+    $then = date('Ymd', strtotime($then));
+    $diff = date('Ymd') - $then;
+    return substr($diff, 0, -4);
+  }
+  
   public function index($request, $response)
   {    
     $DB = $this->db->getDatabaseManager();
@@ -32,6 +40,7 @@ class AdminController extends Controller
     $user_roles = [];
     $user_countries = [];
     $user_genders = [];
+    $user_ages = [];
     
     foreach ($users as $user) {
       $role_name = $user->roles()->first()->name;
@@ -52,6 +61,24 @@ class AdminController extends Controller
           $user_genders[$gender_name] + 1 : 1;
       }
   
+      $birth_date = $user->attr->where('name', 'birth_date')->first();
+      $id_nr = $user->attr->where('name', 'id_number_swe')->first();      
+      
+      $dob = false;
+      if($birth_date) {
+        $dob = date_parse($birth_date->value);
+      } else if ( $id_nr ) {
+        preg_match_all("/\d{1,2}/", substr($id_nr->value,0,6), $date_parts);
+        $dob = date_parse(implode("-", $date_parts[0]));
+        unset($date_parts);
+      }
+
+      if($dob) {
+        $age = self::getAge($dob);
+        $user_ages[$age] = isset($user_ages[$age]) ? 
+          $user_ages[$age] + 1 : 1;
+      }
+      
     }
     
     $ticket_sales = Order::query()
@@ -68,6 +95,7 @@ class AdminController extends Controller
       'userRoles' => $user_roles,
       'userCountries' => $user_countries,
       'userGenders' => $user_genders,
+      'userAges' => $user_ages,
       'sales' => $ticket_sales->get(),
     ]);
   }
