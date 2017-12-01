@@ -1,0 +1,8 @@
+{% set user_order  = ['id','email','user_name','attester_name','type','amount','name','shirt_type','size','preference','user_id','attested_id','orderdate','origin'] %}
+{{ user_order|join(',') }},ex
+{% for order in orders %}
+{% spaceless %}
+{% for data in user_order %}{% if order[data] is iterable %}({{ order[data]|join(' and ') }}){% else %}{{ order[data] | replace({"\n": " ", "\r\n": " ", "\t": " ", "\n\r": " ", ",": " "}) }}{% endif %},{% endfor %}
+{% endspaceless %}
+
+{% endfor %}
