@@ -11,7 +11,10 @@ class AdminController extends Controller
 {
   
   private function getAge($dob) {
-    $then = "{$dob['year']}{$dob['month']}{$dob['day']}";
+    if(count($dob['errors'])) return false;
+    $then = $dob['year'] . 
+            str_pad($dob['month'], 2, '0', STR_PAD_LEFT) . 
+            str_pad($dob['day'], 2, '0', STR_PAD_LEFT);      
     $then = date('Ymd', strtotime($then));
     $diff = date('Ymd') - $then;
     return substr($diff, 0, -4);
@@ -75,8 +78,11 @@ class AdminController extends Controller
 
       if($dob) {
         $age = self::getAge($dob);
-        $user_ages[$age] = isset($user_ages[$age]) ? 
-          $user_ages[$age] + 1 : 1;
+        
+        if($age) {
+          $user_ages[$age] = isset($user_ages[$age]) ? 
+            $user_ages[$age] + 1 : 1;          
+        }
       }
       
     }
