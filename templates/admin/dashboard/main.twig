@@ -180,9 +180,12 @@ window.onload = function () {
   };
   
   var orders_attested_data = [
+  {% if orderStatus %}
     {'label': "Unattested", 'data': {{ orderStatus.unattested }} },
     {'label': "Attested", 'data': {{ orderStatus.attested }} }
+  {% endif %}
   ]; 
+  if(orders_attested_data.length)
   $.plot('#orders_attested', orders_attested_data, settings);
 
 
@@ -191,6 +194,7 @@ window.onload = function () {
     {'label': "{{ role_name }}", 'data': {{ userRoles[role_name] }} }{{ loop.last ? '':',' }}
   {% endfor %}
   ]; 
+  if(users_onboarded_data.length)
   $.plot('#users_onboarded', users_onboarded_data, settings);
     
   var users_country_data = [
@@ -198,6 +202,7 @@ window.onload = function () {
     {'label': "{{ country_name }}", 'data': {{ userCountries[country_name] }} }{{ loop.last ? '':',' }}
   {% endfor %}
   ]; 
+  if(users_country_data.length)
   $.plot('#users_countries', users_country_data, settings);
   
   var users_gender_data = [
@@ -205,6 +210,7 @@ window.onload = function () {
     {'label': "{{ gender_name }}", 'data': {{ userGenders[gender_name] }} }{{ loop.last ? '':',' }}
   {% endfor %}
   ]; 
+  if(users_gender_data.length)
   $.plot('#users_genders', users_gender_data, settings);  
     
   /************************
@@ -218,7 +224,7 @@ window.onload = function () {
     ["{{ age }}", {{ userAges[age] }}]{{ loop.last ? '':',' }}
   {% endfor %}
   ];
-
+  if(age_data.length)
   $.plot("#user_ages", [ age_data ], {
     series: {
       bars: {
