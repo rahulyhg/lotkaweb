@@ -152,11 +152,12 @@ window.onload = function () {
     {'label': "Attested", 'data': {{ orderStatus.attested }} }
   ]; 
   $.plot('#orders_attested', orders_attested_data, settings);
-  
+
+
   var users_onboarded_data = [
-    {'label': "Participants", 'data': {{ userStatus.participants }} },
-    {'label': "Users", 'data': {{ userStatus.users }} },
-    {'label': "Admin", 'data': {{ userStatus.admin }} },
+  {% for key in userStatus|keys %}
+    {'label': "{{ key }}", 'data': {{ userStatus[key] }} }{{ loop.last ? '':',' }}
+  {% endfor %}
   ]; 
   $.plot('#users_onboarded', users_onboarded_data, settings);
     
