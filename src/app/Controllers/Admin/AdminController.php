@@ -78,8 +78,8 @@ class AdminController extends Controller
 
       if($dob) {
         $age = self::getAge($dob);
-        
-        if($age) {
+                
+        if($age && $age > 0) {
           $user_ages[$age] = isset($user_ages[$age]) ? 
             $user_ages[$age] + 1 : 1;          
         }
