@@ -120,7 +120,7 @@ class UserActionController extends Controller
     
     return $this->view->render($response, 'admin/user/csv.html', [
       'listUsers' => $userList
-    ])->withHeader('Content-Type', 'text/csv');
+    ]); #->withHeader('Content-Type', 'text/csv');
   }  
   
   public function deleteUser($request, $response, $arguments)
