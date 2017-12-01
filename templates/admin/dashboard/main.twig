@@ -181,8 +181,8 @@ window.onload = function () {
   
   var orders_attested_data = [
   {% if orderStatus %}
-    {'label': "Unattested", 'data': {{ orderStatus.unattested }} },
-    {'label': "Attested", 'data': {{ orderStatus.attested }} }
+    {'label': "Unattested", 'data': {{ orderStatus.unattested|default('0') }} },
+    {'label': "Attested", 'data': {{ orderStatus.attested|default('0') }} }
   {% endif %}
   ]; 
   if(orders_attested_data.length)
@@ -191,7 +191,7 @@ window.onload = function () {
 
   var users_onboarded_data = [
   {% for role_name in userRoles|keys %}
-    {'label': "{{ role_name }}", 'data': {{ userRoles[role_name] }} }{{ loop.last ? '':',' }}
+    {'label': "{{ role_name }}", 'data': {{ userRoles[role_name]|default('0') }} }{{ loop.last ? '':',' }}
   {% endfor %}
   ]; 
   if(users_onboarded_data.length)
@@ -199,7 +199,7 @@ window.onload = function () {
     
   var users_country_data = [
   {% for country_name in userCountries|keys %}
-    {'label': "{{ country_name }}", 'data': {{ userCountries[country_name] }} }{{ loop.last ? '':',' }}
+    {'label': "{{ country_name }}", 'data': {{ userCountries[country_name]|default('0') }} }{{ loop.last ? '':',' }}
   {% endfor %}
   ]; 
   if(users_country_data.length)
@@ -207,7 +207,7 @@ window.onload = function () {
   
   var users_gender_data = [
   {% for gender_name in userGenders|keys %}
-    {'label': "{{ gender_name }}", 'data': {{ userGenders[gender_name] }} }{{ loop.last ? '':',' }}
+    {'label': "{{ gender_name }}", 'data': {{ userGenders[gender_name]|default('0') }} }{{ loop.last ? '':',' }}
   {% endfor %}
   ]; 
   if(users_gender_data.length)
@@ -221,7 +221,7 @@ window.onload = function () {
     
   var age_data = [ 
   {% for age in userAges|keys %}
-    ["{{ age }}", {{ userAges[age] }}]{{ loop.last ? '':',' }}
+    ["{{ age }}", {{ userAges[age]|default('0') }}]{{ loop.last ? '':',' }}
   {% endfor %}
   ];
   if(age_data.length)

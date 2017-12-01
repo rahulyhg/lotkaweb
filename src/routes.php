@@ -156,6 +156,8 @@ $app->group('/admin', function() use ($container) {
 
     $this->get('/add', 'OrderActionController:addOrder')->setName('admin.order.add');
     $this->post('/add', 'OrderActionController:postAddOrder');
+    
+    $this->get('/export', 'OrderActionController:csv')->setName('admin.orders.export');     
 
     //Handle external orders
     $this->group('/external', function() {

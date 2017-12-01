@@ -97,6 +97,17 @@ class OrderActionController extends Controller
     ]);
   }
 
+  public function csv($request, $response, $arguments)
+  {
+    $orders_query = self::listOrdersQuery();
+    $orders_query->orderBy('id', 'desc');
+    
+    
+    return $this->view->render($response, 'admin/order/csv.html', [
+      'orders' => $orders_query->get(),
+    ])->withHeader('Content-Type', 'text/csv');
+  } 
+  
   public function listMultiples($request, $response)
   {
     $DB = $this->db->getDatabaseManager();
