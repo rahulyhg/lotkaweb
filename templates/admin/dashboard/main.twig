@@ -209,6 +209,33 @@ window.onload = function () {
     
   /************************
   
+  Age chart
+  
+  ************************/
+    
+  var age_data = [ 
+  {% for age in userAges|keys %}
+    ["{{ age }}", {{ userAges[age] }}]{{ loop.last ? '':',' }}
+  {% endfor %}
+  ];
+
+  $.plot("#user_ages", [ age_data ], {
+    series: {
+      bars: {
+        show: true,
+        barWidth: 2,
+        align: "center"
+      }
+    },
+    xaxis: {
+      mode: "categories",
+      tickLength: 0
+    }
+  });
+    
+    
+  /************************
+  
   Sales charts
   
   ************************/
