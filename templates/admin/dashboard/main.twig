@@ -15,7 +15,25 @@
   <link rel="stylesheet" href="/resources/admin/css/jquery.gritter.css" />
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700,800' rel='stylesheet' type='text/css'>
   <link href="https://fonts.googleapis.com/css?family=Pathway+Gothic+One" rel="stylesheet">
-{% block header %}{% endblock %}  
+
+  <style type="text/css">
+    .flotTip 
+    {
+      padding: 3px 5px;
+      background-color: #000;
+      z-index: 100;
+      color: #fff;
+      box-shadow: 0 0 10px #555;
+      opacity: .7;
+      filter: alpha(opacity=70);
+      border: 2px solid #fff;
+      -webkit-border-radius: 4px;
+      -moz-border-radius: 4px;
+      border-radius: 4px;
+    }
+  </style>
+{% block header %}
+{% endblock %}  
 </head>
 <body>
 
@@ -79,6 +97,7 @@
 <script src="/resources/admin/js/jquery.flot.min.js"></script> 
 <script src="/resources/admin/js/jquery.flot.resize.min.js"></script> 
 <script src="/resources/admin/js/jquery.flot.pie.min.js"></script>   
+<script src="/resources/admin/js/jquery.flot.tooltip.min.js"></script>   
 <script src="/resources/admin/js/jquery.peity.min.js"></script> 
 <script src="/resources/admin/js/fullcalendar.min.js"></script> 
 <script src="/resources/admin/js/matrix.js"></script> 
@@ -129,14 +148,15 @@ window.onload = function () {
   Pie charts
   
   *************************/
-  
+    
   var settings = {
     series: {
       pie: {
         show: true,
+        innerRadius: 0.45,
         radius: 1,
         label: {
-          show: true,
+          show: false,
           radius: 1,
           background: {
             opacity: 0.8,
@@ -144,7 +164,19 @@ window.onload = function () {
           }
         }
       }
-    }
+    },
+    grid: {
+      hoverable: true
+    },
+    tooltip: {
+      show: true,
+      content: "%p.0%, %s, n=%n", // show percentages, rounding to 2 decimal places
+      shifts: {
+        x: 20,
+        y: 0
+      },
+      defaultTheme: false
+    }    
   };
   
   var orders_attested_data = [
