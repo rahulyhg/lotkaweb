@@ -56,7 +56,7 @@ class UserActionController extends Controller
       'character' => Character::orderBy('name')->get(),
       'groups' => Group::orderBy('name')->get(),
       'set_attr' => self::user_attributes(),
-      'genders' => ['Nonbinary','Female','Male','Other'],
+      'genders' => ['Non-binary','Female','Male','Other'],
     ];
   }  
   
