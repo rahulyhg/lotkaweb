@@ -29,10 +29,29 @@ class AdminController extends Controller
     
     # User status
     $users = User::all();
-    $user_status = [];
+    $user_roles = [];
+    $user_countries = [];
+    $user_genders = [];
+    
     foreach ($users as $user) {
       $role_name = $user->roles()->first()->name;
-      $user_status[$role_name] = isset($user_status[$role_name]) ? $user_status[$role_name] + 1 : 1;
+      $user_roles[$role_name] = isset($user_roles[$role_name]) ? 
+        $user_roles[$role_name] + 1 : 1;
+      
+      $country_name = $user->attr->where('name', 'country')->first();
+      if($country_name) {
+        $country_name = strlen($country_name->value) ? $country_name->value : "[NOT SET]";
+        $user_countries[$country_name] = isset($user_countries[$country_name]) ? 
+          $user_countries[$country_name] + 1 : 1;          
+      }
+      
+      $gender_name = $user->attr->where('name', 'gender')->first();
+      if($gender_name) {
+        $gender_name = strlen($gender_name->value) ? $gender_name->value : "[NOT SET]";
+        $user_genders[$gender_name] = isset($user_genders[$gender_name]) ? 
+          $user_genders[$gender_name] + 1 : 1;
+      }
+  
     }
     
     $ticket_sales = Order::query()
@@ -46,7 +65,9 @@ class AdminController extends Controller
     
     return $this->view->render($response, 'admin/dashboard/main.twig', [
       'orderStatus' => $order_status,
-      'userStatus' => $user_status,
+      'userRoles' => $user_roles,
+      'userCountries' => $user_countries,
+      'userGenders' => $user_genders,
       'sales' => $ticket_sales->get(),
     ]);
   }

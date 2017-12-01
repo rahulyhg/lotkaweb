@@ -155,14 +155,26 @@ window.onload = function () {
 
 
   var users_onboarded_data = [
-  {% for key in userStatus|keys %}
-    {'label': "{{ key }}", 'data': {{ userStatus[key] }} }{{ loop.last ? '':',' }}
+  {% for role_name in userRoles|keys %}
+    {'label': "{{ role_name }}", 'data': {{ userRoles[role_name] }} }{{ loop.last ? '':',' }}
   {% endfor %}
   ]; 
   $.plot('#users_onboarded', users_onboarded_data, settings);
     
+  var users_country_data = [
+  {% for country_name in userCountries|keys %}
+    {'label': "{{ country_name }}", 'data': {{ userCountries[country_name] }} }{{ loop.last ? '':',' }}
+  {% endfor %}
+  ]; 
+  $.plot('#users_countries', users_country_data, settings);
   
-  
+  var users_gender_data = [
+  {% for gender_name in userGenders|keys %}
+    {'label': "{{ gender_name }}", 'data': {{ userGenders[gender_name] }} }{{ loop.last ? '':',' }}
+  {% endfor %}
+  ]; 
+  $.plot('#users_genders', users_gender_data, settings);  
+    
   /************************
   
   Sales charts
