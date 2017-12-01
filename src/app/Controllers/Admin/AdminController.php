@@ -28,26 +28,12 @@ class AdminController extends Controller
     }
     
     # User status
-    /* TODO
-    $attested_status_counts = User::query()
-      ->select(
-        $DB->raw("(case when attested_id IS NOT NULL then 'attested' else 'unattested' end) as attestement_status"),
-        $DB->raw("count(case when attested_id IS NOT NULL then 1 else 0 end) as num")
-      )
-      ->groupBy('attestement_status')
-      ->get();
-    
+    $users = User::all();
     $user_status = [];
-    foreach( $attested_status_counts as $status ) {
-      $order_status[$status->attestement_status] = $status->num;
+    foreach ($users as $user) {
+      $role_name = $user->roles()->first()->name;
+      $user_status[$role_name] = isset($user_status[$role_name]) ? $user_status[$role_name] + 1 : 1;
     }
-    */
-    
-    $user_status = [
-      'participants' => 0,
-      'users' => 0,
-      'admin' => 100
-    ];
     
     $ticket_sales = Order::query()
       ->select(

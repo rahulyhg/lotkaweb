@@ -6,6 +6,8 @@ class AdminMiddleware extends Middleware
 {
   public function __invoke($request, $response, $next)
   {
+    $isAdmin = false;
+    
     if ($this->container->sentinel->getUser()) {
       $isAdmin = $this->container->sentinel->getUser()->inRole('admin');
     }
