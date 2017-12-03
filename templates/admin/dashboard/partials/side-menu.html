@@ -34,6 +34,8 @@
     <ul>
       <li class="{{ path_for('admin.users.all')|isActive }}">
         <a href="{{ path_for('admin.users.all') }}">All</a></li>
+      <li class="{{ path_for('admin.users.gallery')|isActive }}">
+        <a href="{{ path_for('admin.users.gallery') }}">Gallery</a></li>
       <li class="{{ path_for('admin.user.add')|isActive }}">
         <a href="{{ path_for('admin.user.add') }}"><i class="icon-plus-sign"></i> <span>Create new</span> </a></li>
     </ul>

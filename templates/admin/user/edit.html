@@ -27,6 +27,13 @@
           <form action="{{ current.new ? path_for('admin.user.add') : path_for('admin.user.edit', { 'uid': current.data.username }) }}" method="post" autocomplete="on" class="form-horizontal">
             {{ csrf.field | raw }}
             
+            <div class="control-group">
+              <label class="control-label">Participant portrait :</label>
+              <div class="controls">
+                <div id="preview" class="mb-20"><img src="/assets/{{ current.attr.portrait ? 'portraits/' ~ current.attr.portrait : 'images/logos/lotka-volterra-logo.svg'}}" class="{{current.attr.portrait ? '' : 'unloaded' }}"></div>
+              </div>
+            </div>
+            
             <h6 style="margin-left: 1.5em;">Login and display information</h6>
             <div class="control-group">
               <label class="control-label">User Name :</label>

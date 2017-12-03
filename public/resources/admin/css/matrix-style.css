@@ -1599,3 +1599,16 @@ div.dataTables_wrapper .ui-widget-header {
 }
 #sidebar .content{ display:none;}
 }
+
+.gallery figure {
+  display: inline-block;
+}
+.gallery figure img {
+    object-fit: cover; /* Do not scale the image */
+    object-position: center; /* Center the image within the element */    
+    display: inline-block;
+    margin: .2em auto 0;
+    width: 100px;
+    height: 133px;
+    position: relative;
+}
