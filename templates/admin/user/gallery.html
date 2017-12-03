@@ -1,0 +1,42 @@
+{% extends 'admin/dashboard/main.twig' %}
+
+{% block title %}User Manager{% endblock %}
+
+{% block contentHeader %}
+  <div id="content-header">
+    <div id="breadcrumb"> 
+      <a href="{{ path_for('admin.index') }}" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a> 
+      <a href="{{ path_for('admin.users.all') }}">Users</a> 
+      <a href="#" class="current">User Gallery</a> 
+    </div>
+    
+    <h1>User Gallery</h1>
+  </div>
+{% endblock %}
+
+{% block content %}
+  <div class="container-fluid">
+    <hr>
+    <div class="row-fluid">
+      <div class="span12">
+        <div class="widget-box">
+          <div class="widget-title"> <span class="icon"><i class="icon-th"></i></span>
+            <h5>User Gallery</h5>
+          </div>
+          <div class="widget-content gallery">
+            {% for user in users %}
+              <figure>
+                <a href="{{ path_for('admin.user.edit', { 'uid': user.data.username }) }}">
+                  <img src="/assets/{{ user.attr.portrait ? 'portraits/' ~ user.attr.portrait : 'images/logos/lotka-volterra-logo.svg'}}" class="{{user.attr.portrait ? '' : 'unloaded' }}">
+                </a>
+                <figcaption class="font-alt">
+                  <a href="{{ path_for('admin.user.edit', { 'uid': user.data.username }) }}">{{ user.data.displayname }}</a>
+                </figcaption>
+              </figure>
+            {% endfor %}                
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

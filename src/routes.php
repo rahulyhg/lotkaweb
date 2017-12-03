@@ -142,6 +142,8 @@ $app->group('/admin', function() use ($container) {
     $this->get('/create-from-order/{uid}', 'UserActionController:createFromOrderAndAttest')->setName('admin.order.create.user'); 
     
     $this->get('/export', 'UserActionController:csv')->setName('admin.users.export'); 
+    
+    $this->get('/gallery', 'UserActionController:gallery')->setName('admin.users.gallery');    
   });
   
   //Orders

@@ -121,6 +121,22 @@ class UserActionController extends Controller
     return $this->view->render($response, 'admin/user/csv.html', [
       'listUsers' => $userList
     ])->withHeader('Content-Type', 'text/csv');
+  }
+  
+  public function gallery($request, $response, $arguments)
+  {
+    $users = User::all();
+    $userList = [];
+    foreach ($users as $user) {
+      $userList[] = [
+        "data" => $user,
+        "attr" => self::mapAttributes( $user->attr )
+      ];
+    }
+
+    return $this->view->render($response, 'admin/user/gallery.html', [
+      'users' => $userList,
+    ]);
   }  
   
   public function deleteUser($request, $response, $arguments)
@@ -157,11 +173,7 @@ class UserActionController extends Controller
       'attr' => self::mapAttributes( $getCurrentUserData->attr ),
       'role' => $getCurrentUserRole->slug
     ]);
-/*
-    die(
-      var_dump(self::mapAttributes( $getCurrentUserData->attr ))
-    );
-*/    
+
     return $this->view->render($response, 'admin/user/edit.html', self::userOptions());
   }
 
