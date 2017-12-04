@@ -267,10 +267,10 @@ class OnboardingPageController extends Controller
     $this->container->view->getEnvironment()->addGlobal('data', [
       'genders' => ['Non-binary','Female','Male','Other'],
       'sizes' => [
-        [ 'code' => 'SMALL',  'description' => "up to 165cm (<5'5\") and 60kg (<130lbs)"   ],
-        [ 'code' => 'MEDIUM', 'description' => "165-175cm (5'9\"), up to 85kg (187lbs)"  ],
-        [ 'code' => 'LARGE',  'description' => "175-190cm (6'3\"), up to 100kg (220lbs)" ],
-        [ 'code' => 'XLARGE', 'description' => "over 190cm (>6'3\"), over 100kg (>220lbs)" ], 
+        [ 'code' => 'SMALL',  'description' => "up to 165cm (<5'5\")"   ],
+        [ 'code' => 'MEDIUM', 'description' => "165-175cm (5'9\")"  ],
+        [ 'code' => 'LARGE',  'description' => "175-190cm (6'3\")" ],
+        [ 'code' => 'XLARGE', 'description' => "over 190cm (>6'3\")" ], 
       ],
       'torso_circumference' => $torso_size,
       'user_order' => $user_order,
