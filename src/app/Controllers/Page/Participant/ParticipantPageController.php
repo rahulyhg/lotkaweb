@@ -28,11 +28,18 @@ class ParticipantPageController extends Controller
   public function index($request, $response, $arguments)
   {
     $participant = self::getCurrentUser();
-    if(!isset($participant["attributes"]["onboarding_complete"])) 
-      return $response->withRedirect($this->router->pathFor('participant.onboarding', ['hash' => $participant["user"]->hash]));
+    
+    
+    if(!isset($participant["attributes"]["onboarding_complete"])) {
+      return $response->withRedirect($this->router->pathFor('participant.onboarding', ['hash' => $participant["user"]->hash]));      
+    }
     
     return $this->view->render($response, '/new/participant/dashboard.html', [
-      'debug' => $participant
+      'current' => $participant,
+      'sections' => Post::whereIn('slug', [
+                      'players','relationships','character',
+                      'plots','groups','schedules','profile'
+                    ])->get(),
     ]);
   }
   
