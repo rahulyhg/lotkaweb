@@ -35,7 +35,7 @@ class CharacterActionController extends Controller
       'shifts' => self::characterShifts(),
       'orgs' => self::characterOrgs(),
       'set_attr' => self::character_attributes(),
-      'genders' => ['Nonbinary','Female','Male','Other'],
+      'genders' => ['Non-binary','Female','Male','Other'],
     ];
   }
   
