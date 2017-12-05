@@ -8,3 +8,4 @@
 /phinx.yml
 /composer.lock
 **/public/assets/portraits/
+**/public/assets/media/
