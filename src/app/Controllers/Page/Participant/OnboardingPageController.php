@@ -227,8 +227,8 @@ class OnboardingPageController extends Controller
   {    
     $user_hash = filter_var($arguments['hash'], FILTER_SANITIZE_STRING);
     $participant = self::getCurrentUser($user_hash);
-
-    if(!$participant || (isset($participant["attributes"]["onboarding_complete"]) && $participant["attributes"]["onboarding_complete"])) {
+    
+    if(!$participant["user"] || isset($participant["attributes"]["onboarding_complete"])) {
       $this->flash->addMessage(
         'error', 
         "Sorry, this participant could not be found for onboarding or the link has allready been used."
@@ -237,7 +237,7 @@ class OnboardingPageController extends Controller
     }
     
     $user_order = Order::where('user_id', $participant["user"]->id)->first();
-    
+
     if(!$user_order) {
       $this->flash->addMessage(
         'error', 
