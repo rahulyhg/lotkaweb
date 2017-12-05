@@ -38,11 +38,13 @@ class ParticipantPageController extends Controller
   
   public function page($request, $response, $arguments)
   {
+    $participant = self::getCurrentUser();
     $slug = filter_var($arguments['page'], FILTER_SANITIZE_STRING);
     $post = Post::where('slug', $slug)->first();
     
     return $this->view->render($response, '/new/participant/page.html', [
-      'post' => $post
+      'post' => $post,
+      'current' => $participant
     ]);
   }  
 }
