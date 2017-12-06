@@ -475,3 +475,11 @@ svg.loading path.lights {
   overflow-wrap: break-word;
   text-align: center;
 }
+
+.post-thumbnail .portrait  {
+    object-fit: cover; /* Do not scale the image */
+    object-position: center; /* Center the image within the element */    
+    width: 270px;
+    height: 270px;
+    position: relative;
+}

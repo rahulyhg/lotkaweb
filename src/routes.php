@@ -348,7 +348,7 @@ $app->post('/welcome/{hash}/[{stage}]', 'OnboardingPageController:save');
 
 $app->group('/participants', function () { 
   $this->get('[/]', 'ParticipantPageController:index')->setName('participant.home');
-  $this->get('/{page}', 'ParticipantPageController:page')->setName('participant.page');
+  $this->get('/{page}[/{uid}]', 'ParticipantPageController:page')->setName('participant.page');
 })->add(new ParticipantMiddleware($container));
 
 /*

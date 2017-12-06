@@ -66,8 +66,17 @@ class Post extends Model
    */
   public function scopeVisibleTo($query, $type)
   {
-      return $query->where('visible_to', 'like', '%' . $type . '%')
-        ->orWhere('visible_to', '');
-  }
-  
+    $query->where('visible_to', '');
+      
+    $groups = is_array ($type) ? $type : [$type];    
+    $visible_to = array_map( 
+            function($group) use ($query) { 
+              $query->orWhere('visible_to', 'like', '%' . $group . '%');
+              return $group;
+            },
+            $groups 
+    );
+    
+    return $query;
+  }  
 }
