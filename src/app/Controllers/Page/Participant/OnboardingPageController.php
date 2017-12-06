@@ -13,6 +13,7 @@ use App\Models\Task;
 
 use App\Controllers\Controller;
 use App\Controllers\Admin\UserActionController;
+use App\Controllers\Admin\MediaActionController;
 
 use App\Mail\Sender;
 use App\Mail\Templater;
@@ -192,9 +193,16 @@ class OnboardingPageController extends Controller
       $basename = bin2hex(random_bytes(8)); // see http://php.net/manual/en/function.random-bytes.php
       $filename = sprintf('%s.%0.8s', $basename, $extension);
 
-      $uploadedFile->moveTo($directory . DIRECTORY_SEPARATOR . $filename);
+      $uploadedFile->moveTo($directory . $filename);
       
       self::updateAttributes(['portrait' => $filename], $user);
+      
+      MediaActionController::convertPortrait(
+        $directory . $filename, 
+        $directory . "scaled" . DIRECTORY_SEPARATOR . $filename
+      );
+      
+      //die($directory . "scaled" . DIRECTORY_SEPARATOR . $filename);
     }
   }  
   
