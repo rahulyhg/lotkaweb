@@ -482,4 +482,5 @@ svg.loading path.lights {
     width: 270px;
     height: 270px;
     position: relative;
+    filter: grayscale(1);
 }
