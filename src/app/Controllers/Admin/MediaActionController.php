@@ -133,4 +133,12 @@ class MediaActionController extends Controller
   public function delete($request, $response, $arguments)
   { 
   }
+  
+  public function convertPortrait($inputfile, $outputfile) {
+  // input/output should be COMPLETE absolute path+filename
+    $command = sprintf('convert %s -auto-orient -gravity center -resize 270x270^ -crop 270x270+0+0 +repage -set colorspace Gray -separate -average %s', $inputfile, $outputfile);
+    exec($command);
+    
+  #convert $outputfile \( -clone 0 -fill "#00FF00" -colorize 10 \) -compose multiply -composite $outputfile
+  }
 }
