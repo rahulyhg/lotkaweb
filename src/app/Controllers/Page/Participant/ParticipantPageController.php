@@ -33,7 +33,7 @@ class ParticipantPageController extends Controller
       $user_list[] = [
         "user" => $user_obj,
         "attributes" => self::mapAttributes( $user_obj->attr ),
-        "order" => $user_obj->order,
+        "order" => $user_obj->order()->get(),
       ];
     }
     
