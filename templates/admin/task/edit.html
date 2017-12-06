@@ -76,16 +76,16 @@
               <div class="controls">
                 <div data-toggle="buttons-radio" class="btn-group">
                   <label class="btn btn-info{% if current.data.status == 0 or not current.data.status %} active{% endif %}">
-                     <input type="radio" name="status" value="0"> Not Started
+                     <input type="radio" name="status" value="0" {% if current.data.status == 0 or not current.data.status %}checked{% endif %}> Not Started
                   </label>    
                   <label class="btn btn-success{% if current.data.status == 1 %} active{% endif %}">
-                    <input type="radio" name="status" value="1">Completed
+                    <input type="radio" name="status" value="1" {% if current.data.status == 1 %}checked{% endif %}>Completed
                   </label>
                   <label class="btn btn-warning{% if current.data.status == 2 %} active{% endif %}">
-                    <input type="radio" name="status" value="2">In Progress
+                    <input type="radio" name="status" value="2" {% if current.data.status == 2 %}checked{% endif %}>In Progress
                   </label>
                   <label class="btn btn-danger{% if current.data.status == 3 %} active{% endif %}">
-                    <input type="radio" name="status" value="3">Blocked
+                    <input type="radio" name="status" value="3" {% if current.data.status == 3 %}active{% endif %}>Blocked
                   </label>
                 </div>
               </div>

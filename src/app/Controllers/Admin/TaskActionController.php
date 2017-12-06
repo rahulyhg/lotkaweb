@@ -15,7 +15,8 @@ class TaskActionController extends Controller
     $tasks = Task::all();
     
     return $this->view->render($response, 'admin/task/list.html', [
-      'tasks' => $tasks
+      'users' => User::query()->orderBy('displayname')->get(),
+      'tasks' => $tasks,
     ]);
   }
   

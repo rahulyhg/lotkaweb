@@ -47,8 +47,8 @@ class HomePageController extends Controller
   {
     $slug = isset($arguments['page']) ? $arguments['page'] : $arguments['category'];
     $slug = filter_var($slug, FILTER_SANITIZE_STRING);
-    $post = Post::where('slug', $slug)->visibleTo('public')->published()->first();
-    
+    $post = Post::where('slug', $slug)->visibleTo(['public','participant','admin'])->published()->first();
+
     if($slug == 'tickets') {
       $this->container->view->getEnvironment()->addGlobal(
         'tickets', self::populateTicketInfo());
