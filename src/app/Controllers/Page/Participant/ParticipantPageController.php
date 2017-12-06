@@ -10,6 +10,7 @@ use App\Models\Relation;
 use App\Models\Attribute;
 use App\Models\User;
 use App\Models\Task;
+use App\Models\Order;
 
 use App\Controllers\Controller;
 use Slim\Views\Twig as View;
@@ -33,7 +34,7 @@ class ParticipantPageController extends Controller
       $user_list[] = [
         "user" => $user_obj,
         "attributes" => self::mapAttributes( $user_obj->attr ),
-        "order" => $user_obj->order()->get(),
+        "order" => Order::where('user_id', $user->id)->first(), 
       ];
     }
     
