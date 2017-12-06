@@ -1,7 +1,7 @@
 <li class="dropdown"><a class="dropdown-toggle" href="{{ site.navPath }}" data-toggle="dropdown">About</a>
   <ul class="dropdown-menu" role="menu">
-    <li><a href="{{ path_for('open.page', { 'category': 'faq' }) }}"><i class="fa fa-question-circle[&#xf059;]"></i> FAQ</a></li>
-    <li><a href="{{ path_for('open.page', { 'category': 'organizers' }) }}"><i class="fa fa-sitemap[&#xf0e8;]"></i> Organizers</a></li>
+    <li><a href="{{ path_for('open.page', { 'category': 'faq' }) }}"><i class="fa fa-question-circle"></i> FAQ</a></li>
+    <li><a href="{{ path_for('open.page', { 'category': 'organizers' }) }}"><i class="fa fa-sitemap"></i> Organizers</a></li>
     <li><a href="{{ path_for('page.press') }}">Press</a></li>
   </ul>
 </li>
@@ -68,19 +68,29 @@
 <li class="dropdown"><a class="dropdown-toggle" href="{{ path_for('participant.home') }}" data-toggle="dropdown"> <span class="icon-key"></span> Participants</a>
   <ul class="dropdown-menu" role="menu">
 {% if auth.isAdmin %}
-    <li class="dropdown"><a class="dropdown-toggle" href="{{ path_for('admin.index') }}" data-toggle="dropdown"><i class="fa fa-cogs[&#xf085;]"></i> Admin</a>
+    <li class="dropdown"><a class="dropdown-toggle" href="{{ path_for('admin.index') }}" data-toggle="dropdown"><i class="fa fa-cogs"></i> Admin</a>
       <ul class="dropdown-menu" role="menu">
-        <li><a href="{{ path_for('admin.index') }}"><i class="fa fa-home[&#xf015;]"></i> Dashboard</a></li>
-        <li><a href="{{ path_for('admin.orders.all') }}"><i class="fa fa-magnet[&#xf076;]"></i> Orders</a></li>
-        <li><a href="{{ path_for('admin.orders.external') }}"><i class="fa fa-magnet[&#xf076;]"></i> External Orders</a></li>
-        <li><a href="{{ path_for('admin.users.all') }}"><i class="fa fa-user[&#xf076;]"></i> Users</a></li>
-        <li><a href="{{ path_for('admin.posts.all') }}"><i class="fa fa-copy[&#xf076;]"></i> Posts</a></li>
+        <li><a href="{{ path_for('admin.index') }}"><i class="fa fa-home"></i> Dashboard</a></li>
+        <li><a href="{{ path_for('admin.orders.all') }}"><i class="fa fa-ticket"></i> Orders</a></li>
+        <li><a href="{{ path_for('admin.orders.external') }}"><i class="fa fa-magnet"></i> External Orders</a></li>
+        <li><a href="{{ path_for('admin.users.all') }}"><i class="fa fa-user"></i> Users</a></li>
+        <li><a href="{{ path_for('admin.posts.all') }}"><i class="fa fa-copy"></i> Posts</a></li>
       </ul>
-    </li>   
+    </li>
+    
+    <li class="dropdown"><a class="dropdown-toggle" href="{{ path_for('admin.index') }}" data-toggle="dropdown"><i class="fa fa-pencil"></i> Writers</a>
+      <ul class="dropdown-menu" role="menu">
+        <li><a href="{{ path_for('admin.character.list') }}"><i class="fa fa-user"></i> Characters</a></li>
+        <li><a href="{{ path_for('admin.group.list') }}"><i class="fa fa-group"></i> Groups</a></li>
+        <li><a href="{{ path_for('admin.plot.list') }}"><i class="fa fa-bullhorn"></i> Plots</a></li>
+        <li><a href="{{ path_for('admin.relation.list') }}"><i class="fa fa-comments-o"></i> Relations</a></li>
+      </ul>
+    </li>
+    
 {% endif %}    
-    <li><a href="{{ path_for('participant.home') }}"><i class="fa fa-home[&#xf015;]"></i> Dashboard</a></li></a></li>
-    <li><a href="{{ path_for('participant.page', { 'page': 'profile' }) }}"><i class="fa fa-user-circle-o[&#xf015;]"></i> Profile</a></li></a></li>
-    <li><a href="{{ path_for('user.logout') }}">logout</a></li>
+    <li><a href="{{ path_for('participant.home') }}"><i class="fa fa-home"></i> Dashboard</a></li></a></li>
+    <li><a href="{{ path_for('participant.page', { 'page': 'profile' }) }}"><i class="fa fa-child"></i> Profile</a></li></a></li>
+    <li><a href="{{ path_for('user.logout') }}"><i class="fa fa-power-off"></i> Logout</a></li>
   </ul>
 </li>
 {% else %}
