@@ -2927,3 +2927,7 @@ Google map
     background-color: #333;
   }
 }
+
+.ingame-name {
+  color: #91e28f !important;
+}
