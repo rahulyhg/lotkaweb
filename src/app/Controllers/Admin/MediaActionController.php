@@ -141,4 +141,20 @@ class MediaActionController extends Controller
     
   #convert $outputfile \( -clone 0 -fill "#00FF00" -colorize 10 \) -compose multiply -composite $outputfile
   }
+  
+  /* utility function for bulk processing of participant profile portraits - only for use at CA
+  public function bulk()
+  {
+    $img_list = preg_grep("~\.(jpeg|jpg|png)$~", scandir('/home/cabox/workspace/lotkaweb/public/assets/portraits/'));
+
+    foreach($img_list as $img) {
+        self::convertPortrait(
+          "/home/cabox/workspace/lotkaweb/public/assets/portraits/$img",
+          "/home/cabox/workspace/lotkaweb/public/assets/portraits/scaled/$img"
+        );
+      
+        echo "<img src='/assets/portraits/scaled/$img'>";
+    }
+  }
+  */
 }

@@ -166,7 +166,7 @@ window.onload = function() {
       }));
   }
   
-  $("#organizers figure img").on('mousemove', function() {
+  $("#organizers figure img, img.portrait").on('mousemove', function() {
     $(this).data('glitch').ones(4);
   }).each(glitchSetup).on('mouseleave', function() {
     $(this).data('glitch').reset();

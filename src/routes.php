@@ -360,5 +360,6 @@ $app->group('/', function () use ($container) {
   $this->get('press', 'HomePageController:press')->setName('page.press');  
   $this->get('ticket/{sku}', 'HomePageController:ticket')->setName('single.ticket');
   $this->post('charge', 'App\Pages\OpenPage:charge');  
+  // $this->get('bulk', 'MediaActionController:bulk'); /* utility function - only for dev. env. use  */
   $this->get('{category}[/{page}]', 'HomePageController:page')->setName('open.page'); //FINAL CATCH ALL
 });
