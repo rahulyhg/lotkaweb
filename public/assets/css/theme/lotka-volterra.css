@@ -485,7 +485,7 @@ svg.loading path.lights {
     filter: grayscale(1);
 }
 
-.work-item > .post a::before {
+.work-item .post-thumbnail > .post a::before {
   content: '';
   height: 270px;
   width: 2em;
@@ -493,6 +493,7 @@ svg.loading path.lights {
   right: 2em;
   top: 0;
   color: transparent;
+  opacity: .75;
   background-size: 3em 3em;
   background-image: -moz-linear-gradient(45deg, transparent 0%, transparent 25%, currentColor 26%, currentColor 50%, transparent 51%, transparent 75%, currentColor 76%);
   background-image: -webkit-gradient(linear, right bottom, , color-stop(0%, transparent), color-stop(25%, transparent), color-stop(26%, currentColor), color-stop(50%, currentColor), color-stop(51%, transparent), color-stop(75%, transparent), color-stop(76%, currentColor));
@@ -501,30 +502,30 @@ svg.loading path.lights {
   background-image: -ms-linear-gradient(45deg, transparent 0%, transparent 25%, currentColor 26%, currentColor 50%, transparent 51%, transparent 75%, currentColor 76%);
   background-image: linear-gradient(45deg, transparent 0%, transparent 25%, currentColor 26%, currentColor 50%, transparent 51%, transparent 75%, currentColor 76%);
 }
-.work-item.maintenance  > .post a::before {
+.work-item.maintenance .post-thumbnail > .post a::before {
   color: #FFF;
 }
-.work-item.surface-operations  > .post a::before {
+.work-item.surface-operations .post-thumbnail > .post a::before {
   color: #FC0;
 }
-.work-item.outpost-command  > .post a::before {
+.work-item.outpost-command .post-thumbnail > .post a::before {
   color: #D00;
 }
-.work-item.mission-control  > .post a::before {
+.work-item.mission-control .post-thumbnail > .post a::before {
   color: #0D0;
 }
-.work-item.medical-personnel  > .post a::before {
+.work-item.medical-personnel .post-thumbnail > .post a::before {
   color: #000;
 }
-.work-item.science-personnel  > .post a::before {
+.work-item.science-personnel .post-thumbnail > .post a::before {
   color: #00D;
 }
-.work-item.counselors  > .post a::before {
+.work-item.counselors .post-thumbnail > .post a::before {
   color: #0CD;
 }
-.work-item.internal-security  > .post a::before {
+.work-item.internal-security .post-thumbnail > .post a::before {
   color: #DF0;
 }
-.work-item.quartermasters  > .post a::before {
+.work-item.quartermasters .post-thumbnail > .post a::before {
   color: #0CC;
 }
