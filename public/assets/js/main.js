@@ -291,6 +291,7 @@
                 }
             });
 
+            $("#player_filter").val('');
             return false;
         });
       
