@@ -490,7 +490,7 @@ svg.loading path.lights {
   height: 270px;
   width: 2em;
   position: absolute;
-  right: 2em;
+  right: 1.2em;
   top: 0;
   color: transparent;
   opacity: .75;
@@ -502,7 +502,7 @@ svg.loading path.lights {
   background-image: -ms-linear-gradient(45deg, transparent 0%, transparent 25%, currentColor 26%, currentColor 50%, transparent 51%, transparent 75%, currentColor 76%);
   background-image: linear-gradient(45deg, transparent 0%, transparent 25%, currentColor 26%, currentColor 50%, transparent 51%, transparent 75%, currentColor 76%);
 }
-.maintenance.work-item > div > div.post-thumbnail::after         {  color: #FFF; }
+.maintenance.work-item > div > div.post-thumbnail::after         {  color: #FFF; opacity: 1; background-color: #000; }
 .surface-operations.work-item > div > div.post-thumbnail::after  {  color: #FC0; }
 .outpost-command.work-item > div > div.post-thumbnail::after     {  color: #D00; }
 .mission-control.work-item > div > div.post-thumbnail::after     {  color: #0D0; }
