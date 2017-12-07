@@ -293,6 +293,33 @@
 
             return false;
         });
+      
+        $("#player_filter").on("input", function () {
+          var search_string = $(this).val().toLowerCase();
+
+          worksgrid.isotope({ 
+            filter: function() {
+              var name = $(this).text().toLowerCase();
+
+              console.log("filter", $(this), search_string, name)
+
+              return name.match(search_string);
+            },
+            animationOptions: {
+              duration: 750,
+              easing: 'linear',
+              queue: false
+            }            
+          });
+          
+        });
+
+        function textFilter(string, selector) {
+            selector = selector || "";
+            $(selector + ":contains(" + string + ")").each(function(){
+              
+            });
+        }
 
 
         /* ---------------------------------------------- /*
