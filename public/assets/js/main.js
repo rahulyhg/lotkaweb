@@ -301,9 +301,6 @@
           worksgrid.isotope({ 
             filter: function() {
               var name = $(this).text().toLowerCase();
-
-              console.log("filter", $(this), search_string, name)
-
               return name.match(search_string);
             },
             animationOptions: {
