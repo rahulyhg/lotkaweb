@@ -201,15 +201,22 @@ $app->group('/admin', function() use ($container) {
   
   //Tasks
   $this->group('/tasks', function() {
-    $this->get('', 'TaskActionController:index')->setName('admin.tasks.all');
+    $this->get('', 'TaskActionController:index')->setName('admin.tasks');
+    $this->get('/all', 'TaskActionController:allTasks')->setName('admin.tasks.all');
+    $this->get('/done', 'TaskActionController:doneTasks')->setName('admin.tasks.done');
+    $this->get('/blocked', 'TaskActionController:blockedTasks')->setName('admin.tasks.blocked');
     
-    $this->get('/add', 'TaskActionController:add')->setName('admin.task.add');
+    $this->get('/add[/{uid}]', 'TaskActionController:add')->setName('admin.task.add');
     $this->post('/add', 'TaskActionController:postAdd');
     
     $this->get('/{uid}/edit', 'TaskActionController:edit')->setName('admin.task.edit');
     $this->post('/{uid}/edit', 'TaskActionController:postEdit');
 
     $this->get('/{uid}/delete', 'TaskActionController:delete')->setName('admin.task.delete');
+    
+    $this->get('/{uid}/start', 'TaskActionController:startTask')->setName('admin.task.start');    
+    $this->get('/{uid}/complete', 'TaskActionController:completeTask')->setName('admin.task.complete');    
+    $this->get('/{uid}/blocked', 'TaskActionController:blockedTask')->setName('admin.task.blocked');    
   });
   
   //Posts

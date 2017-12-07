@@ -15,6 +15,7 @@
 {% endblock %}
 
 {% block content %}
+  {% set status_levels = ['btn-info', 'btn-success', 'btn-warning', 'btn-danger'] %}
   <div class="container-fluid">
     <hr>
     <div class="row-fluid">
@@ -36,15 +37,25 @@
               </thead>
               <tbody>
                 {% for task in userData.todos %}
-                <tr class="gradeA{% if "now"|date('Y-m-d') > post.due_date|date('Y-m-d') %} bg-lr{% endif %}">
-                  <td class="center">{{ loop.index }}</td>
-                  <td>{{ task.title }}</td>
+                <tr class="gradeA" {% if "now"|date('Y-m-d') > task.due_date|date('Y-m-d') and task.status != 1 %}style="box-shadow: inset 0 0 0 0.5em red;"{% endif %}>
+                  <td>{{ loop.index }}</td>
+                  <td><a href="{{ path_for('admin.task.edit', { 'uid': task.id }) }}">{{ task.title }}</a></td>
                   <td>{{ task.description }}</td>
-                  <td>{{ task.due_date }}</td>
+                  <td class="{{ status_levels[task.status] }} taskOptions">{{ task.due_date }}</td>
 
                   <td class="center">
                     <a href="{{ path_for('admin.task.edit', { 'uid': task.id }) }}" class="btn btn-default" title="Edit Task"><i class="icon-edit"></i></a>
                     <a href="{{ path_for('admin.task.delete', { 'uid': task.id }) }}" class="btn btn-danger" title="Delete Task"><i class="icon-remove"></i></a>
+                    &nbsp;
+                    {% if task.status == 0 or task.status == 3 %}
+                    <a href="{{ path_for('admin.task.start', { 'uid': task.id }) }}" class="btn btn-warning" title="Start Task"><i class="icon-play"></i></a>
+                    {% endif %}
+                    {% if task.status == 2 %}
+                    <a href="{{ path_for('admin.task.complete', { 'uid': task.id }) }}" class="btn btn-success" title="Complete Task"><i class="icon-check"></i></a>
+                    {% endif %}
+                    {% if task.status == 2 or task.status == 0 %}
+                    <a href="{{ path_for('admin.task.blocked', { 'uid': task.id }) }}" class="btn btn-danger" title="Complete Task"><i class="icon-warning-sign"></i></a>
+                    {% endif %}
                   </td>
                 </tr>
                 {% endfor %}
