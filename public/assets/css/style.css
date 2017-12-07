@@ -2952,7 +2952,7 @@ Google map
   width: 100px;
   display: block;
   background: #79A70A;
-  background: linear-gradient(#F0D000 0%, #FABF1E 100%);
+  background: linear-gradient(#EB00EB 0%, #9F28A7 100%);
   box-shadow: 0 3px 10px -5px rgba(0, 0, 0, 1);
   position: absolute;
   top: 19px; left: -21px;
@@ -2961,17 +2961,17 @@ Google map
   content: "";
   position: absolute; left: 0px; top: 100%;
   z-index: -1;
-  border-left: 3px solid #FABF1E;
+  border-left: 3px solid #9F28A7;
   border-right: 3px solid transparent;
   border-bottom: 3px solid transparent;
-  border-top: 3px solid #FABF1E;
+  border-top: 3px solid #9F28A7;
 }
 .ribbon span::after {
   content: "";
   position: absolute; right: 0px; top: 100%;
   z-index: -1;
   border-left: 3px solid transparent;
-  border-right: 3px solid #FABF1E;
+  border-right: 3px solid #9F28A7;
   border-bottom: 3px solid transparent;
-  border-top: 3px solid #FABF1E;
+  border-top: 3px solid #9F28A7;
 }
