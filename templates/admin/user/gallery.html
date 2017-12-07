@@ -27,7 +27,7 @@
             {% for user in users %}
               <figure>
                 <a href="{{ path_for('admin.user.edit', { 'uid': user.data.username }) }}">
-                  <img src="/assets/{{ user.attr.portrait ? 'portraits/' ~ user.attr.portrait : 'images/logos/lotka-volterra-logo.svg'}}" class="{{user.attr.portrait ? '' : 'unloaded' }}">
+                  <img src="/assets/{{ user.attr.portrait ? 'portraits/scaled/' ~ user.attr.portrait : 'images/logos/lotka-volterra-logo.svg'}}" class="{{user.attr.portrait ? '' : 'unloaded' }}">
                 </a>
                 <figcaption class="font-alt">
                   <a href="{{ path_for('admin.user.edit', { 'uid': user.data.username }) }}">{{ user.data.displayname }}</a>
