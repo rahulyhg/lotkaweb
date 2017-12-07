@@ -28,7 +28,8 @@ class ParticipantPageController extends Controller
  
   private function getPlayersInfo() {
     $role = $this->container->sentinel->findRoleBySlug('participant');
-    $users = $role->users()->get();
+    $users = $role->users()->orderBy('displayname', 'ASC')->get();
+    
     foreach ($users as $user) {        
       $user_obj = User::where('id', $user->id)->first();
       $user_list[] = [
