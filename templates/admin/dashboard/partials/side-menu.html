@@ -3,6 +3,24 @@
     <a href="{{ path_for('admin.index') }}"><i class="icon icon-home"></i> <span>Dashboard</span></a>
   </li>
 
+  <li class="submenu {{ [path_for('admin.tasks'),path_for('admin.tasks.all'),path_for('admin.tasks.done'),path_for('admin.task.add'),]|isActive }}">
+    <a href="{{ path_for('admin.tasks') }}">
+      <i class="icon icon-th-list"></i> <span>Tasks</span> <span class="label label-important"></span>
+    </a>
+    <ul>
+      <li class="{{ path_for('admin.tasks.blocked')|isActive }}">
+        <a href="{{ path_for('admin.tasks.blocked') }}">Blocked</a> <span class="label label-important"></span></li>      
+      <li class="{{ path_for('admin.tasks')|isActive }}">
+        <a href="{{ path_for('admin.tasks') }}">ToDo</a></li>
+      <li class="{{ path_for('admin.tasks.all')|isActive }}">
+        <a href="{{ path_for('admin.tasks.all') }}">All</a></li>
+      <li class="{{ path_for('admin.tasks.done')|isActive }}">
+        <a href="{{ path_for('admin.tasks.done') }}">Done</a></li>
+      <li class="{{ path_for('admin.task.add')|isActive }}">
+        <a href="{{ path_for('admin.task.add') }}"><i class="icon-plus-sign"></i> <span>New task</span> </a></li>
+    </ul>
+  </li>
+  
   <li class="submenu {{ [path_for('admin.orders.all'),path_for('admin.orders.attested'),path_for('admin.orders.unattested'),path_for('admin.orders.partial'),path_for('admin.order.add'),path_for('admin.orders.multiples')]|isActive }}">
     <a href="{{ path_for('admin.orders.all') }}">
       <i class="icon icon-money"></i> <span>Orders</span> <span class="label label-important"></span>

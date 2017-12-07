@@ -16,115 +16,57 @@
 {% endblock %}
 
 {% block content %}
+  {% set status_levels = ['btn-info', 'btn-success', 'btn-warning', 'btn-danger'] %}
   <div class="container-fluid">
-   <hr>
+    <hr>
     <div class="row-fluid">
       <div class="span12">
-        <div class="widget-box widget-calendar">
-          <div class="widget-title"> <span class="icon"><i class="icon-calendar"></i></span>
-            <h5>Calendar</h5>
-            <div class="buttons"> <a id="add-event" data-toggle="modal" href="#modal-add-event" class="btn btn-inverse btn-mini"><i class="icon-plus icon-white"></i> Add new task</a>
-            </div>
+        <div class="widget-box">
+          <div class="widget-title"> <span class="icon"><i class="icon-th"></i></span>
+            <h5>Tasks</h5>
           </div>
-          <div class="widget-content">
-            <div class="panel-left">
-              <div id="fullcalendar"></div>
-            </div>
-            <div id="external-events" class="panel-right">
-              <div class="panel-title">
-                <h5>Drag Events to the calander</h5>
-              </div>
-              <div class="panel-content">
-                <div class="external-event ui-draggable label label-inverse">My Event 1</div>
-                <div class="external-event ui-draggable label label-inverse">My Event 2</div>
-                <div class="external-event ui-draggable label label-inverse">My Event 3</div>
-                <div class="external-event ui-draggable label label-inverse">My Event 4</div>
-                <div class="external-event ui-draggable label label-inverse">My Event 5</div>
-              </div>
-            </div>
+          <div class="widget-content nopadding">
+            <table class="table table-bordered data-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Title</th>
+                  <th>Assignee</th>
+                  <th>Description</th>
+                  <th>Due Date</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>                
+                {% for task in tasks %}
+                <tr class="gradeA" {% if "now"|date('Y-m-d') > task.due_date|date('Y-m-d') and task.status != 1 %}style="box-shadow: inset 0 0 0 0.5em red;"{% endif %}>
+                  <td>{{ loop.index }}</td>
+                  <td><a href="{{ path_for('admin.task.edit', { 'uid': task.id }) }}">{{ task.title }}</a></td>
+                  <td><a href="{{ path_for('admin.user.edit', { 'uid': task.user_link }) }}">{{ task.user_name }}</a></td>
+                  <td>{{ task.description }}</td>
+                  <td class="{{ status_levels[task.status] }} taskOptions">{{ task.due_date }}</td>
+
+                  <td class="center">
+                    <a href="{{ path_for('admin.task.edit', { 'uid': task.id }) }}" class="btn btn-default" title="Edit Task"><i class="icon-edit"></i></a>
+                    <a href="{{ path_for('admin.task.delete', { 'uid': task.id }) }}" class="btn btn-danger" title="Delete Task"><i class="icon-remove"></i></a>
+                    &nbsp;
+                    {% if task.status == 0 or task.status == 3 %}
+                    <a href="{{ path_for('admin.task.start', { 'uid': task.id }) }}" class="btn btn-warning" title="Start Task"><i class="icon-play"></i></a>
+                    {% endif %}
+                    {% if task.status == 2 %}
+                    <a href="{{ path_for('admin.task.complete', { 'uid': task.id }) }}" class="btn btn-success" title="Complete Task"><i class="icon-check"></i></a>
+                    {% endif %}
+                    {% if task.status == 2 or task.status == 0 %}
+                    <a href="{{ path_for('admin.task.blocked', { 'uid': task.id }) }}" class="btn btn-danger" title="Complete Task"><i class="icon-warning-sign"></i></a>
+                    {% endif %}
+                  </td>
+                </tr>
+                {% endfor %}                
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
-    </div>
-  </div>
-
-  <div class="modal hide" id="modal-add-event">
-    <div class="modal-header">
-      <button type="button" class="close" data-dismiss="modal">×</button>
-      <h3>Add a new task</h3>
-    </div>
-    <div class="modal-body">
-
-      <div class="row-fluid">
-        <div class="control-group">
-          <label class="control-label">Title :</label>
-          <div class="controls">
-            <input type="text" class="span11" name="title" placeholder="Task Title" value="">
-          </div>
-        </div>
-
-        <div class="control-group">
-          <label class="control-label">Description:</label>
-          <div class="controls">
-            <textarea class="span11" name="description" rows="11"></textarea>
-          </div>
-        </div>
-
-        <div class="control-group">
-          <label class="control-label">Priority :</label>
-          <div class="controls">
-            <input type="range" class="span11" name="priority" value="50" max="100" min="0" step="10">
-          </div>
-        </div>  
-
-        <div class="control-group">
-          <label class="control-label">Due Date :</label>
-          <div class="controls">
-            <div  data-date="0000-00-00 00:00:00" class="input-append date datepicker">
-              <input type="datetime-local" name="due_date" value="0000-00-00 00:00:00" class="span11" >
-              <span class="add-on"><i class="icon-th"></i></span> </div>
-          </div>
-        </div>
-
-        <div class="control-group">
-          <label class="control-label">Assign To :</label>
-          <div class="controls">
-            <select name="user_id">
-              <option value=""> - No Assigned user - </option>
-            {% for user in users %}
-              <option value="{{ user.id }}" {% if user.id == current.data.user_id %}selected="selected"{% endif %}>
-                {{ user.displayname }}
-              </option>
-            {% endfor %}
-            </select>
-          </div>
-        </div>
-
-        <div class="control-group">
-          <label for="checkboxes" class="control-label">Status :</label>
-          <div class="controls">
-            <div data-toggle="buttons-radio" class="btn-group">
-              <label class="btn btn-info active">
-                 <input type="radio" name="status" checked value="0"> Not Started
-              </label>    
-              <label class="btn btn-success">
-                <input type="radio" name="status" value="1">Completed
-              </label>
-              <label class="btn btn-warning">
-                <input type="radio" name="status" value="2">In Progress
-              </label>
-              <label class="btn btn-danger">
-                <input type="radio" name="status" value="3">Blocked
-              </label>
-            </div>
-          </div>
-        </div>
-
-      </div>      
-    </div>
-    <div class="modal-footer"> 
-      <a href="#" class="btn" data-dismiss="modal">Cancel</a> 
-      <a href="#" id="add-event-submit" class="btn btn-primary">Add task</a> 
     </div>
   </div>
 {% endblock %}

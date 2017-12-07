@@ -6,7 +6,7 @@
   <div id="content-header">
     <div id="breadcrumb"> 
       <a href="{{ path_for('admin.index') }}" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a> 
-      <a href="{{ path_for('admin.tasks.all') }}">Tasks</a> 
+      <a href="{{ path_for('admin.tasks') }}">Tasks</a> 
       <a href="#" class="current">{{current.data.title|default('New Task')}}</a> 
     </div>
     
@@ -51,8 +51,8 @@
             <div class="control-group">
               <label class="control-label">Due Date :</label>
               <div class="controls">
-                <div  data-date="{% if current.data.due_date and current.data.due_date != '0000-00-00 00:00:00' %}{{ current.data.due_date }}{% endif %}" class="input-append date datepicker">
-                  <input type="datetime-local" name="due_date" value="{% if current.data.due_date and current.data.due_date != '0000-00-00 00:00:00' %}{{ current.data.due_date }}{% endif %}" class="span11" >
+                <div  data-date="{% if current.data.due_date and current.data.due_date != '0000-00-00T00:00:00' %}{{ current.data.due_date }}{% endif %}" class="input-append date datepicker">
+                  <input type="datetime-local" name="due_date" value="{% if current.data.due_date and current.data.due_date != '0000-00-00 00:00:00' %}{{ current.data.due_date }}{% else %}{{ "now"|date('Y-m-d') ~ 'T00:00:00' }}{% endif %}" class="span11" >
                   <span class="add-on"><i class="icon-th"></i></span> </div>
               </div>
             </div>
@@ -78,14 +78,14 @@
                   <label class="btn btn-info{% if current.data.status == 0 or not current.data.status %} active{% endif %}">
                      <input type="radio" name="status" value="0" {% if current.data.status == 0 or not current.data.status %}checked{% endif %}> Not Started
                   </label>    
-                  <label class="btn btn-success{% if current.data.status == 1 %} active{% endif %}">
-                    <input type="radio" name="status" value="1" {% if current.data.status == 1 %}checked{% endif %}>Completed
-                  </label>
                   <label class="btn btn-warning{% if current.data.status == 2 %} active{% endif %}">
                     <input type="radio" name="status" value="2" {% if current.data.status == 2 %}checked{% endif %}>In Progress
                   </label>
                   <label class="btn btn-danger{% if current.data.status == 3 %} active{% endif %}">
                     <input type="radio" name="status" value="3" {% if current.data.status == 3 %}active{% endif %}>Blocked
+                  </label>
+                  <label class="btn btn-success{% if current.data.status == 1 %} active{% endif %}">
+                    <input type="radio" name="status" value="1" {% if current.data.status == 1 %}checked{% endif %}>Completed
                   </label>
                 </div>
               </div>
