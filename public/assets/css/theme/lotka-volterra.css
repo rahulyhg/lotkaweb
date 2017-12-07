@@ -490,7 +490,7 @@ svg.loading path.lights {
   height: 270px;
   width: 2em;
   position: absolute;
-  right: 1.2em;
+  left: calc(270px - 2em);
   top: 0;
   color: transparent;
   opacity: .75;
