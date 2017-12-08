@@ -312,13 +312,45 @@
           
         });
 
-        function textFilter(string, selector) {
-            selector = selector || "";
-            $(selector + ":contains(" + string + ")").each(function(){
-              
-            });
+        if ($('.table-like').length) {
+          var $table = $('.table-like').isotope({
+            layoutMode: 'vertical',
+            getSortData: {
+              name: '.character-name',
+              player: '.player',
+              country: '.country',
+              team: '.team',
+              shift: '.shift'
+            }
+          });          
         }
+      
+        $("#player_filter_table").on("input", function () {
+          var search_string = $(this).val().toLowerCase();
 
+          $table.isotope({ 
+            filter: function() {
+              var txt = $(this).text().toLowerCase();
+              
+              console.log($(this), $(this).hasClass('header') )
+              
+              return $(this).hasClass('header') || txt.match(search_string);
+            },
+            animationOptions: {
+              duration: 750,
+              easing: 'linear',
+              queue: false
+            }            
+          });
+          
+        });      
+
+        $(".table-like__item.header div").on("click", function () {
+          var sortValue = $(this).data('sort-value');
+          $table.isotope({ sortBy: sortValue });
+          $(".table-like__item.header div").removeClass("active");
+          $(this).addClass("active");
+        });
 
         /* ---------------------------------------------- /*
          * Testimonials

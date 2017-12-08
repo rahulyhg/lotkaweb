@@ -149,8 +149,6 @@ $container[App\API\Names::class]        = function ($c) { return new \App\API\Na
 $container[App\Pages\OpenPage::class]   = function ($c) { return new \App\Pages\OpenPage($c); };
 
 $container['HomePageController']        = function($c) { return new \App\Controllers\Page\HomePageController($c); };
-$container['ParticipantPageController'] = function($c) { return new \App\Controllers\Page\Participant\ParticipantPageController($c); };
-$container['OnboardingPageController']  = function($c) { return new \App\Controllers\Page\Participant\OnboardingPageController($c); };
 
 // Admin
 $container['AuthController']            = function($c) { return new \App\Controllers\Auth\AuthController($c); };
@@ -171,5 +169,13 @@ $container['CharacterActionController'] = function($c) { return new \App\Control
 $container['GroupActionController']     = function($c) { return new \App\Controllers\Admin\Participants\GroupActionController($c); };
 $container['PlotActionController']      = function($c) { return new \App\Controllers\Admin\Participants\PlotActionController($c); };
 $container['RelationActionController']  = function($c) { return new \App\Controllers\Admin\Participants\RelationActionController($c); };
+
+// Participant pages
+$container['ParticipantPageController'] = function($c) { return new \App\Controllers\Page\Participant\ParticipantPageController($c); };
+$container['OnboardingPageController']  = function($c) { return new \App\Controllers\Page\Participant\OnboardingPageController($c); };
+$container['PlayersPageController']     = function($c) { return new \App\Controllers\Page\Participant\PlayersPageController($c); };
+$container['GroupPageController']       = function($c) { return new \App\Controllers\Page\Participant\GroupPageController($c); };
+$container['PlotPageController']        = function($c) { return new \App\Controllers\Page\Participant\PlotPageController($c); };
+$container['RelationPageController']    = function($c) { return new \App\Controllers\Page\Participant\RelationPageController($c); };
 
 

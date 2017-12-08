@@ -4,6 +4,8 @@
 
 {% block headCover %}{% endblock %}
 
+{% block mainClass %}{% endblock %}
+
 {% block content %}
 <div class="col-sm-8 col-sm-offset-2">
     {{ include(template_from_string(post.content|raw)) }}

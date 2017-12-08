@@ -2,6 +2,11 @@
 
 namespace App\Controllers;
 
+use App\Models\Post;
+use App\Models\User;
+use App\Models\Order;
+use App\Models\Attribute;
+
 class Controller
 {
   protected $container;
@@ -34,5 +39,47 @@ class Controller
       }
     }        
     return $a;
-  }  
+  }
+  
+  # Helpers
+  public function render($slug, $info, $response) {
+    $participant = self::getCurrentUser();
+    $post = Post::where('slug', $slug)
+      ->visibleTo(['participant', 'admin'])
+      ->published()->first();
+    
+    if(!$post) die("Template '$slug' is missing, have a nice day.");
+    
+    $this->container->view->getEnvironment()->addGlobal(
+      $info['key'], $info['data']
+    );
+    
+    return $this->view->render($response, '/new/participant/page.html', [
+      'post' => $post,
+      'current' => $participant
+    ]);
+  }
+  
+  public function getPlayerInfo($uid) {
+    $user_data = User::where('id', $uid)->first();
+
+    return $user_data? [
+      "user" => $user_data,
+      "attributes" => self::mapAttributes( $user_data->attr ),
+      "order" => Order::where('user_id', $user_data->id)->first()
+    ] : [];
+  }
+  
+  public function getCurrentUser() {
+    $participant = User::where(
+      'username',
+      $this->container->sentinel->getUser()->username
+    )->first();
+    
+    return [
+      "user" => $participant,
+      "attributes" => self::mapAttributes( $participant->attr ),
+      "order" => Order::where('user_id', $participant->id)->first()
+    ];
+  }    
 }
