@@ -16,27 +16,14 @@ use App\Controllers\Controller;
 use Slim\Views\Twig as View;
 
 class ParticipantPageController extends Controller
-{
-  private function getCurrentUser() {
-    $participant = User::where('username', $this->container->sentinel->getUser()->username)->first();
-    
-    return [
-      "user" => $participant,
-      "attributes" => self::mapAttributes( $participant->attr ),
-    ];
-  }
- 
+{ 
   private function getPlayersInfo() {
     $role = $this->container->sentinel->findRoleBySlug('participant');
     $users = $role->users()->orderBy('displayname', 'ASC')->get();
-    
+    $user_list = [];
+      
     foreach ($users as $user) {        
-      $user_obj = User::where('id', $user->id)->first();
-      $user_list[] = [
-        "user" => $user_obj,
-        "attributes" => self::mapAttributes( $user_obj->attr ),
-        "order" => Order::where('user_id', $user->id)->first(), 
-      ];
+      $user_list[] = self::getPlayerInfo($user->id);
     }
     
     return $user_list;
@@ -55,20 +42,134 @@ class ParticipantPageController extends Controller
     return [];
   }
   
-  public function index($request, $response, $arguments)
+  public function index($request, $response, $arguments) // Dashboard
   {
     $participant = self::getCurrentUser();
     
     if(!isset($participant["attributes"]["onboarding_complete"])) {
-      return $response->withRedirect($this->router->pathFor('participant.onboarding', ['hash' => $participant["user"]->hash]));      
+      return $response->withRedirect($this->router->pathFor('participant.onboarding', ['hash' => $participant["user"]->hash]));
     }
+    
+    //Dashboard sections
+    $this->container->view->getEnvironment()->addGlobal('dashboard', [
+      'sections' => [
+        /*
+          'profile' => [
+            'title' => 'My Profile',
+            'target' => $this->router->pathFor('participant.page', ['page' => 'profile']),
+          ],
+        */
+          'characters' => [
+            'title' => 'Characters',
+            'target' => $this->router->pathFor('participant.character.list'),
+            'pages' => [
+              'my' => [
+                'title' => 'My Character',
+                'target' => $this->router->pathFor('participant.character.my'),
+                'info' => 'My character page',
+              ],              
+              'characters' => [
+                'title' => 'Character List',
+                'target' => $this->router->pathFor('participant.character.list'),
+                'info' => 'Get the characters in list form',
+              ],
+              'gallery' => [
+                'title' => 'Character Gallery',
+                'target' => $this->router->pathFor('participant.character.gallery'),
+                'info' => 'Character profile images',
+              ],
+            ]
+          ],
+          'players' => [
+            'title' => 'Players',
+            'target' => $this->router->pathFor('participant.player.list'),
+            'pages' => [
+              'players' => [
+                'title' => 'Player List',
+                'target' => $this->router->pathFor('participant.player.list'),
+                'info' => 'Participant list',
+              ],
+              'gallery' => [
+                'title' => 'Player Gallery',
+                'target' => $this->router->pathFor('participant.player.gallery'),
+                'info' => 'Participant profile image gallery',
+              ],
+            ]
+          ],
+          'relationships' => [
+            'title' => 'Relationships',
+            'target' => $this->router->pathFor('participant.relation.list'),
+            'pages' => [
+              'my' => [
+                'title' => 'My Relationships',
+                'target' => $this->router->pathFor('participant.relation.my'),
+                'info' => 'My characters relationships',
+              ],
+              'list' => [
+                'title' => 'Relationships',
+                'target' => $this->router->pathFor('participant.relation.list'),
+                'info' => 'Public relationships',
+              ],
+             'pending' => [
+                'title' => 'Pending Relationships',
+                'target' => $this->router->pathFor('participant.relation.pending'),
+                'info' => 'Your pending relationships and public relationship requests',
+              ],              
+            ]
+          ],
+          'plots' => [
+            'title' => 'Plots',
+            'target' => $this->router->pathFor('participant.plot.list'),
+            'pages' => [
+              'my' => [
+                'title' => 'My Plots',
+                'target' => $this->router->pathFor('participant.plot.my'),
+                'info' => 'My characters plots, and plots that my team or groups are involved in',
+              ],
+              'list' => [
+                'title' => 'Plots',
+                'target' => $this->router->pathFor('participant.plot.list'),
+                'info' => 'Public plots list',
+              ],
+            ]
+          ],
+          'groups' => [
+            'title' => 'Groups',
+            'target' => $this->router->pathFor('participant.group.list'),
+            'pages' => [
+              'my' => [
+                'title' => 'My Groups',
+                'target' => $this->router->pathFor('participant.group.my'),
+                'info' => 'Groups that I\'m part of',
+              ],
+              'list' => [
+                'title' => 'Groups',
+                'target' => $this->router->pathFor('participant.group.list'),
+                'info' => 'Public groups',
+              ],
+            ]
+          ],
+          'schedules' => [
+            'title' => 'Schedules',
+            'target' => '#', #$this->router->pathFor('participant.schedule.list'),
+            'pages' => [
+              'my' => [
+                'title' => 'My Schedule (TODO)',
+                'target' => '#', #$this->router->pathFor('participant.group.my'),
+                'info' => 'My work schedule',
+              ],
+              'list' => [
+                'title' => 'Schedules (TODO)',
+                'target' => '#', #$this->router->pathFor('participant.group.list'),
+                'info' => 'Schedule lists',
+              ],
+            ]
+          ],
+        ],
+    ]);
     
     return $this->view->render($response, '/new/participant/dashboard.html', [
       'current' => $participant,
-      'sections' => Post::whereIn('slug', [
-                      'players','relationships','character',
-                      'plots','groups','schedules','profile'
-                    ])->get(),
     ]);
   }
 

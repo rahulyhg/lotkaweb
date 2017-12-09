@@ -1918,6 +1918,7 @@ Google map
   -webkit-transform: scale(1.1) rotate(2deg);
   -ms-transform: scale(1.1) rotate(2deg);
   transform: scale(1.1) rotate(2deg);
+	opacity: .25;
 }
 
 .work-item:hover .work-caption {
@@ -1935,7 +1936,7 @@ Google map
 }
 
 .works-grid.works-hover-w .work-item:hover .work-image:after {
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(15,15,15,.5);
 }
 
 /* Work item gradien background*/

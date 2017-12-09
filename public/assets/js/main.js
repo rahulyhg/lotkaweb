@@ -278,6 +278,9 @@
         });
 
         $('#filters a').click(function() {
+            if(!$(this).data("filter"))
+              return;
+          
             $('#filters .current').removeClass('current');
             $(this).addClass('current');
             var selector = $(this).attr('data-filter');

@@ -39,6 +39,17 @@ class RelationPageController extends Controller
     );
   }
   
+  public function pending($request, $response, $arguments){
+    return self::render(
+      "relations-pending", 
+      [
+        "key" => "relations", 
+        "data" => [], #self::getPendingRalationsInfo()
+      ], 
+      $response
+    );
+  }
+  
   public function add($request, $response, $arguments){
     return "TODO : add";
   }
