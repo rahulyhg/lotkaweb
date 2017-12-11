@@ -177,5 +177,6 @@ $container['PlayersPageController']     = function($c) { return new \App\Control
 $container['GroupPageController']       = function($c) { return new \App\Controllers\Page\Participant\GroupPageController($c); };
 $container['PlotPageController']        = function($c) { return new \App\Controllers\Page\Participant\PlotPageController($c); };
 $container['RelationPageController']    = function($c) { return new \App\Controllers\Page\Participant\RelationPageController($c); };
-$container['CharacterPageController']    = function($c) { return new \App\Controllers\Page\Participant\CharacterPageController($c); };
+$container['CharacterPageController']   = function($c) { return new \App\Controllers\Page\Participant\CharacterPageController($c); };
+$container['SchedulePageController']    = function($c) { return new \App\Controllers\Page\Participant\SchedulePageController($c); };
 

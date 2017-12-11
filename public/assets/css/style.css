@@ -1877,6 +1877,9 @@ Google map
   display: block;
   overflow: hidden;
   width: 100%;
+	object-fit: cover; /* Do not scale the image */
+	object-position: center; /* Center the image within the element */    
+	max-height: 260px;
 }
 
 .work-image:after {

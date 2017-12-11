@@ -101,7 +101,8 @@
       
       <div class="main">
         {% block headCover %}
-        {{ include('new/partials/headcover.html') }}
+        {{ include('new/partials/headcover.html') }}   
+        {{ include('/new/partials/fragments/flash.html') }}
         {% endblock %}
         <section class="module{% block mainClass %}{% endblock %}">
           <div class="container">

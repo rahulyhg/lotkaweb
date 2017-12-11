@@ -23,6 +23,20 @@ use Slim\Views\Twig as View;
 class OnboardingPageController extends Controller
 {
   
+  private function getParticipantFromHash($arguments) {
+    $user_hash = filter_var($arguments['hash'], FILTER_SANITIZE_STRING);
+    $user = User::where('hash', $user_hash)->first();
+    $participant = [];
+      
+    if($user) {
+      $participant["user"] = $user;
+      $participant["attributes"] = self::mapAttributes($user->attr);
+      $participant["hash"] = $user_hash;
+    }
+    
+    return $participant;
+  }
+  
   private function sendEmail($recipient, $subject, $body, $vars) {
     $mail = new Sender($this->container->get('settings'));
     return $mail->send($recipient, $subject, $body, $vars);
@@ -204,15 +218,6 @@ class OnboardingPageController extends Controller
       
       //die($directory . "scaled" . DIRECTORY_SEPARATOR . $filename);
     }
-  }  
-  
-  private function getCurrentUser($hash) {
-    $participant = User::where('hash', $hash)->first();
-    
-    return $participant ? [
-      "user" => $participant,
-      "attributes" => self::mapAttributes( $participant->attr ),
-    ] : false;
   }
   
   private function getStageData($arguments, $participant) {
@@ -233,10 +238,9 @@ class OnboardingPageController extends Controller
   
   public function onboarding($request, $response, $arguments)
   {    
-    $user_hash = filter_var($arguments['hash'], FILTER_SANITIZE_STRING);
-    $participant = self::getCurrentUser($user_hash);
-    
-    if(!$participant["user"] || isset($participant["attributes"]["onboarding_complete"])) {
+    $participant = self::getParticipantFromHash($arguments);
+          
+    if(!$participant["user"] || isset($participant["attributes"]["onboarding_complete"])) {      
       $this->flash->addMessage(
         'error', 
         "Sorry, this participant could not be found for onboarding or the link has allready been used."
@@ -289,16 +293,15 @@ class OnboardingPageController extends Controller
       'stages_total' => $stage_data['total'],
       'stage' => $stage,
       'participant' => $participant,
-      'hash' => $user_hash,
+      'hash' => $participant["hash"],
     ]);
   }
   
   public function save($request, $response, $arguments)
   {
-    $user_hash = filter_var($arguments['hash'], FILTER_SANITIZE_STRING);
-    $participant = self::getCurrentUser($user_hash);
+    $participant = self::getParticipantFromHash($arguments);
     
-    if(!$participant) {
+    if(!$participant["user"]) {
       return $response->withRedirect($this->router->pathFor('home'));
     }
     
@@ -347,9 +350,8 @@ class OnboardingPageController extends Controller
       };      
     }
     
-    return $response->withRedirect($this->router->pathFor(
-      'participant.onboarding', 
-      ['hash' => $user_hash, 'stage' => $participant['attributes']['onboarding_stage']]
+    return $response->withRedirect($this->router->pathFor('participant.onboarding', 
+      ['hash' => $participant["hash"], 'stage' => $participant['attributes']['onboarding_stage']]
     ));
   }  
 }

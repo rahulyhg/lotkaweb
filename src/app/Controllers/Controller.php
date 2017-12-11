@@ -76,10 +76,10 @@ class Controller
       $this->container->sentinel->getUser()->username
     )->first();
     
-    return [
+    return $participant ? [
       "user" => $participant,
       "attributes" => self::mapAttributes( $participant->attr ),
       "order" => Order::where('user_id', $participant->id)->first()
-    ];
+    ] : [];
   }    
 }

@@ -361,116 +361,124 @@ $app->group('/welcome/', function () {
 $app->group('/participants', function () { 
   $this->get('[/]', 'ParticipantPageController:index')->setName('participant.home');
   
-    //Characters
-    $this->group('/characters', function () {
-      $this->get('[/]',       'CharacterPageController:index')
-        ->setName('participant.character.list');
-      $this->get('/my',       'CharacterPageController:my')
-        ->setName('participant.character.my');      
-      $this->get('/gallery',  'CharacterPageController:gallery')
-        ->setName('participant.character.gallery');
-      $this->get('/{uid}[/]', 'CharacterPageController:character')
-        ->setName('participant.character');
-    });
+  //Characters
+  $this->group('/characters', function () {
+    $this->get('[/]',       'CharacterPageController:index')
+      ->setName('participant.character.list');
+    $this->get('/my',       'CharacterPageController:my')
+      ->setName('participant.character.my');      
+    $this->get('/gallery',  'CharacterPageController:gallery')
+      ->setName('participant.character.gallery');
+    $this->get('/{uid}[/]', 'CharacterPageController:character')
+      ->setName('participant.character');
+  });
+
+  //Players
+  $this->group('/players', function () {
+    $this->get('[/]',       'PlayersPageController:index')
+      ->setName('participant.player.list');
+    $this->get('/gallery',  'PlayersPageController:gallery')
+      ->setName('participant.player.gallery');
+    $this->get('/{uid}[/]',    'PlayersPageController:player')
+      ->setName('participant.player');
+  });
+
+  //Groups
+  $this->group('/groups', function () {
+    $this->get('[/]',         'GroupPageController:index')
+      ->setName('participant.group.list');
+
+    $this->get('/my',         'GroupPageController:my')
+      ->setName('participant.group.my');
+
+    $this->get('/add',        'GroupPageController:add')
+      ->setName('participant.group.add');
+    $this->post('/add',       'GroupPageController:post');
+
+    $this->get('/{uid}/edit', 'GroupPageController:edit')
+      ->setName('participant.group.edit');
+    $this->post('/{uid}/edit','GroupPageController:post');
+
+    $this->get('/{uid}/delete','GroupPageController:delete')
+      ->setName('participant.group.delete');
+
+    $this->get('/{uid}/join', 'GroupPageController:join')
+      ->setName('participant.group.request');
+    $this->post('/{uid}/join','GroupPageController:postJoin');
+
+    $this->get('/{uid}[/]',      'GroupPageController:group')
+      ->setName('participant.group');            
+  });
+
+  //Plots
+  $this->group('/plots', function () {
+    $this->get('[/]', 'PlotPageController:index')
+      ->setName('participant.plot.list');
+
+    $this->get('/my', 'PlotPageController:my')
+      ->setName('participant.plot.my');
+
+    $this->get('/add', 'PlotPageController:add')
+      ->setName('participant.plot.add');
+    $this->post('/add', 'PlotPageController:post');
+
+    $this->get('/{uid}/edit', 'PlotPageController:edit')
+      ->setName('participant.plot.edit');
+    $this->post('/{uid}/edit', 'PlotPageController:post');
+
+    $this->get('/{uid}/delete', 'PlotPageController:delete')
+      ->setName('participant.plot.delete');
+
+    $this->get('/{uid}/join', 'PlotPageController:join')
+      ->setName('participant.plot.request');
+    $this->post('/{uid}/join', 'PlotPageController:postJoin');
+
+    $this->get('/{uid}[/]', 'PlotPageController:plot')
+      ->setName('participant.plot');   
+  });
+
+  //Relations
+  $this->group('/relations', function () {
+    $this->get('[/]', 'RelationPageController:index')
+      ->setName('participant.relation.list');
+
+    $this->get('/pending', 'RelationPageController:pending')
+      ->setName('participant.relation.pending');
+
+    $this->get('/my', 'RelationPageController:my')
+      ->setName('participant.relation.my');
+
+    $this->get('/add', 'RelationPageController:add')
+      ->setName('participant.relation.add');
+    $this->post('/add', 'RelationPageController:post');
+
+    $this->get('/{uid}/edit', 'RelationPageController:edit')
+      ->setName('participant.relation.edit');
+    $this->post('/{uid}/edit', 'RelationPageController:post');
+
+    $this->get('/{uid}/delete', 'RelationPageController:delete')
+      ->setName('participant.relation.delete');
+
+    $this->get('/{uid}/join', 'RelationPageController:join')
+      ->setName('participant.relation.request');
+    $this->post('/{uid}/join', 'RelationPageController:postJoin');
+
+    $this->get('/{uid}/accept', 'RelationPageController:accept')
+      ->setName('participant.relation.accept');
+    $this->get('/{uid}/reject', 'RelationPageController:reject')
+      ->setName('participant.relation.reject');
+
+    $this->get('/{uid}[/]', 'RelationPageController:relation')
+      ->setName('participant.relation');     
+  });
   
-    //Players
-    $this->group('/players', function () {
-      $this->get('[/]',       'PlayersPageController:index')
-        ->setName('participant.player.list');
-      $this->get('/gallery',  'PlayersPageController:gallery')
-        ->setName('participant.player.gallery');
-      $this->get('/{uid}[/]',    'PlayersPageController:player')
-        ->setName('participant.player');
-    });
-
-    //Groups
-    $this->group('/groups', function () {
-      $this->get('[/]',         'GroupPageController:index')
-        ->setName('participant.group.list');
-      
-      $this->get('/my',         'GroupPageController:my')
-        ->setName('participant.group.my');
-      
-      $this->get('/add',        'GroupPageController:add')
-        ->setName('participant.group.add');
-      $this->post('/add',       'GroupPageController:post');
-            
-      $this->get('/{uid}/edit', 'GroupPageController:edit')
-        ->setName('participant.group.edit');
-      $this->post('/{uid}/edit','GroupPageController:post');
-      
-      $this->get('/{uid}/delete','GroupPageController:delete')
-        ->setName('participant.group.delete');
-      
-      $this->get('/{uid}/join', 'GroupPageController:join')
-        ->setName('participant.group.request');
-      $this->post('/{uid}/join','GroupPageController:postJoin');
-      
-      $this->get('/{uid}[/]',      'GroupPageController:group')
-        ->setName('participant.group');            
-    });
-    
-    //Plots
-    $this->group('/plots', function () {
-      $this->get('[/]', 'PlotPageController:index')
-        ->setName('participant.plot.list');
-      
-      $this->get('/my', 'PlotPageController:my')
-        ->setName('participant.plot.my');
-      
-      $this->get('/add', 'PlotPageController:add')
-        ->setName('participant.plot.add');
-      $this->post('/add', 'PlotPageController:post');
-      
-      $this->get('/{uid}/edit', 'PlotPageController:edit')
-        ->setName('participant.plot.edit');
-      $this->post('/{uid}/edit', 'PlotPageController:post');
-      
-      $this->get('/{uid}/delete', 'PlotPageController:delete')
-        ->setName('participant.plot.delete');
-      
-      $this->get('/{uid}/join', 'PlotPageController:join')
-        ->setName('participant.plot.request');
-      $this->post('/{uid}/join', 'PlotPageController:postJoin');
-      
-      $this->get('/{uid}[/]', 'PlotPageController:plot')
-        ->setName('participant.plot');   
-    });
-    
-    //Relations
-    $this->group('/relations', function () {
-      $this->get('[/]', 'RelationPageController:index')
-        ->setName('participant.relation.list');
-
-      $this->get('/pending', 'RelationPageController:pending')
-        ->setName('participant.relation.pending');
-      
-      $this->get('/my', 'RelationPageController:my')
-        ->setName('participant.relation.my');
-      
-      $this->get('/add', 'RelationPageController:add')
-        ->setName('participant.relation.add');
-      $this->post('/add', 'RelationPageController:post');
-      
-      $this->get('/{uid}/edit', 'RelationPageController:edit')
-        ->setName('participant.relation.edit');
-      $this->post('/{uid}/edit', 'RelationPageController:post');
-      
-      $this->get('/{uid}/delete', 'RelationPageController:delete')
-        ->setName('participant.relation.delete');
-      
-      $this->get('/{uid}/join', 'RelationPageController:join')
-        ->setName('participant.relation.request');
-      $this->post('/{uid}/join', 'RelationPageController:postJoin');
-      
-      $this->get('/{uid}/accept', 'RelationPageController:accept')
-        ->setName('participant.relation.accept');
-      $this->get('/{uid}/reject', 'RelationPageController:reject')
-        ->setName('participant.relation.reject');
-      
-      $this->get('/{uid}[/]', 'RelationPageController:relation')
-        ->setName('participant.relation');     
-    });
+  // Schedules
+  $this->group('/schedules', function () {
+    $this->get('[/]',       'SchedulePageController:index')
+      ->setName('participant.schedules');
+    $this->get('/my',       'SchedulePageController:my')
+      ->setName('participant.schedules.my');      
+  });  
   
   $this->get('/{page}[/{uid}]', 'ParticipantPageController:page')
     ->setName('participant.page');
