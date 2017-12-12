@@ -21,8 +21,7 @@ class GroupPageController extends Controller
     return self::render(
       "group-list", 
       [
-        "key" => "groups", 
-        "data" => [], #self::getGroupsInfo()
+        "groups" => [], #self::getGroupsInfo()
       ], 
       $response
     );
@@ -32,8 +31,7 @@ class GroupPageController extends Controller
     return self::render(
       "groups-my", 
       [
-        "key" => "groups", 
-        "data" => [], #self::getGroupsInfo($arguments["uid"])
+        "groups" => [], #self::getGroupsInfo($arguments["uid"])
       ], 
       $response
     );

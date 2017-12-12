@@ -21,8 +21,7 @@ class PlotPageController extends Controller
     return self::render(
       "plot-list", 
       [
-        "key" => "plots", 
-        "data" => [], #self::getPlotsInfo()
+        "plots" => [], #self::getPlotsInfo()
       ], 
       $response
     );
@@ -32,8 +31,7 @@ class PlotPageController extends Controller
     return self::render(
       "plot-my", 
       [
-        "key" => "plots", 
-        "data" => [], #self::getPlotsInfo($arguments["uid"])
+        "plots" => [], #self::getPlotsInfo($arguments["uid"])
       ], 
       $response
     );

@@ -100,9 +100,11 @@ class Controller
     
     if(!$post) die("Template '$slug' is missing, have a nice day.");
     
-    $this->container->view->getEnvironment()->addGlobal(
-      $info['key'], $info['data']
-    );
+    foreach($info as $key => $data) {
+      $this->container->view->getEnvironment()->addGlobal(
+        $key, $data
+      );
+    }
     
     return $this->view->render($response, '/new/participant/page.html', [
       'post' => $post,

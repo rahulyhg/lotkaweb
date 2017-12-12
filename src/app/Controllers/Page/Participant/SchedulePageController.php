@@ -18,8 +18,7 @@ class SchedulePageController extends Controller
     return self::render(
       "schedules", 
       [
-        "key" => "schedules", 
-        "data" => [], #self::getCharacersInfo()
+        "schedules" => [], #self::getCharacersInfo()
       ], 
       $response
     );
@@ -30,8 +29,7 @@ class SchedulePageController extends Controller
     return self::render(
       "schedule-my", 
       [
-        "key" => "schedule", 
-        "data" => [], #self::getCharacterInfo($user["user"]->id)
+        "schedule" => [], #self::getCharacterInfo($user["user"]->id)
       ], 
       $response
     );

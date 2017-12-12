@@ -17,8 +17,7 @@ class PlayersPageController extends Controller
     return self::render(
       "player-list", 
       [
-        "key" => "players", 
-        "data" => self::getPlayersInfo()
+        "players" => self::getPlayersInfo()
       ], 
       $response
     );
@@ -28,8 +27,7 @@ class PlayersPageController extends Controller
     return self::render(
       "player-gallery", 
       [
-        "key" => "players", 
-        "data" => self::getPlayersInfo()
+        "players" => self::getPlayersInfo()
       ], 
       $response
     );
@@ -39,8 +37,7 @@ class PlayersPageController extends Controller
     return self::render(
       "player", 
       [
-        "key" => "player", 
-        "data" => self::getPlayerInfo($arguments["uid"])
+        "player" => self::getPlayerInfo($arguments["uid"])
       ], 
       $response
     );

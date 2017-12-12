@@ -21,8 +21,7 @@ class RelationPageController extends Controller
     return self::render(
       "relations-list", 
       [
-        "key" => "relations", 
-        "data" => [], #self::getRalationsInfo()
+        "relations" => [], #self::getRalationsInfo()
       ], 
       $response
     );
@@ -32,8 +31,7 @@ class RelationPageController extends Controller
     return self::render(
       "relations-my", 
       [
-        "key" => "relations", 
-        "data" => [], #self::getRalationsInfo($arguments["uid"])
+        "relations" => [], #self::getRalationsInfo($arguments["uid"])
       ], 
       $response
     );
@@ -43,8 +41,7 @@ class RelationPageController extends Controller
     return self::render(
       "relations-pending", 
       [
-        "key" => "relations", 
-        "data" => [], #self::getPendingRalationsInfo()
+        "relations" => [], #self::getPendingRalationsInfo()
       ], 
       $response
     );

@@ -19,8 +19,7 @@ class CharacterPageController extends Controller
     return self::render(
       "character-list", 
       [
-        "key" => "characters", 
-        "data" => self::getCharacersInfo()
+        "characters" => self::getCharacersInfo(),
       ], 
       $response
     );
@@ -30,8 +29,7 @@ class CharacterPageController extends Controller
     return self::render(
       "character-gallery", 
       [
-        "key" => "characters", 
-        "data" => self::getCharacersInfo()
+        "characters" => self::getCharacersInfo(),
       ], 
       $response
     );
@@ -42,8 +40,7 @@ class CharacterPageController extends Controller
     return self::render(
       "character-my", 
       [
-        "key" => "character", 
-        "data" => self::getCharacterInfo($user["user"]->id)
+        "character" => self::getCharacterInfo($user["user"]->id),
       ], 
       $response
     );
@@ -53,8 +50,7 @@ class CharacterPageController extends Controller
     return self::render(
       "character", 
       [
-        "key" => "character", 
-        "data" => self::getCharacterInfo(),
+        "character" => self::getCharacterInfo(),
       ], 
       $response
     );
