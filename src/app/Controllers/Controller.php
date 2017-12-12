@@ -42,6 +42,56 @@ class Controller
   }
   
   # Helpers
+  public function getAttributeIds($attributes = [ 'keys' => [], 'values' => [] ]) {
+    $attribute_ids = [];
+    foreach ($attributes['keys'] as $i => $attr_key) {
+      $attribute_ids[] = Attribute::firstOrCreate([
+        'name' => $attr_key, 
+        'value' => $attributes['values'][$i]
+      ])->id;
+    }
+    return $attribute_ids;
+  }
+  
+  public function setModelAttributes($request, $model_attribute_list, $model, $extra_attributes = []) {
+    $model_attributes = self::mapAttributes($model->attr);
+    #Supply extra attributes not present in the origninal request to be able to set system attributes.
+    $request_attributes = array_merge( $request->getParsedBody(), $extra_attributes );    
+    
+    # We prepopulate boolean attributes so they can be deactivated, otherwise they are not even sent
+    if( isset($request_attributes["boolean_attributes"]) ) {
+      $boolean_attributes = explode(',', $request->getParam("boolean_attributes"));
+      foreach ($boolean_attributes as $a) {
+        $request_attributes[$a] = isset($request_attributes[$a]) ? $request_attributes[$a] : 'false';
+      }
+    }
+    
+    $attributes = [ 'keys' => [], 'values' => [] ];
+
+    foreach ($model_attribute_list as $attr) {
+      $attribute_value = null;
+      
+      if(array_key_exists($attr, $model_attributes)) $attribute_value = $model_attributes[$attr]; //Prepolulate existing attr
+      if(isset($request_attributes[$attr])) $attribute_value = $request_attributes[$attr]; //Update if we have new values
+
+      if ( is_array($attribute_value) ? count($attribute_value) : strlen($attribute_value) ) {
+        if(is_array($attribute_value)) {
+          foreach ($attribute_value as $i => $val) {
+            $attributes['keys'][] = $attr;
+            $attributes['values'][] = $attribute_value[$i];
+          }
+        } else {
+          $attributes['keys'][] = $attr;
+          $attributes['values'][] = $attribute_value;
+        }
+      }
+    }
+
+    $updated_attribute_ids = self::getAttributeIds( $attributes );
+        
+    return $model->attr()->sync($updated_attribute_ids);
+  }  
+  
   public function render($slug, $info, $response) {
     $participant = self::getCurrentUser();
     $post = Post::where('slug', $slug)

@@ -127,57 +127,6 @@ class OnboardingPageController extends Controller
     
     return $user_data;
   }
-  
-  
-  private function getAttributeIds($attributes = [ 'keys' => [], 'values' => [] ]) {
-    $attribute_ids = [];
-    foreach ($attributes['keys'] as $i => $attr_key) {
-      $attribute_ids[] = Attribute::firstOrCreate([
-        'name' => $attr_key, 
-        'value' => $attributes['values'][$i]
-      ])->id;
-    }
-    return $attribute_ids;
-  }
-  
-  private function setUserAttributes($request, $participant) {
-    $user_attribute_set = self::onboardingAttributes();
-    $user_attributes = $participant["attributes"];
-    $request_attributes = $request->getParsedBody();
-
-    # We prepopulate boolean attributes so they can be deactivated, otherwise they are not even sent
-    if( isset($request_attributes["boolean_attributes"]) ) {
-      $boolean_attributes = explode(',', $request->getParam("boolean_attributes"));
-      foreach ($boolean_attributes as $a) {
-        $request_attributes[$a] = isset($request_attributes[$a]) ? $request_attributes[$a] : 'false';
-      }
-    }
-    
-    $attributes = [ 'keys' => [], 'values' => [] ];
-
-    foreach ($user_attribute_set as $attr) {
-      $attribute_value = null;
-      
-      if(array_key_exists($attr, $user_attributes)) $attribute_value = $user_attributes[$attr]; //Prepolulate existing attr
-      if(isset($request_attributes[$attr])) $attribute_value = $request_attributes[$attr]; //Update if we have new values
-
-      if ( is_array($attribute_value) ? count($attribute_value) : strlen($attribute_value) ) {
-        if(is_array($attribute_value)) {
-          foreach ($attribute_value as $i => $val) {
-            $attributes['keys'][] = $attr;
-            $attributes['values'][] = $attribute_value[$i];
-          }
-        } else {
-          $attributes['keys'][] = $attr;
-          $attributes['values'][] = $attribute_value;
-        }
-      }
-    }
-
-    $updated_attribute_ids = self::getAttributeIds( $attributes );
-    
-    return $participant["user"]->attr()->sync($updated_attribute_ids);
-  }
 
   private function updateAttributes($attributes, $user) {
     foreach ($attributes as $name => $value) {
@@ -306,14 +255,21 @@ class OnboardingPageController extends Controller
     }
     
     $stage_data = self::getStageData($arguments, $participant);
-    
-    $participant['attributes']['onboarding_stage'] = $stage_data['stage'] + 1;
-    $participant['attributes']['onboarding_complete'] = $stage_data['total'] == $stage_data['stage'];
-    
     $user_data = self::getUserData($request, $participant);
+    $user_attribute_list = self::onboardingAttributes();    
     
-    self::setUserAttributes($request, $participant);
+    $onbording_stage_attributes = [
+      'onboarding_stage' => $stage_data['stage'] + 1,
+      'onboarding_complete' => $stage_data['total'] == $stage_data['stage'],
+    ];
     
+    $save_results = self::setModelAttributes(
+      $request, 
+      $user_attribute_list, 
+      $participant["user"], 
+      $onbording_stage_attributes
+    );
+            
     # Check if we have updated data
     $hasUpload = $request->getUploadedFiles();
     if( isset($hasUpload['portrait']) ) {
@@ -325,7 +281,7 @@ class OnboardingPageController extends Controller
                                "have a look and make sure that you have filled out all the required fields.");
     }
     
-    if($participant['attributes']['onboarding_complete']) {
+    if($onbording_stage_attributes['onboarding_complete']) {
       
       $user_role = $this->container->sentinel->findRoleBySlug('user');
       $user_role->users()->detach($participant["user"]);
@@ -351,7 +307,7 @@ class OnboardingPageController extends Controller
     }
     
     return $response->withRedirect($this->router->pathFor('participant.onboarding', 
-      ['hash' => $participant["hash"], 'stage' => $participant['attributes']['onboarding_stage']]
+      ['hash' => $participant["hash"], 'stage' => $onbording_stage_attributes['onboarding_stage']]
     ));
   }  
 }
