@@ -3,7 +3,16 @@ $(document).ready(function(){
 	
 	$('input[type=checkbox],input[type=radio],input[type=file]').uniform();
 	
-	$('select').select2();
+	$('select:not(.special)').select2();
+	
+	function format_icons(state) {		
+    return "<i class='" + state.text.toLowerCase() + "'></i> " + state.text.replace('icon-', '');
+	}
+	$("select.icon_select").select2({
+    formatResult: format_icons,
+    formatSelection: format_icons,
+    escapeMarkup: function(m) { return m; }
+	});
 	
 	// Form Validation
     $("#basic_validate").validate({

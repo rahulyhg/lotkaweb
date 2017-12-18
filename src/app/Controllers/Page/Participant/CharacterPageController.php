@@ -59,13 +59,15 @@ class CharacterPageController extends Controller
   private function getCharacersInfo() {
     $characters = Character::whereHas(
         'attr', function ($query) {
-            $query->whereIn('name', 
-                            ['NPC','Costume done']);
+            $query->whereIn('name', ['Costume done'])
+              ->whereIn('value', ['no']);
         }
     )->with('attr');
     $character_list = [];
     
-    foreach ($characters as $character) {        
+    die(var_dump($characters->toSql()));
+    
+    foreach ($characters->get() as $character) {        
       $character_list[] = [
         "data" => $character, 
         "attributes" => self::mapAttributes($character->attr),
