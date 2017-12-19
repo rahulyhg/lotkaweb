@@ -96,8 +96,7 @@ class BulkmailActionController extends Controller
   
   public function compose($request, $response, $arguments)
   {
-    
-    $templates = Post::where('slug', 'like', '%email%')->get();
+    $templates = Post::where('category_id', 10)->get();
     $users = User::get();
     
     return $this->view->render($response, 'admin/bulkmail/compose.html', [
