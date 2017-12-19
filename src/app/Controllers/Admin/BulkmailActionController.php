@@ -105,7 +105,7 @@ class BulkmailActionController extends Controller
       'users' => $users,
       'userAttributes' => self::userAttributes(),
       'userValues' => self::userValues(),
-      'default-subject' => strtoupper($this->container->get('settings')['event']['name'])
+      'default_subject' => strtoupper($this->container->get('settings')['event']['name'])
     ]);
   }
   
