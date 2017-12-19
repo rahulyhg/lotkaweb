@@ -39,7 +39,7 @@ class Templater
         foreach ($this->vars as $name => $value)
         {
             $key = sprintf('[{%s}]', strtoupper($name));
-            $pairs[$key] = (string)$value;
+            $pairs[$key] = is_array($value) ? implode(", ", $value) : (string)$value;
         }
         return $pairs;
     }

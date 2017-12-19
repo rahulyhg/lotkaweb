@@ -306,6 +306,11 @@ $app->group('/admin', function() use ($container) {
     $this->get('/{uid}/delete', 'MediaActionController:delete')->setName('admin.media.delete');
   });  
   
+  //Bulk mail
+  $this->group('/email', function() {
+    $this->get('', 'BulkmailActionController:compose')->setName('admin.bulkmail');    
+    $this->post('', 'BulkmailActionController:send');
+  });
   
 })->add(new AdminMiddleware($container));
 
