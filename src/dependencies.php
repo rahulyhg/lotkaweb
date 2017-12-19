@@ -158,6 +158,7 @@ $container['AdminController']           = function($c) { return new \App\Control
 $container['UserActionController']      = function($c) { return new \App\Controllers\Admin\UserActionController($c); };
 $container['OrderActionController']     = function($c) { return new \App\Controllers\Admin\OrderActionController($c); };
 $container['MediaActionController']     = function($c) { return new \App\Controllers\Admin\MediaActionController($c); };
+$container['BulkmailActionController']  = function($c) { return new \App\Controllers\Admin\BulkmailActionController($c); };
 
 // Participant admin
 $container['RolesActionController']     = function($c) { return new \App\Controllers\Admin\RolesActionController($c); };
