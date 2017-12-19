@@ -64,6 +64,7 @@ return [
     ],
     
     'event' => [
+      'name' => 'Lotka-volterra', 
       'date' => '5 April 2018',
       'ticket' => [
         'target' => <OUR_TICKET_TARGET_AMOUNT>,
