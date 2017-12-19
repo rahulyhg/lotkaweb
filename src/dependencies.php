@@ -111,7 +111,7 @@ $container['csrf'] = function($container) {
 };
 
 $container['hasher'] = function ($container) {
-    return new Cartalyst\Sentinel\Hashing\BcryptHasher;
+  return new Cartalyst\Sentinel\Hashing\BcryptHasher;
 };
 
 $container['dispatcher'] = function ($container) {
@@ -131,6 +131,11 @@ $container['sentinel'] = function ($container) {
 
   return $sentinel;
 };
+
+$container['reminders'] = function ($c) { 
+  return new Cartalyst\Sentinel\Reminders\IlluminateReminderRepository($c->sentinel->getUserRepository()); 
+};
+
 // Validator
 $container['validator'] = function($container) {
   return new App\Validation\Validator;

@@ -1,0 +1,27 @@
+{% extends "/new/layout.html" %}
+
+{% block title %} Password Reset {% endblock %}
+
+{% block headCover %}
+{{ include('/new/partials/fragments/flash.html') }}
+{% endblock %}
+
+{% block content %}
+  <div class="col-sm-6 col-sm-offset-3 mb-sm-40 reminder_form">
+    <h4 class="font-alt">Set new password</h4>
+    <hr class="divider-w mb-10">
+    <form class="form" method="post" action="{{ path_for('user.reset', { 'code': reset_code }) }}">
+      {{ csrf.field|raw }}
+      <div class="form-group">
+        <input class="form-control" id="email" type="text" name="email" placeholder="E-mail"/>
+      </div>
+      <div class="form-group">
+        <input class="form-control" id="password" type="password" name="password" placeholder="New Password"/>
+      </div>
+      <div class="form-group">
+        <button class="btn btn-round btn-b">Update</button>
+      </div>
+    </form>
+  </div>
+
+{% endblock %}
