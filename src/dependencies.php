@@ -111,7 +111,7 @@ $container['csrf'] = function($container) {
 };
 
 $container['hasher'] = function ($container) {
-    return new Cartalyst\Sentinel\Hashing\BcryptHasher;
+  return new Cartalyst\Sentinel\Hashing\BcryptHasher;
 };
 
 $container['dispatcher'] = function ($container) {
@@ -131,6 +131,11 @@ $container['sentinel'] = function ($container) {
 
   return $sentinel;
 };
+
+$container['reminders'] = function ($c) { 
+  return new Cartalyst\Sentinel\Reminders\IlluminateReminderRepository($c->sentinel->getUserRepository()); 
+};
+
 // Validator
 $container['validator'] = function($container) {
   return new App\Validation\Validator;
@@ -156,6 +161,7 @@ $container['AdminController']           = function($c) { return new \App\Control
 $container['UserActionController']      = function($c) { return new \App\Controllers\Admin\UserActionController($c); };
 $container['OrderActionController']     = function($c) { return new \App\Controllers\Admin\OrderActionController($c); };
 $container['MediaActionController']     = function($c) { return new \App\Controllers\Admin\MediaActionController($c); };
+$container['BulkmailActionController']  = function($c) { return new \App\Controllers\Admin\BulkmailActionController($c); };
 
 // Participant admin
 $container['RolesActionController']     = function($c) { return new \App\Controllers\Admin\RolesActionController($c); };

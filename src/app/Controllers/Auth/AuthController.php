@@ -89,35 +89,72 @@ class AuthController extends Controller
     ]);    
     
     if ($validation->failed()) { //we have a user with this email
-      $template = Post::where('slug', 'password-reminder')->first();
+      $template = Post::where('slug', 'email-password-reminder')->first();
+      $user = $this->container->sentinel->findByCredentials($credentials);
       
-      if( self::sendEmail(
-        $credentials['email'], // Recipiant
-        $template->title,      // Subject Line
-        $template->content,    // E-mail Body
-        [                      // Values ([{###}] where ### is the KEY)
-          "CODE" => 'KODEKODEKODEKODEO'
-        ]
-      ) ) {
-        $this->flash->addMessage('success', "Check you email for login reset information.");
+      if($this->container->reminders->exists($user) == false) {
+        $reminder = $this->container->reminders->create($user);      
+      
+        //die(var_dump($reminder));
+        
+        if( self::sendEmail(
+          $credentials['email'], // Recipiant
+          $template->title,      // Subject Line
+          $template->content,    // E-mail Body
+          [                      // Values ([{###}] where ### is the KEY)
+            "CODE" => $reminder->code, 
+          ]
+        ) ) {
+          $this->flash->addMessage('success', "Check you email for login reset information.");
+        } else {
+          $this->flash->addMessage('error', "There's a problem with the email function. (Sorry)");
+        };
       } else {
-        $this->flash->addMessage('error', "There's a problem with the email function. (Sorry)");
-      };
+        $this->container->reminders->removeExpired();
+        $this->flash->addMessage('error', "You already have a reminder active for this account. Please check your email.");
+      }
       
     }
     
     return $response->withRedirect($this->router->pathFor('user.login'));
   }
   
-  public function getResetPassword($request, $response)
+  public function getResetPassword($request, $response, $arguments)
   {
+    $code = filter_var($arguments['code'], FILTER_SANITIZE_STRING);
+
     return $this->view->render($response, 'new/user/reset.html', [
-      
+      'reset_code' => $code
     ]);
   }
   
-  public function resetPassword($request, $response)
+  public function resetPassword($request, $response, $arguments)
   {
+    $code = filter_var($arguments['code'], FILTER_SANITIZE_STRING);
+    $user = $this->container->sentinel->findByCredentials(['email' => $request->getParam('email')]);
+    $password = $request->getParam('password');
+    
+    if($user) {
+      ;
+      if($this->container->reminders->exists($user)) {
+        if($this->container->reminders->complete($user, $code, $password)) {
+          $this->flash->addMessage('success', "Password updated!");
+          
+          $template = Post::where('slug', 'email-password-post-reminder')->first();
+          self::sendEmail(
+            $user->email,       // Recipiant
+            $template->title,   // Subject Line
+            $template->content, // E-mail Body
+            []
+          );
+          
+        } else {
+          $this->flash->addMessage('error', "There's a problem with password update, sorry about that.");
+        }
+      }
+    }
+    
+    return $response->withRedirect($this->router->pathFor('user.login'));
     
   }  
 }

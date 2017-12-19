@@ -143,6 +143,12 @@
     </ul>
   </li>  
   
+  <li class="{{ [path_for('admin.bulkmail')]|isActive }}">
+    <a href="{{ path_for('admin.bulkmail') }}">
+      <i class="icon icon-envelope-alt"></i> <span>Bulk Mailer</span> <span class="label label-important"></span>
+    </a>
+  </li>  
+  
   <li class="content"> <span>Ticket Sales Amount</span>
     <div class="progress progress-mini progress-danger active progress-striped">
       <div style="width: {{ (100 * ticketData.totalAmount/100 / ticketData.target)|number_format }}%;" class="bar"></div>

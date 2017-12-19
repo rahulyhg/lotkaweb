@@ -1,0 +1,140 @@
+{% extends 'admin/dashboard/main.twig' %}
+
+{% block title %}Bulkmail Manager{% endblock %}
+
+{% block contentHeader %}
+  <div id="content-header">
+    <div id="breadcrumb"> 
+      <a href="{{ path_for('admin.index') }}" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a> 
+      <a href="#" class="current"># Compose</a> 
+    </div>
+
+    <h1>Compose Bulkmail Message</h1>
+  </div>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  <hr>
+  <div class="row-fluid">
+    <div class="span8">
+      <div class="widget-box">
+        <div class="widget-title"> <span class="icon"> <i class="icon-align-justify"></i> </span>
+          <h5>Bulkmail Message</h5>
+        </div>
+        <div class="widget-content nopadding">
+          <form action="{{ path_for('admin.bulkmail') }}" method="post" autocomplete="on" class="form-horizontal">
+            <input type="hidden" name="selfsave">
+            {{ csrf.field | raw }}
+            
+            <div class="control-group">
+              <label class="control-label">Recipiants:</label>
+              <div class="controls">
+                <input type="hidden" class="span11" name="recipiants" placeholder="Recipient email addresses" value="">
+                <span class="help-inline">Add email adrdesses of users and or recipiants not in the system.</span>
+              </div>
+            </div>            
+            
+            <div class="control-group">
+              <label class="control-label">Subject :</label>
+              <div class="controls">
+                <input type="text" class="span11" name="subject" placeholder="Email Subject" value="">
+                <span class="help-inline">All emails subjects from the system will start with "[{{ default_subject }}]".</span>
+             </div>
+            </div>
+            
+            <div class="control-group">
+              <label class="control-label">Template :</label>
+              <div class="controls">
+                <select name="template-name">
+                  <option value="" data-template="">- No Template -</option>
+                {% for template in templates %}
+                  <option value="{{ template.id }}" data-template="{{ template.content }}">
+                    {{ template.title }}
+                  </option>
+                {% endfor %}
+                </select>
+                <span class="help-inline">Load template to be used as base for the bulkmail.</span>
+              </div>
+            </div>                 
+            
+            <div class="control-group">
+              <label class="control-label">Message :</label>
+              <div class="controls">
+                <textarea class="span11" name="template" rows="15"></textarea>
+                <span class="help-inline" style="margin-right: 3em;">Keys formatted like [{KEY-NAME}] will be replaced with KEY-NAME in the list of keys. Key values like "attr.some_attribute_name" and "user.some_user_value" are 'special' and will be used to look up the corresponding value for the specific recipiant - if this value is not set at user level, the lookup key will be printed.</span>
+              </div>
+            </div>
+            
+            <div class="widget-box collapsible">
+              <div class="widget-title"> 
+                <a href="#collapseAttr" data-toggle="collapse"> 
+                  <span class="icon"><i class="icon-tags"></i></span>
+                  <h5>Keys</h5>
+                </a> 
+              </div>
+              <div class="collapse in" id="collapseAttr">
+                <div class="widget-content attributes">
+                  <div class="attribute">
+                    <input type="text" class="span6" name="attrKey[]" placeholder="Name" value="">
+                    <input type="text" class="span5" name="attrVal[]" placeholder="Value" value="" list="bulkValues">
+                    <datalist id="bulkValues">
+                      <optgroup label="User Attributes">
+                      {% for attribute in userAttributes %}
+                        <option value="attr.{{ attribute }}">
+                          {{ attribute }}
+                        </option>
+                      {% endfor %}
+                      </optgroup>
+
+                      <optgroup label="User Values">
+                      {% for value in userValues %}
+                        <option value="user.{{ value }}">
+                          {{ value }}
+                        </option>
+                      {% endfor %}
+                      </optgroup>         
+                    </datalist>
+                    <button class="btn btn-success add_attrib span1 pull-right">+</button>
+                  </div>
+                </div>
+              </div>            
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn-success">Send</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block inlinejs %}
+  $(".attributes").on("click", ".add_attrib", function (e) {
+    e.preventDefault();
+    $addDiv = $(this).parent().clone();
+    $addDiv.find('input').each(function () { $(this).val(null); })
+    $(this).parent().after($addDiv);
+    $(this).parent().find('button')
+      .removeClass('btn-success add_attrib').addClass('btn-warning remove_attrib').text('-');
+  });
+
+  $(".attributes").on("click", ".remove_attrib", function (e) {
+    e.preventDefault();
+    $addDiv = $(this).parent().remove();
+  });
+
+  $('[name="recipiants"]').select2({
+      tags:[
+        {% for user in users %}"{{ user.email }}", {% endfor %}""
+      ],
+      tokenSeparators: [",", " "]
+  });
+
+  $('[name="template-name"]').on('change', function () {
+    $('[name="template"]').val($('[name="template-name"] option:selected').data('template'));
+  });
+{% endblock %}
