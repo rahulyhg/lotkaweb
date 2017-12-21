@@ -1,4 +1,4 @@
-* {
+wi* {
 	outline:none !important;
 	-moz-outline: none !important;
 }
@@ -539,6 +539,10 @@ hr{ border-top-color:#dadada;}
 	border: none;
 	margin-top: 0;
 	margin-bottom: 0;
+}
+.nopadding .widget-box.collapsible {
+  border-left: none;
+  border-right: none;
 }
 .widget-title, .modal-header, .table th, div.dataTables_wrapper .ui-widget-header {
 	 background:#efefef;
