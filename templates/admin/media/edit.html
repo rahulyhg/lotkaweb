@@ -26,7 +26,7 @@
           <h5>Edit Media</h5>
         </div>
         <div class="widget-content nopadding">
-          <form action="{{ current.new ? path_for('admin.media.add') : path_for('admin.media.edit', { 'uid': current.data.id }) }}" method="post" autocomplete="on" class="form-horizontal" enctype="multipart/form-data">
+          <form action="{{ current.new ? path_for('admin.media.add') : path_for('admin.media.edit', { 'uid': current.data.id }) }}" method="post" autocomplete="off" class="form-horizontal" enctype="multipart/form-data">
             <input type="hidden" name="selfsave">
             {{ csrf.field | raw }}
             
