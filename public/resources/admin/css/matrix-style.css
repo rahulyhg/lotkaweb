@@ -1625,3 +1625,7 @@ div.dataTables_wrapper .ui-widget-header {
   overflow-wrap: break-word;
   text-align: center;
 }
+#chartdiv {
+    height: 50vh;
+    width: 100%;
+}
