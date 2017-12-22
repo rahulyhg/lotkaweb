@@ -26,7 +26,7 @@
           <h5>Edit Ticket</h5>
         </div>
         <div class="widget-content nopadding">
-          <form action="{{ current.new ? path_for('admin.ticket.add') : path_for('admin.ticket.edit', { 'uid': current.data.id }) }}" method="post" autocomplete="on" class="form-horizontal">
+          <form action="{{ current.new ? path_for('admin.ticket.add') : path_for('admin.ticket.edit', { 'uid': current.data.id }) }}" method="post" autocomplete="off" class="form-horizontal">
             {{ csrf.field | raw }}
             
             {% if current.new %}

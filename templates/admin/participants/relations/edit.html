@@ -25,7 +25,7 @@
           <h5>Edit Relation</h5>
         </div>
         <div class="widget-content nopadding">
-          <form action="{{ current.new ? path_for('admin.relation.add') : path_for('admin.relation.edit', { 'uid': current.data.id }) }}" method="post" autocomplete="on" class="form-horizontal">
+          <form action="{{ current.new ? path_for('admin.relation.add') : path_for('admin.relation.edit', { 'uid': current.data.id }) }}" method="post" autocomplete="off" class="form-horizontal">
             <input type="hidden" name="selfsave">
             {{ csrf.field | raw }}
             
