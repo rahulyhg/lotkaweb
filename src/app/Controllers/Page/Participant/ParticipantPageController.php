@@ -76,7 +76,7 @@ class ParticipantPageController extends Controller
   {
     $participant = self::getCurrentUser();
     $slug = filter_var($arguments['page'], FILTER_SANITIZE_STRING);
-    $post = Post::where('slug', $slug)->visibleTo(['participant', 'admin'])->published()->first();
+    $post = Post::where('slug', $slug)->visibleTo(['participant'])->published()->first();
     
     if(!$post) return $response->withRedirect($this->router->pathFor('participant.home'));
     
