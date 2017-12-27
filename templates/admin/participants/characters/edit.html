@@ -27,8 +27,7 @@
         <div class="widget-content nopadding">
           <form action="{{ current.new ? path_for('admin.character.add') : path_for('admin.character.edit', { 'uid': current.data.id }) }}" method="post" autocomplete="off" class="form-horizontal">
             <input type="hidden" name="selfsave">
-            {{ csrf.field | raw }}
-            
+            {{ csrf.field | raw }}            
             <div class="control-group">
               <label class="control-label">Surname :</label>
               <div class="controls">
@@ -153,7 +152,7 @@
             <div class="control-group">
               <label class="control-label">Personal traits :</label>
               <div class="controls">
-                <textarea class="span11" name="traits" rows="3">{{ current.attr.traits }}</textarea>
+                <textarea class="span11" name="traits" rows="8">{{ current.attr.traits }}</textarea>
              </div>
             </div>
             
@@ -161,20 +160,36 @@
               <label class="control-label">Values :</label>
               <div class="controls">
                 <h5>Isolationist <span class="pull-right" style="margin-right: 40px;">Interventionist</span></h5>
-                <input type="range" class="span11" name="iso_int" value="{{ current.attr.iso_int }}" max="100" min="0" step="10">
-                <textarea class="span11" name="iso_int_note" rows="3">{{ current.attr.iso_int_note }}</textarea>
+                <input type="range" class="span11" name="iso_int" value="{{ current.attr.iso_int }}" max="110" min="0" step="10">
+                <textarea class="span11" name="iso_int_note" rows="8">{{ current.attr.iso_int_note }}</textarea>
                 
                 <h5>Militarist <span class="pull-right" style="margin-right: 40px;">Democrat</span></h5>
-                <input type="range" class="span11" name="mil_dem" value="{{ current.attr.mil_dem }}" max="100" min="0" step="10">
-                <textarea class="span11" name="mil_dem_note" rows="3">{{ current.attr.mil_dem_note }}</textarea>
+                <input type="range" class="span11" name="mil_dem" value="{{ current.attr.mil_dem }}" max="110" min="0" step="10">
+                <textarea class="span11" name="mil_dem_note" rows="8">{{ current.attr.mil_dem_note }}</textarea>
                 
                 <h5>Nostalgic <span class="pull-right" style="margin-right: 40px;">Progressive</span></h5>
-                <input type="range" class="span11" name="nos_pro" value="{{ current.attr.nos_pro }}" max="100" min="0" step="10">
-                <textarea class="span11" name="nos_pro_note" rows="3">{{ current.attr.nos_pro_note }}</textarea>
+                <input type="range" class="span11" name="nos_pro" value="{{ current.attr.nos_pro }}" max="110" min="0" step="10">
+                <textarea class="span11" name="nos_pro_note" rows="8">{{ current.attr.nos_pro_note }}</textarea>
                 
                 <h5>Libertine <span class="pull-right" style="margin-right: 40px;">Collectivist</span></h5>
-                <input type="range" class="span11" name="lib_col" value="{{ current.attr.lib_col }}" max="100" min="0" step="10">
-                <textarea class="span11" name="lib_col_note" rows="3">{{ current.attr.lib_col_note }}</textarea>
+                <input type="range" class="span11" name="lib_col" value="{{ current.attr.lib_col }}" max="110" min="0" step="10">
+                <textarea class="span11" name="lib_col_note" rows="8">{{ current.attr.lib_col_note }}</textarea>
+
+                <h5>Logical <span class="pull-right" style="margin-right: 40px;">Intuitive</span></h5>
+                <input type="range" class="span11" name="log_int" value="{{ current.attr.log_int }}" max="110" min="0" step="10">
+                <textarea class="span11" name="log_int_note" rows="8">{{ current.attr.log_int_note }}</textarea>
+
+                <h5>Direct <span class="pull-right" style="margin-right: 40px;">Avoidant</span></h5>
+                <input type="range" class="span11" name="dir_avo" value="{{ current.attr.dir_avo }}" max="110" min="0" step="10">
+                <textarea class="span11" name="dir_avo_note" rows="8">{{ current.attr.dir_avo_note }}</textarea>
+                
+                <h5>Physical <span class="pull-right" style="margin-right: 40px;">Non-physical</span></h5>
+                <input type="range" class="span11" name="phy_non" value="{{ current.attr.phy_non }}" max="110" min="0" step="10">
+                <textarea class="span11" name="phy_non_note" rows="8">{{ current.attr.phy_non_note }}</textarea>
+                
+                <h5>Malcontent <span class="pull-right" style="margin-right: 40px;">Content</span></h5>
+                <input type="range" class="span11" name="mal_con" value="{{ current.attr.mal_con }}" max="110" min="0" step="10">
+                <textarea class="span11" name="mal_con_note" rows="8">{{ current.attr.mal_con_note }}</textarea>                
              </div>
             </div>
             
