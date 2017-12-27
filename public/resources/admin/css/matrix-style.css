@@ -1629,3 +1629,7 @@ div.dataTables_wrapper .ui-widget-header {
     height: 50vh;
     width: 100%;
 }
+
+.generated_characters input {
+	width: 75%;
+}

@@ -246,6 +246,9 @@ $app->group('/admin', function() use ($container) {
       
       $this->get('/add', 'CharacterActionController:add')->setName('admin.character.add');
       $this->post('/add', 'CharacterActionController:post');
+
+      $this->get('/generate', 'CharacterActionController:generate')->setName('admin.character.generate');
+      $this->post('/generate', 'CharacterActionController:postGenerate');
       
       $this->get('/{uid}/edit', 'CharacterActionController:edit')->setName('admin.character.edit');
       $this->post('/{uid}/edit', 'CharacterActionController:post');

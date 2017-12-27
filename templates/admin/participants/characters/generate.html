@@ -1,0 +1,150 @@
+{% extends 'admin/dashboard/main.twig' %}
+
+{% block title %}Character Manager{% endblock %}
+
+{% block contentHeader %}
+  <div id="content-header">
+    <div id="breadcrumb"> 
+      <a href="{{ path_for('admin.index') }}" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a> 
+      <a href="{{ path_for('admin.participant.dashboard') }}">Participants</a> 
+      <a href="{{ path_for('admin.character.list') }}">Characters</a> 
+      <a href="#" class="current"># Generate</a> 
+    </div>
+
+    <h1>Generate Characters</h1>
+  </div>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  <hr>
+  <div class="row-fluid">
+    <div class="span20">
+      <div class="widget-box">
+        <div class="widget-title"> <span class="icon"> <i class="icon-align-justify"></i> </span>
+          <h5>Generate Characters</h5>
+        </div>
+        <div class="widget-content nopadding">
+          <form action="{{ path_for('admin.character.generate') }}" method="post" autocomplete="off" class="form-horizontal">
+            <input type="hidden" name="selfsave">
+            {{ csrf.field | raw }}
+            
+            <div class="control-group">
+              <label class="control-label">Character Values :</label>
+              <div class="controls">
+                <div class="widget-box span20">
+                  <div class="widget-title"> <span class="icon"> <i class="icon-align-justify"></i> </span>
+                    <table class="table" style="display: inline;">
+                      <thead>
+                        <tr>
+                          <th>ID</th>
+                          <th>Group</th>
+                          <th>Specialist Group</th>
+                          <th>Shift</th>
+                          <th>Iso vs Int</th>
+                          <th>Mil vs Dem</th>
+                          <th>Nost vs Prog</th>
+                          <th>Lib vs Col</th>
+                          <th>Log vs Int</th>
+                          <th>Dir vs Avoid</th>
+                          <th>Phys vs Non-P</th>
+                          <th>Mal vs Con</th>
+                        </tr>
+                      </thead>
+                    </table>  
+                  </div>
+                  <div class="widget-content nopadding">        
+                    <textarea class="span20" name="input" rows="20"></textarea>
+                  </div>
+                  
+                  <button id="generate" class="btn btn-info">Generate Characters</button>
+                </div>
+             </div>
+            </div>
+            
+            <div class="control-group">
+              <label class="control-label">Generated Characters :</label>
+              <div class="controls">
+                <table class="table table-bordered table-striped">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Group</th>
+                      <th>Specialist Group</th>
+                      <th>Shift</th>
+                      <th>Iso vs Int</th>
+                      <th>Mil vs Dem</th>
+                      <th>Nost vs Prog</th>
+                      <th>Lib vs Col</th>
+                      <th>Log vs Int</th>
+                      <th>Dir vs Avoid</th>
+                      <th>Phys vs Non-P</th>
+                      <th>Mal vs Con</th>
+                    </tr>
+                  </thead>
+                  <tbody class="generated_characters">
+                  </tbody>
+                </table>
+              </div>
+            </div>
+  
+            <div class="form-actions">
+              <button type="submit" class="btn btn-success">Import</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ parent() }}
+<script type="text/javascript" src="/resources/admin/js/traits.js"></script> 
+<script type="text/javascript" src="/resources/admin/js/generateCharacters.js"></script> 
+{% endblock %}
+
+{% block inlinejs %}
+  $("#generate").on("click", function (e) {
+    e.preventDefault();
+    var characters = generateFromInput($("[name=input]").val());
+    var row, field;
+    var values_lookup = {
+      "Dir vs Avoid": "dir_avo_note[]",
+      "Group": "org[]",
+      "ID": "id[]",
+      "Iso vs Int": "iso_int_note[]",
+      "Lib vs Col": "lib_col_note[]",
+      "Log vs Int": "log_int_note[]",
+      "Mal vs Con": "mal_con_note[]",
+      "Mil vs Dem": "mil_dem_note[]",
+      "Nost vs Prog": "nos_pro_note[]",
+      "Phys vs Non-P": "phy_non_note[]",
+      "Iso_Int":     "iso_int[]",
+      "Lib_Col":     "lib_col[]",
+      "Log_Int":     "log_int[]",
+      "Mal_Con":     "mal_con[]",
+      "Mil_Dem":     "mil_dem[]",
+      "Nost_Prog":   "nos_pro[]",
+      "Phys_Non-P":  "phy_non[]",
+      "Shift": "shift[]",
+      "Specialist Group": "role[]"
+    }
+    var row_template = $('<tr><td><input type="text" name="id[]" value="{{last.id}}"></td><td><input type="text" name="org[]"></td><td><input type="text" name="role[]"></td><td><input type="text" name="shift[]"></td><td><input type="text" name="iso_int_note[]"><input type="hidden" name="iso_int[]" data-multiply="10"></td><td><input type="text" name="mil_dem_note[]"><input type="hidden" name="mil_dem[]" data-multiply="10"></td><td><input type="text" name="nos_pro_note[]"><input type="hidden" name="nos_pro[]" data-multiply="10"></td><td><input type="text" name="lib_col_note[]"><input type="hidden" name="lib_col[]" data-multiply="10"></td><td><input type="text" name="log_int_note[]"><input type="hidden" name="log_int[]" data-multiply="10"></td><td><input type="text" name="dir_avo_note[]"><input type="hidden" name="dir_avo[]" data-multiply="10"></td><td><input type="text" name="phy_non_note[]"><input type="hidden" name="phy_non[]" data-multiply="10"></td><td><input type="text" name="mal_con_note[]"><input type="hidden" name="mal_con[]" data-multiply="10"></td></tr>')
+
+    characters.forEach(function (char) {
+      row = row_template.clone();
+      Object.keys(char).forEach(function (key) {
+        field = row.find("[name='" + values_lookup[key] + "']");
+        multiplyer = field.data("multiply") || 1;
+        val = ((field.val() || "").length ? +field.val() + +char[key] : char[key]);
+        if(field.data("multiply")) val *= field.data("multiply");
+        if (char[key] !== false) {
+          field.val(val);
+        }
+      });
+      row.appendTo(".generated_characters");
+    });
+  });
+{% endblock %}
