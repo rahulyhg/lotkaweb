@@ -6,14 +6,14 @@ var levels = [
 var type_mapping = [0,0,0,0,0, -1, 1,1,1,1,1];
 
 var traits_mapping = {
-	"Iso vs Int":     { "types": ["Isolationist", "Isolationist"],  "levels": levels },
-	"Mil vs Dem":     { "types": ["Militarist", "Democrat"],        "levels": levels },
-	"Nost vs Prog":   { "types": ["Nostalgic", "Progressive"],      "levels": levels },
-	"Lib vs Col":     { "types": ["Libertine", "Collectivist"],     "levels": levels },
-	"Log vs Int":     { "types": ["Logical", "Intuitive"],          "levels": levels },
-	"Dir vs Avoid":   { "types": ["Direct", "Avoidant"],            "levels": levels },
-	"Phys vs Non-P":  { "types": ["Physical", "Non-physical"],      "levels": levels },
-	"Mal vs Con":     { "types": ["Malcontent", "Content"],         "levels": levels }
+	"Iso vs Int":     { "types": ["Isolationist", "Interventionist"],  "levels": levels },
+	"Mil vs Dem":     { "types": ["Militarist", "Democrat"],           "levels": levels },
+	"Nost vs Prog":   { "types": ["Nostalgic", "Progressive"],         "levels": levels },
+	"Lib vs Col":     { "types": ["Libertine", "Collectivist"],        "levels": levels },
+	"Log vs Int":     { "types": ["Logical", "Intuitive"],             "levels": levels },
+	"Dir vs Avoid":   { "types": ["Direct", "Avoidant"],               "levels": levels },
+	"Phys vs Non-P":  { "types": ["Physical", "Non-physical"],         "levels": levels },
+	"Mal vs Con":     { "types": ["Malcontent", "Content"],            "levels": levels }
 };
 
 var role_labels = [
