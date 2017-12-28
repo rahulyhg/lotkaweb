@@ -315,6 +315,19 @@ $app->group('/admin', function() use ($container) {
     $this->post('', 'BulkmailActionController:send');
   });
   
+  //Attributes
+  $this->group('/attributes', function () {
+    $this->get('/all', 'AttributeActionController:index')->setName('admin.attributes.list');
+
+    $this->get('/add', 'AttributeActionController:add')->setName('admin.attributes.add');
+    $this->post('/add', 'AttributeActionController:post');
+
+    $this->get('/{uid}/edit', 'AttributeActionController:edit')->setName('admin.attributes.edit');
+    $this->post('/{uid}/edit', 'AttributeActionController:post');
+
+    $this->get('/{uid}/delete', 'AttributeActionController:delete')->setName('admin.attributes.delete');
+  });  
+  
 })->add(new AdminMiddleware($container));
 
 //Setup
