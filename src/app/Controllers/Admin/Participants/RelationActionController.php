@@ -104,6 +104,7 @@ class RelationActionController extends Controller
       }
 
       $item->attr()->sync($attribute_ids);
+      $item->characters()->sync([$data["source"], $data["target"]]);
       return true;
     } else {
       $this->flash->addMessage('error', "The relationship ID:" . $id . " could not be saved.");
