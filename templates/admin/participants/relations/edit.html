@@ -79,7 +79,7 @@
                   <option value=""> - No Source - </option>
                 {% for character in characters %}
                   <option value="{{ character.id }}"{% if character.id == current.attr.source %} selected="selected"{% endif %}>
-                    {{ character.name }}
+                    {{ character.name|default(character.id) }}
                   </option>
                 {% endfor %}
                 </select>
@@ -94,7 +94,7 @@
                   <option value=""> - No Target - </option>                  
                 {% for character in characters %}
                   <option value="{{ character.id }}"{% if character.id == current.attr.target %} selected="selected"{% endif %}>
-                    {{ character.name }}
+                    {{ character.name|default(character.id) }}
                   </option>
                 {% endfor %}
                 </select>
@@ -108,7 +108,7 @@
                 <select name="character_ids[]" multiple="true">
                 {% for character in characters %}
                   <option value="{{ character.id }}"{% for relation_character in current.data.characters %}{% if character.id == relation_character.id %} selected="selected"{% endif %}{% endfor %}>
-                    {{ character.name }}
+                    {{ character.name|default(character.id) }}
                   </option>
                 {% endfor %}
                 </select>

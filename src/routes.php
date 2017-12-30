@@ -288,6 +288,9 @@ $app->group('/admin', function() use ($container) {
       
       $this->get('/add', 'RelationActionController:add')->setName('admin.relation.add');
       $this->post('/add', 'RelationActionController:post');
+
+      $this->get('/generate', 'RelationActionController:generate')->setName('admin.relation.generate');
+      $this->post('/generate', 'RelationActionController:postGenerate');
       
       $this->get('/{uid}/edit', 'RelationActionController:edit')->setName('admin.relation.edit');
       $this->post('/{uid}/edit', 'RelationActionController:post');

@@ -397,7 +397,7 @@ var mapData = [
 var map = AmCharts.makeChart( "chartdiv", {
   "type": "map",
   "theme": "dark",
-  "colorSteps":  users_country_data[0].data,
+  "colorSteps":  (users_country_data[0]||{}).data,
 
   "dataProvider": {
     "map": "worldLow",

@@ -1,0 +1,132 @@
+{% extends 'admin/dashboard/main.twig' %}
+
+{% block title %}Relationship Manager{% endblock %}
+
+{% block contentHeader %}
+  <div id="content-header">
+    <div id="breadcrumb"> 
+      <a href="{{ path_for('admin.index') }}" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a> 
+      <a href="{{ path_for('admin.participant.dashboard') }}">Participants</a> 
+      <a href="{{ path_for('admin.relation.list') }}">Relationships</a> 
+      <a href="#" class="current"># Generate</a> 
+    </div>
+
+    <h1>Generate Relationships</h1>
+  </div>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  <hr>
+  <div class="row-fluid">
+    <div class="span20">
+      <div class="widget-box">
+        <div class="widget-title"> <span class="icon"> <i class="icon-align-justify"></i> </span>
+          <h5>Generate Relationships</h5>
+        </div>
+        <div class="widget-content nopadding">
+          <form action="{{ path_for('admin.relation.generate') }}" method="post" autocomplete="off" class="form-horizontal">
+            <input type="hidden" name="selfsave">
+            {{ csrf.field | raw }}
+            
+            <div class="control-group">
+              <label class="control-label">Relationship Values :</label>
+              <div class="controls">
+                <div class="widget-box span20">
+                  <div class="widget-title"> <span class="icon"> <i class="icon-align-justify"></i> </span>
+                    <table class="table" style="display: inline;">
+                      <thead>
+                        <tr>
+                          <th>Character ID</th>
+                          <th>Rel 1 Char ID</th>
+                          <th>Rel 1 Nature</th>
+                          <th>Rel 2 Char ID</th>
+                          <th>Rel 2 Nature</th>
+                          <th>Rel 3 Char ID</th>
+                          <th>Rel 3 Nature</th>
+                          <th>Rel 4 Char ID</th>
+                          <th>Rel 4 Nature</th>
+                        </tr>
+                      </thead>
+                    </table>  
+                  </div>
+                  <div class="widget-content nopadding">        
+                    <textarea class="span20" name="input" rows="20"></textarea>
+                    <input type="text" class="span5" name="id_offset" placeholder="System ID offset" style="margin-top: .5em;">
+                  </div>
+                  
+                  <button id="generate" class="btn btn-info">Generate Relationships</button>
+                </div>
+             </div>
+            </div>
+            
+            <div class="control-group">
+              <label class="control-label">Generated Relationships :</label>
+              <div class="controls">
+                <table class="table table-bordered table-striped">
+                  <thead>
+                    <tr>
+                        <th>Character ID</th>
+                        <th>Relationship Character ID</th>
+                        <th>Relationship Nature</th>
+                    </tr>
+                  </thead>
+                  <tbody class="generated_characters">
+                  </tbody>
+                </table>
+              </div>
+            </div>
+  
+            <div class="form-actions">
+              <button type="submit" class="btn btn-success">Import</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block inlinejs %}
+  $("#generate").on("click", function (e) {
+    e.preventDefault();
+
+    offset = $("[name=id_offset]").val();
+    offset = offset.length ? offset : 0;
+    rels = $("[name=input]").val().split("\n");
+
+    rels = rels.map((r, i, a, s, R) => (
+      R = r.split("\t"),
+      [{
+        "id": +R[0] + +offset,
+        "char_id": +R[1] + +offset,
+        "nature": R[2]
+      },{
+        "id": +R[0] + +offset,
+        "char_id": +R[3] + +offset,
+        "nature": R[4]
+      },{
+        "id": +R[0] + +offset,
+        "char_id": +R[5] + +offset,
+        "nature": R[6]
+      },{
+        "id": +R[0] + +offset,
+        "char_id": +R[7] + +offset,
+        "nature": R[8]
+      },]
+    ));
+    rels = [].concat.apply([], rels);
+
+    var row, field;
+    var row_template = $('<tr><td><input type="text" name="id[]"></td><td><input type="text" name="char_id[]"></td><td><input type="text" name="nature[]"></td></tr>')
+
+    rels.forEach(function (rel) {
+      row = row_template.clone();
+      Object.keys(rel).forEach(function (key) {
+        row.find("[name='" + key + "[]']").val(rel[key]);
+      });
+      row.appendTo(".generated_characters");
+    });
+  });
+{% endblock %}
