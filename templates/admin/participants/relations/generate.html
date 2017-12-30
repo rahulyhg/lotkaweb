@@ -42,10 +42,6 @@
                           <th>Rel 1 Nature</th>
                           <th>Rel 2 Char ID</th>
                           <th>Rel 2 Nature</th>
-                          <th>Rel 3 Char ID</th>
-                          <th>Rel 3 Nature</th>
-                          <th>Rel 4 Char ID</th>
-                          <th>Rel 4 Nature</th>
                         </tr>
                       </thead>
                     </table>  
@@ -106,7 +102,9 @@
         "id": +R[0] + +offset,
         "char_id": +R[3] + +offset,
         "nature": R[4]
-      },{
+      }
+/*
+      ,{
         "id": +R[0] + +offset,
         "char_id": +R[5] + +offset,
         "nature": R[6]
@@ -114,7 +112,9 @@
         "id": +R[0] + +offset,
         "char_id": +R[7] + +offset,
         "nature": R[8]
-      },]
+      },
+*/
+      ]
     ));
     rels = [].concat.apply([], rels);
 

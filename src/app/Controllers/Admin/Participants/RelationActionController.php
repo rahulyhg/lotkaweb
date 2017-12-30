@@ -104,7 +104,7 @@ class RelationActionController extends Controller
       }
 
       $item->attr()->sync($attribute_ids);
-      $item->characters()->sync([$data["source"], $data["target"]]);
+      $item->characters()->sync($credentials["characters"]);
       return true;
     } else {
       $this->flash->addMessage('error', "The relationship ID:" . $id . " could not be saved.");
@@ -182,11 +182,10 @@ class RelationActionController extends Controller
     $relation_generations = [];
     foreach ( $relation_data["source"] as $i => $id ) {
       $relation_generations[$id] = self::saveRelation($id, [
-        "source"            => $relation_data["source"][$i],
         "relationship_type" => $relation_data["relationship_type"][$i],
-        "target"            => $relation_data["target"][$i],
       ], [
         "name"              => $relation_data["relationship_type"][$i],
+        "characters"        => [$relation_data["source"][$i], $relation_data["target"][$i]]
       ]);
     }
     
