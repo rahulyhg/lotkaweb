@@ -94,8 +94,12 @@ class Controller
   
   public function render($slug, $info, $response) {
     $participant = self::getCurrentUser();
+    
+    $visibility = ['participant'];
+    if($this->container->auth->isAdmin()) $visibility[] = 'admin';
+    
     $post = Post::where('slug', $slug)
-      ->visibleTo(['participant', 'admin'])
+      ->visibleTo($visibility)
       ->published()->first();
     
     if(!$post) die("Template '$slug' is missing, have a nice day.");

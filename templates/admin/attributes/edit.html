@@ -52,10 +52,10 @@
               </div>
               <div class="collapse {{ current.characters|length > 0 ? 'in' : ''}}" id="collapseChars">
                 <div class="widget-content"> 
-                  <select name="character_ids[]" multiple="true" disabled>
-                  {% for character in characters %}
-                    <option value="{{ character.id }}" {% for char in current.characters %}{% if character.id == char.id %}selected="selected"{% endif %}{% endfor %}>
-                      {{ character.name }}
+                  <select name="character_ids[]"  multiple="true">
+                  {% for item in characters %}
+                    <option value="{{ item.id }}" {% for char in current.characters %}{% if item.id == char.id %}selected="selected"{% endif %}{% endfor %}>
+                      {{ item.name|default(item.id) }}
                     </option>
                   {% endfor %}
                   </select>
@@ -70,10 +70,10 @@
               </div>
               <div class="collapse {{ current.groups|length > 0 ? 'in' : ''}}" id="collapseGroups">
                 <div class="widget-content"> 
-                  <select name="group_ids[]" multiple="true" disabled>
+                  <select name="group_ids[]"  multiple="true">
                   {% for item in groups %}
                     <option value="{{ item.id }}" {% for i in current.groups %}{% if item.id == i.id %}selected="selected"{% endif %}{% endfor %}>
-                      {{ item.name }}
+                      {{ item.name|default(item.id) }}
                     </option>
                   {% endfor %}
                   </select>
@@ -88,10 +88,10 @@
               </div>
               <div class="collapse {{ current.plots|length > 0 ? 'in' : ''}}" id="collapsePlots">
                 <div class="widget-content"> 
-                  <select name="plot_ids[]" multiple="true" disabled>
+                  <select name="plot_ids[]"  multiple="true">
                   {% for item in plots %}
                     <option value="{{ item.id }}" {% for i in current.plots %}{% if item.id == i.id %}selected="selected"{% endif %}{% endfor %}>
-                      {{ item.name }}
+                      {{ item.name|default(item.id) }}
                     </option>
                   {% endfor %}
                   </select>
@@ -106,10 +106,10 @@
               </div>
               <div class="collapse {{ current.posts|length > 0 ? 'in' : ''}}" id="collapsePosts">
                 <div class="widget-content"> 
-                  <select name="post_ids[]" multiple="true" disabled>
+                  <select name="post_ids[]"  multiple="true">
                   {% for item in posts %}
                     <option value="{{ item.id }}" {% for i in current.posts %}{% if item.id == i.id %}selected="selected"{% endif %}{% endfor %}>
-                      {{ item.title }}
+                      {{ item.title|default(item.id) }}
                     </option>
                   {% endfor %}
                   </select>
@@ -124,10 +124,10 @@
               </div>
               <div class="collapse {{ current.media|length > 0 ? 'in' : ''}}" id="collapseMedia">
                 <div class="widget-content"> 
-                  <select name="media_ids[]" multiple="true" disabled>
+                  <select name="media_ids[]"  multiple="true">
                   {% for item in media %}
                     <option value="{{ item.id }}" {% for i in current.media %}{% if item.id == i.id %}selected="selected"{% endif %}{% endfor %}>
-                      {{ item.name }}
+                      {{ item.name|default(item.id) }}
                     </option>
                   {% endfor %}
                   </select>
@@ -142,10 +142,10 @@
               </div>
               <div class="collapse {{ current.rel|length > 0 ? 'in' : ''}}" id="collapseRelations">
                 <div class="widget-content"> 
-                  <select name="rel_ids[]" multiple="true" disabled>
+                  <select name="rel_ids[]"  multiple="true">
                   {% for item in rel %}
                     <option value="{{ item.id }}" {% for i in current.rel %}{% if item.id == i.id %}selected="selected"{% endif %}{% endfor %}>
-                      {{ item.name }}
+                      {{ item.name|default(item.id) }}
                     </option>
                   {% endfor %}
                   </select>
@@ -160,10 +160,10 @@
               </div>
               <div class="collapse {{ current.tickets|length > 0 ? 'in' : ''}}" id="collapseTickets">
                 <div class="widget-content"> 
-                  <select name="ticket_ids[]" multiple="true" disabled>
+                  <select name="ticket_ids[]"  multiple="true">
                   {% for item in tickets %}
                     <option value="{{ item.id }}" {% for i in current.tickets %}{% if item.id == i.id %}selected="selected"{% endif %}{% endfor %}>
-                      {{ item.sku }}
+                      {{ item.sku|default(item.id) }}
                     </option>
                   {% endfor %}
                   </select>
@@ -178,10 +178,10 @@
               </div>
               <div class="collapse {{ current.users|length > 0 ? 'in' : ''}}" id="collapseUsers">
                 <div class="widget-content"> 
-                  <select name="user_ids[]" multiple="true" disabled>
+                  <select name="user_ids[]"  multiple="true">
                   {% for item in users %}
                     <option value="{{ item.id }}" {% for i in current.users %}{% if item.id == i.id %}selected="selected"{% endif %}{% endfor %}>
-                      {{ item.displayname }}
+                      {{ item.displayname|default(item.id) }}
                     </option>
                   {% endfor %}
                   </select>

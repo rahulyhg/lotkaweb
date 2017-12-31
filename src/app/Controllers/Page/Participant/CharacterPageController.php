@@ -56,18 +56,17 @@ class CharacterPageController extends Controller
     );
   }
   
-  private function getCharacersInfo() {
+  private function getCharacersInfo($AttributeFilter = [['name','like','%']]) {
     $characters = Character::whereHas(
-        'attr', function ($query) {
-            $query->whereIn('name', ['Costume done'])
-              ->whereIn('value', ['no']);
+        'attr', function ($query) use ($AttributeFilter) {
+            $query->where( $AttributeFilter);
         }
-    )->with('attr');
-    $character_list = [];
+    )->where('name', '<>', '')->with('attr')->get();
     
-    die(var_dump($characters->toSql()));
     
-    foreach ($characters->get() as $character) {        
+    //die(var_dump($characters->toSql()));
+    $character_list = [];    
+    foreach ($characters as $character) {        
       $character_list[] = [
         "data" => $character, 
         "attributes" => self::mapAttributes($character->attr),

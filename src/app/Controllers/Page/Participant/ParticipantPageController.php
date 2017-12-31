@@ -17,7 +17,7 @@ use Slim\Views\Twig as View;
 
 class ParticipantPageController extends Controller
 { 
-  private function getPlayersInfo() {
+  private function getPlayersInfo() {    
     $role = $this->container->sentinel->findRoleBySlug('participant');
     $users = $role->users()->orderBy('displayname', 'ASC')->get();
     $user_list = [];
@@ -191,7 +191,13 @@ class ParticipantPageController extends Controller
   {
     $participant = self::getCurrentUser();
     $slug = filter_var($arguments['page'], FILTER_SANITIZE_STRING);
-    $post = Post::where('slug', $slug)->visibleTo(['participant'])->published()->first();
+    
+    $visibility = ['participant'];
+    if($this->container->auth->isAdmin()) $visibility[] = 'admin';
+    
+    $post = Post::where('slug', $slug)
+        ->visibleTo($visibility)
+        ->published()->first();
     
     if(!$post) return $response->withRedirect($this->router->pathFor('participant.home'));
     
