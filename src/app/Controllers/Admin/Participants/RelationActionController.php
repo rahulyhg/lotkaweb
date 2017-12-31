@@ -139,6 +139,26 @@ class RelationActionController extends Controller
     ];
   }
   
+  private function saveRelation($id, $data, $credentials) {
+    $item = Relation::create(['name' => $credentials['name']]);
+    if($item->id) {
+      $attribute_ids = [];
+      foreach ($data as $name => $value) {
+        $attribute_ids[] = Attribute::firstOrCreate([
+          'name' => $name, 
+          'value' => $value
+        ])->id;
+      }
+
+      $item->attr()->sync($attribute_ids);
+      $item->characters()->sync($credentials["characters"]);
+      return true;
+    } else {
+      $this->flash->addMessage('error', "The relationship ID:" . $id . " could not be saved.");
+      return false;
+    }
+  }
+  
   private function save($requestData, $request, $response, $arguments) {
     // update data
     $item = Relation::firstOrCreate(['id' => $arguments['uid']]);
@@ -190,6 +210,39 @@ class RelationActionController extends Controller
     ]);
     
     return $this->view->render($response, 'admin/participants/relations/edit.html', self::relationOptions());
+  }
+  
+  public function generate($request, $response, $arguments)
+  {
+    return $this->view->render($response, 'admin/participants/relations/generate.html', [
+    ]);
+  }
+
+  public function postGenerate($request, $response, $arguments)
+  {    
+    $relation_data = [
+      "source"            => $request->getParam("id"),
+      "relationship_type" => $request->getParam("nature"),
+      "target"            => $request->getParam("char_id"),     
+    ];
+    
+    $relation_generations = [];
+    foreach ( $relation_data["source"] as $i => $id ) {
+      $relation_generations[$id] = self::saveRelation($id, [
+        "relationship_type" => $relation_data["relationship_type"][$i],
+      ], [
+        "name"              => $relation_data["relationship_type"][$i],
+        "characters"        => [$relation_data["source"][$i], $relation_data["target"][$i]]
+      ]);
+    }
+    
+    //die(var_dump($character_generations));
+    
+    if( !in_array(false, $relation_generations, true) ) {
+      $this->flash->addMessage('success', count($relation_data["source"]) . " Relations created.");      
+    }
+    
+    return $response->withRedirect($this->router->pathFor('admin.relation.list'));
   }
   
   public function post($request, $response, $arguments)

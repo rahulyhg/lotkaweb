@@ -1,0 +1,54 @@
+{% extends 'admin/dashboard/main.twig' %}
+
+{% block title %}Attribute Manager{% endblock %}
+
+{% block contentHeader %}
+  <div id="content-header">
+    <div id="breadcrumb"> 
+      <a href="{{ path_for('admin.index') }}" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a> 
+      <a href="#" class="current">Attributes</a>
+    </div>
+    
+    <h1>Attributes</h1>
+  </div>
+{% endblock %}
+
+{% block content %}
+  <div class="container-fluid">
+    <hr>
+    <div class="row-fluid">
+      <div class="span12">
+        <div class="widget-box">
+          <div class="widget-title"> <span class="icon"><i class="icon-th"></i></span>
+            <h5>Attributes</h5>
+          </div>
+          <div class="widget-content nopadding">
+            <table class="table table-bordered data-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Name</th>
+                  <th>Value</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for attr in list %}
+                <tr class="gradeA">
+                  <td class="center">{{ attr.id }}</td>
+                  <td><a href="{{ path_for('admin.attributes.edit', { 'uid': attr.id }) }}" title="Edit Attribute">{{ attr.name }}</a></td>
+                  <td><a href="{{ path_for('admin.attributes.edit', { 'uid': attr.id }) }}" title="Edit Attribute">{{ attr["value"]|e }}</a></td>
+                  <td class="center">
+                    <a href="{{ path_for('admin.attributes.edit', { 'uid': attr.id }) }}" class="btn btn-default" title="Edit Attribute"><i class="icon-edit"></i></a>
+                    {# <a href="{{ path_for('admin.attributes.delete', { 'uid': attr.id }) }}" class="btn btn-danger" title="Delete Attribute"><i class="icon-remove"></i></a> #}
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

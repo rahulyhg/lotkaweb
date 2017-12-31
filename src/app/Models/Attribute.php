@@ -15,34 +15,34 @@ class Attribute extends Model
   
   public function characters()
   {
-      return $this->belongsToMany('App\Models\Character')->withTimeStamps();
+      return $this->belongsToMany('App\Models\Character', 'character_attribute')->withTimeStamps();
   }
   public function groups()
   {
-      return $this->belongsToMany('App\Models\Group')->withTimeStamps();
+      return $this->belongsToMany('App\Models\Group', 'group_attribute')->withTimeStamps();
   }
   public function plots()
   {
-      return $this->belongsToMany('App\Models\Plot')->withTimeStamps();
+      return $this->belongsToMany('App\Models\Plot', 'plot_attribute')->withTimeStamps();
   }
   public function posts()
   {
-      return $this->belongsToMany('App\Models\Post')->withTimeStamps();
+      return $this->belongsToMany('App\Models\Post', 'post_attribute')->withTimeStamps();
   }  
   public function rel()
   {
-      return $this->belongsToMany('App\Models\Relation')->withTimeStamps();
+      return $this->belongsToMany('App\Models\Relation', 'relation_attribute')->withTimeStamps();
   }
   public function tickets()
   {
-      return $this->belongsToMany('App\Models\Ticket')->withTimeStamps();
+      return $this->belongsToMany('App\Models\Ticket', 'ticket_attribute')->withTimeStamps();
   }
   public function users()
   {
-      return $this->belongsToMany('App\Models\User')->withTimeStamps();
+      return $this->belongsToMany('App\Models\User', 'user_attribute')->withTimeStamps();
   }
   public function media()
   {
-      return $this->belongsToMany('App\Models\Media')->withTimeStamps();
+      return $this->belongsToMany('App\Models\Media', 'media_attribute')->withTimeStamps();
   }
 }

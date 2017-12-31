@@ -83,13 +83,15 @@
     </ul>
   </li>
 
-  <li class="submenu {{ [path_for('admin.character.list'),path_for('admin.character.add')]|isActive }}">
+  <li class="submenu {{ [path_for('admin.character.list'),path_for('admin.character.add'),path_for('admin.character.generate')]|isActive }}">
     <a href="{{ path_for('admin.participant.dashboard') }}">
       <i class="icon icon-user"></i> <span>Characters</span> <span class="label label-important"></span>
     </a>
     <ul>
       <li class="{{ path_for('admin.character.list')|isActive }}">
         <a href="{{ path_for('admin.character.list') }}">All</a></li>
+      <li class="{{ path_for('admin.character.generate')|isActive }}">
+        <a href="{{ path_for('admin.character.generate') }}">Generate from import</a></li>
       <li class="{{ path_for('admin.character.add')|isActive }}">
         <a href="{{ path_for('admin.character.add') }}"><i class="icon-plus-sign"></i> <span>Create new</span> </a></li>
     </ul>
@@ -119,13 +121,15 @@
     </ul>
   </li>  
   
-  <li class="submenu {{ [path_for('admin.relation.list'),path_for('admin.relation.add')]|isActive }}">
+  <li class="submenu {{ [path_for('admin.relation.list'),path_for('admin.relation.add'),path_for('admin.relation.generate')]|isActive }}">
     <a href="{{ path_for('admin.participant.dashboard') }}">
       <i class="icon icon-heart-empty"></i> <span>Relations</span> <span class="label label-important"></span>
     </a>
     <ul>
       <li class="{{ path_for('admin.relation.list')|isActive }}">
         <a href="{{ path_for('admin.relation.list') }}">All</a></li>
+      <li class="{{ path_for('admin.relation.generate')|isActive }}">
+        <a href="{{ path_for('admin.relation.generate') }}">Generate from import</a></li>
       <li class="{{ path_for('admin.relation.add')|isActive }}">
         <a href="{{ path_for('admin.relation.add') }}"><i class="icon-plus-sign"></i> <span>Create new</span> </a></li>
     </ul>
@@ -142,6 +146,16 @@
         <a href="{{ path_for('admin.media.add') }}"><i class="icon-plus-sign"></i> <span>Upload new</span> </a></li>
     </ul>
   </li>  
+  
+  <li class="submenu {{ [path_for('admin.attributes.list'),path_for('admin.attributes.add')]|isActive }}">
+    <a href="{{ path_for('admin.attributes.list') }}">
+      <i class="icon icon-tag"></i> <span>Attributes</span> <span class="label label-important"></span>
+    </a>
+    <ul>
+      <li class="{{ path_for('admin.attributes.list')|isActive }}">
+        <a href="{{ path_for('admin.attributes.list') }}">All</a></li>
+    </ul>
+  </li>   
   
   <li class="{{ [path_for('admin.bulkmail')]|isActive }}">
     <a href="{{ path_for('admin.bulkmail') }}">

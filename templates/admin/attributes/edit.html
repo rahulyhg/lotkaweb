@@ -1,0 +1,205 @@
+{% extends 'admin/dashboard/main.twig' %}
+
+{% block title %}Attribute Manager{% endblock %}
+
+{% block contentHeader %}
+  <div id="content-header">
+    <div id="breadcrumb"> 
+      <a href="{{ path_for('admin.index') }}" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a> 
+      <a href="{{ path_for('admin.attributes.list') }}">Attributes</a> 
+      <a href="#" class="current"># {{current.data.name|default('New Attribute')}}</a> 
+    </div>
+
+    <h1>Edit {{current.data.name|default('New Attribute')}}</h1>
+  </div>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  <hr>
+  <div class="row-fluid">
+    <div class="span8">
+      <div class="widget-box">
+        <div class="widget-title"> <span class="icon"> <i class="icon-align-justify"></i> </span>
+          <h5>Edit Attribute</h5>
+        </div>
+        <div class="widget-content nopadding">
+          <form action="{{ current.new ? path_for('admin.attributes.add') : path_for('admin.attributes.edit', { 'uid': current.data.id }) }}" method="post" autocomplete="off" class="form-horizontal">
+            <input type="hidden" name="selfsave">
+            {{ csrf.field | raw }}
+            
+            <div class="control-group">
+              <label class="control-label">Name :</label>
+              <div class="controls">
+                <input type="text" class="span11" name="name" placeholder="Name" value="{{ current.data.name }}">
+             </div>
+            </div>
+
+            <div class="control-group">
+              <label class="control-label">Value :</label>
+              <div class="controls">
+                <textarea class="span11" name="value" rows="5">{{ current.data.value }}</textarea>
+             </div>
+            </div>
+            
+            
+            <div class="widget-box collapsible">
+              <div class="widget-title"> 
+                <a href="#collapseChars" data-toggle="collapse"> 
+                  <span class="icon"><i class="icon-user"></i></span>
+                  <h5>Characters</h5>
+                </a> 
+              </div>
+              <div class="collapse {{ current.characters|length > 0 ? 'in' : ''}}" id="collapseChars">
+                <div class="widget-content"> 
+                  <select name="character_ids[]" multiple="true" disabled>
+                  {% for character in characters %}
+                    <option value="{{ character.id }}" {% for char in current.characters %}{% if character.id == char.id %}selected="selected"{% endif %}{% endfor %}>
+                      {{ character.name }}
+                    </option>
+                  {% endfor %}
+                  </select>
+                </div>
+              </div>
+            
+              <div class="widget-title"> 
+                <a href="#collapseGroups" data-toggle="collapse"> 
+                  <span class="icon"><i class="icon-group"></i></span>
+                  <h5>Groups</h5>
+                </a> 
+              </div>
+              <div class="collapse {{ current.groups|length > 0 ? 'in' : ''}}" id="collapseGroups">
+                <div class="widget-content"> 
+                  <select name="group_ids[]" multiple="true" disabled>
+                  {% for item in groups %}
+                    <option value="{{ item.id }}" {% for i in current.groups %}{% if item.id == i.id %}selected="selected"{% endif %}{% endfor %}>
+                      {{ item.name }}
+                    </option>
+                  {% endfor %}
+                  </select>
+                </div>
+              </div>
+            
+              <div class="widget-title"> 
+                <a href="#collapsePlots" data-toggle="collapse"> 
+                  <span class="icon"><i class="icon-comments-alt"></i></span>
+                  <h5>Plots</h5>
+                </a> 
+              </div>
+              <div class="collapse {{ current.plots|length > 0 ? 'in' : ''}}" id="collapsePlots">
+                <div class="widget-content"> 
+                  <select name="plot_ids[]" multiple="true" disabled>
+                  {% for item in plots %}
+                    <option value="{{ item.id }}" {% for i in current.plots %}{% if item.id == i.id %}selected="selected"{% endif %}{% endfor %}>
+                      {{ item.name }}
+                    </option>
+                  {% endfor %}
+                  </select>
+                </div>
+              </div>
+            
+              <div class="widget-title"> 
+                <a href="#collapsePosts" data-toggle="collapse"> 
+                  <span class="icon"><i class="icon-copy"></i></span>
+                  <h5>Posts</h5>
+                </a> 
+              </div>
+              <div class="collapse {{ current.posts|length > 0 ? 'in' : ''}}" id="collapsePosts">
+                <div class="widget-content"> 
+                  <select name="post_ids[]" multiple="true" disabled>
+                  {% for item in posts %}
+                    <option value="{{ item.id }}" {% for i in current.posts %}{% if item.id == i.id %}selected="selected"{% endif %}{% endfor %}>
+                      {{ item.title }}
+                    </option>
+                  {% endfor %}
+                  </select>
+                </div>
+              </div>
+            
+              <div class="widget-title"> 
+                <a href="#collapseMedia" data-toggle="collapse"> 
+                  <span class="icon"><i class="icon-copy"></i></span>
+                  <h5>Media</h5>
+                </a> 
+              </div>
+              <div class="collapse {{ current.media|length > 0 ? 'in' : ''}}" id="collapseMedia">
+                <div class="widget-content"> 
+                  <select name="media_ids[]" multiple="true" disabled>
+                  {% for item in media %}
+                    <option value="{{ item.id }}" {% for i in current.media %}{% if item.id == i.id %}selected="selected"{% endif %}{% endfor %}>
+                      {{ item.name }}
+                    </option>
+                  {% endfor %}
+                  </select>
+                </div>
+              </div>
+            
+              <div class="widget-title"> 
+                <a href="#collapseRelations" data-toggle="collapse"> 
+                  <span class="icon"><i class="icon-heart-empty"></i></span>
+                  <h5>Relations</h5>
+                </a> 
+              </div>
+              <div class="collapse {{ current.rel|length > 0 ? 'in' : ''}}" id="collapseRelations">
+                <div class="widget-content"> 
+                  <select name="rel_ids[]" multiple="true" disabled>
+                  {% for item in rel %}
+                    <option value="{{ item.id }}" {% for i in current.rel %}{% if item.id == i.id %}selected="selected"{% endif %}{% endfor %}>
+                      {{ item.name }}
+                    </option>
+                  {% endfor %}
+                  </select>
+                </div>
+              </div>
+              
+              <div class="widget-title"> 
+                <a href="#collapseTickets" data-toggle="collapse"> 
+                  <span class="icon"><i class="icon-film"></i></span>
+                  <h5>Tickets</h5>
+                </a> 
+              </div>
+              <div class="collapse {{ current.tickets|length > 0 ? 'in' : ''}}" id="collapseTickets">
+                <div class="widget-content"> 
+                  <select name="ticket_ids[]" multiple="true" disabled>
+                  {% for item in tickets %}
+                    <option value="{{ item.id }}" {% for i in current.tickets %}{% if item.id == i.id %}selected="selected"{% endif %}{% endfor %}>
+                      {{ item.sku }}
+                    </option>
+                  {% endfor %}
+                  </select>
+                </div>
+              </div>
+            
+              <div class="widget-title"> 
+                <a href="#collapseUsers" data-toggle="collapse"> 
+                  <span class="icon"><i class="icon-user"></i></span>
+                  <h5>Users</h5>
+                </a> 
+              </div>
+              <div class="collapse {{ current.users|length > 0 ? 'in' : ''}}" id="collapseUsers">
+                <div class="widget-content"> 
+                  <select name="user_ids[]" multiple="true" disabled>
+                  {% for item in users %}
+                    <option value="{{ item.id }}" {% for i in current.users %}{% if item.id == i.id %}selected="selected"{% endif %}{% endfor %}>
+                      {{ item.displayname }}
+                    </option>
+                  {% endfor %}
+                  </select>
+                </div>
+              </div>
+            </div>
+ 
+            <div class="form-actions">
+              <button type="submit" class="btn btn-success">Save</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block inlinejs %}
+
+{% endblock %}

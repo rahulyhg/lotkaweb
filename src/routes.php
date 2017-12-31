@@ -246,6 +246,9 @@ $app->group('/admin', function() use ($container) {
       
       $this->get('/add', 'CharacterActionController:add')->setName('admin.character.add');
       $this->post('/add', 'CharacterActionController:post');
+
+      $this->get('/generate', 'CharacterActionController:generate')->setName('admin.character.generate');
+      $this->post('/generate', 'CharacterActionController:postGenerate');
       
       $this->get('/{uid}/edit', 'CharacterActionController:edit')->setName('admin.character.edit');
       $this->post('/{uid}/edit', 'CharacterActionController:post');
@@ -285,6 +288,9 @@ $app->group('/admin', function() use ($container) {
       
       $this->get('/add', 'RelationActionController:add')->setName('admin.relation.add');
       $this->post('/add', 'RelationActionController:post');
+
+      $this->get('/generate', 'RelationActionController:generate')->setName('admin.relation.generate');
+      $this->post('/generate', 'RelationActionController:postGenerate');
       
       $this->get('/{uid}/edit', 'RelationActionController:edit')->setName('admin.relation.edit');
       $this->post('/{uid}/edit', 'RelationActionController:post');
@@ -311,6 +317,19 @@ $app->group('/admin', function() use ($container) {
     $this->get('', 'BulkmailActionController:compose')->setName('admin.bulkmail');    
     $this->post('', 'BulkmailActionController:send');
   });
+  
+  //Attributes
+  $this->group('/attributes', function () {
+    $this->get('/all', 'AttributeActionController:index')->setName('admin.attributes.list');
+
+    $this->get('/add', 'AttributeActionController:add')->setName('admin.attributes.add');
+    $this->post('/add', 'AttributeActionController:post');
+
+    $this->get('/{uid}/edit', 'AttributeActionController:edit')->setName('admin.attributes.edit');
+    $this->post('/{uid}/edit', 'AttributeActionController:post');
+
+    $this->get('/{uid}/delete', 'AttributeActionController:delete')->setName('admin.attributes.delete');
+  });  
   
 })->add(new AdminMiddleware($container));
 
