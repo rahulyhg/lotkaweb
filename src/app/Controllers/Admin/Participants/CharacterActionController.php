@@ -6,6 +6,7 @@ use App\Models\Character;
 use App\Models\Attribute;
 use App\Models\Group;
 use App\Models\User;
+use App\Models\Order;
 use App\Models\Relation;
 use App\Models\Plot;
 use App\Controllers\Controller;
@@ -118,7 +119,28 @@ class CharacterActionController extends Controller
   private function save($requestData, $request, $response, $arguments) {
     // update data
     $item = Character::firstOrCreate(['id' => $arguments['uid']]);
-    $item->update($requestData['values']);
+    
+    if(is_null($requestData['values']['user_id'])) {
+      $user = User::where('id', $item->user_id)->first();      
+      if($user) {
+        $user->character_id = 0;
+        $user->save();
+      }
+    } else {
+      $user = User::where('id', $requestData['values']['user_id'])->first();
+      if($user) {
+        $user->character_id = $item->id;
+        $order = Order::where('user_id', $user->id)->first();
+                
+        if($order && strlen($requestData['values']['name'] == 0)) {
+          $requestData['values']['name'] = $order->name;
+        }
+        
+        $user->save();
+      }
+    }
+
+    $item->update($requestData['values']);    
     
     // update data
     if($item->id) {
@@ -251,9 +273,18 @@ class CharacterActionController extends Controller
   public function edit($request, $response, $arguments)
   {
     $character = Character::where('id', $arguments['uid'])->first();
+    $order = [];
+    
+//    die(var_dump($character->user));
+    
+    
+    if($character->user_id) {
+      $order = Order::where('user_id', $character->user_id)->first();
+    }
     
     $this->container->view->getEnvironment()->addGlobal('current', [
       'data' => $character,
+      'order' => $order,
       'attr' => self::mapAttributes( $character->attr )
     ]);
     

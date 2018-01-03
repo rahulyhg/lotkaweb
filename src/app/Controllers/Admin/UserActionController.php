@@ -189,7 +189,7 @@ class UserActionController extends Controller
     if($getCurrentUserRole) {
       $getCurrentUserRole = $getCurrentUserRole->roles()->get()->first();
     }
-    
+        
     $credentials = [
       'username' => $request->getParam('username'),
       'displayname' => $request->getParam('displayname'),
@@ -293,6 +293,7 @@ class UserActionController extends Controller
       'email' => $order->email,
       //This generates the users default password, to be changed later - unsecure
       'password' => $defaultPassword,
+      'order_id' => $order->id,
     ];
 
     $validators = [

@@ -102,7 +102,11 @@ class Controller
       ->visibleTo($visibility)
       ->published()->first();
     
-    if(!$post) die("Template '$slug' is missing, have a nice day.");
+    if(!$post) {
+      $post["content"] = "Template '$slug' has not been released yet or is under development.";
+      if($this->container->get('settings')['renderer']['debug'])
+        die($post["content"]);
+    }
     
     foreach($info as $key => $data) {
       $this->container->view->getEnvironment()->addGlobal(

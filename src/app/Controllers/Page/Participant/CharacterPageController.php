@@ -37,10 +37,14 @@ class CharacterPageController extends Controller
   
   public function my($request, $response, $arguments){
     $user = self::getCurrentUser();
+    $character = $user["user"]->character;
+    
+    //die(var_dump($character->id));
+    
     return self::render(
       "character-my", 
       [
-        "character" => self::getCharacterInfo($user["user"]->id),
+        "character" => $character ? self::getCharacterInfo($character->id) : [],
       ], 
       $response
     );
@@ -50,7 +54,7 @@ class CharacterPageController extends Controller
     return self::render(
       "character", 
       [
-        "character" => self::getCharacterInfo(),
+        "character" => self::getCharacterInfo($arguments["uid"]),
       ], 
       $response
     );
@@ -63,10 +67,8 @@ class CharacterPageController extends Controller
         }
     )->where('name', '<>', '')->with('attr')->get();
     
-    
-    //die(var_dump($characters->toSql()));
     $character_list = [];    
-    foreach ($characters as $character) {        
+    foreach ($characters as $character) {
       $character_list[] = [
         "data" => $character, 
         "attributes" => self::mapAttributes($character->attr),
