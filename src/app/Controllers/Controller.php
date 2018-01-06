@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Models\Post;
 use App\Models\User;
 use App\Models\Order;
+use App\Models\Character;
 use App\Models\Attribute;
 
 class Controller
@@ -120,13 +121,25 @@ class Controller
     ]);
   }
   
+  public function getPlayerCharacter($user_id) {
+    $player_characer = Character::where('user_id', $user_id)->first();
+    
+    $character = [ "data" => [], "attributes" => [] ];
+    if($player_characer) {
+      $character["data"] = $player_characer;
+      $character["attributes"] = self::mapAttributes($player_characer->attr);
+    }    
+    return $character;
+  }
+  
   public function getPlayerInfo($uid) {
     $user_data = User::where('id', $uid)->first();
-
+      
     return $user_data? [
       "user" => $user_data,
       "attributes" => self::mapAttributes( $user_data->attr ),
-      "order" => Order::where('user_id', $user_data->id)->first()
+      "order" => Order::where('user_id', $user_data->id)->first(),
+      "character" => self::getPlayerCharacter($user_data->id),
     ] : [];
   }
   
@@ -139,7 +152,8 @@ class Controller
     return $participant ? [
       "user" => $participant,
       "attributes" => self::mapAttributes( $participant->attr ),
-      "order" => Order::where('user_id', $participant->id)->first()
+      "order" => Order::where('user_id', $participant->id)->first(),
+      "character" => self::getPlayerCharacter($participant->id),
     ] : [];
   }    
 }

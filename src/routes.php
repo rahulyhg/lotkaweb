@@ -403,7 +403,7 @@ $app->group('/participants', function () {
       ->setName('participant.player.list');
     $this->get('/gallery',  'PlayersPageController:gallery')
       ->setName('participant.player.gallery');
-    $this->get('/{uid}[/]',    'PlayersPageController:player')
+    $this->get('/{uid}[/]', 'PlayersPageController:player')
       ->setName('participant.player');
   });
 
@@ -430,7 +430,7 @@ $app->group('/participants', function () {
       ->setName('participant.group.request');
     $this->post('/{uid}/join','GroupPageController:postJoin');
 
-    $this->get('/{uid}[/]',      'GroupPageController:group')
+    $this->get('/{uid}[/]',   'GroupPageController:group')
       ->setName('participant.group');            
   });
 

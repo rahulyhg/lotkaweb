@@ -7,6 +7,7 @@ use App\Models\Plot;
 use App\Models\Group;
 use App\Models\Relation;
 use App\Models\Task;
+use App\Models\User;
 
 use App\Controllers\Controller;
 use Slim\Views\Twig as View;
@@ -34,6 +35,9 @@ class PlayersPageController extends Controller
   }
   
   public function player($request, $response, $arguments){
+    
+    die(var_dump(self::getPlayerInfo($arguments["uid"])));
+    
     return self::render(
       "player", 
       [
