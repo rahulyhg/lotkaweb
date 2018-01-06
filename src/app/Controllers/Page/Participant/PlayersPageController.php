@@ -34,10 +34,7 @@ class PlayersPageController extends Controller
     );
   }
   
-  public function player($request, $response, $arguments){
-    
-    die(var_dump(self::getPlayerInfo($arguments["uid"])));
-    
+  public function player($request, $response, $arguments){    
     return self::render(
       "player", 
       [
