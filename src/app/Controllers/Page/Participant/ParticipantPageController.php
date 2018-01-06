@@ -59,6 +59,7 @@ class ParticipantPageController extends Controller
             'target' => $this->router->pathFor('participant.page', ['page' => 'profile']),
           ],
         */
+        /*
           'characters' => [
             'title' => 'Characters',
             'target' => $this->router->pathFor('participant.character.list'),
@@ -83,6 +84,7 @@ class ParticipantPageController extends Controller
               ],
             ]
           ],
+        */
           'players' => [
             'title' => 'Players',
             'target' => $this->router->pathFor('participant.player.list'),
@@ -101,6 +103,7 @@ class ParticipantPageController extends Controller
               ],
             ]
           ],
+        /*
           'relationships' => [
             'title' => 'Relationships',
             'target' => $this->router->pathFor('participant.relation.list'),
@@ -179,6 +182,7 @@ class ParticipantPageController extends Controller
               ],
             ]
           ],
+          */
         ],
     ]);
     
