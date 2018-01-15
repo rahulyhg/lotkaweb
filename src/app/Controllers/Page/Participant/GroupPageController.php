@@ -37,6 +37,16 @@ class GroupPageController extends Controller
     );
   }
   
+  public function group($request, $response, $arguments){
+    return self::render(
+      "group", 
+      [
+        "group" => [], #self::getGroupInfo($arguments["uid"])
+      ], 
+      $response
+    );
+  }  
+  
   public function add($request, $response, $arguments){
     return "TODO : add";
   }

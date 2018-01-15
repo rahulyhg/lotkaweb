@@ -104,7 +104,7 @@ class Controller
       ->published()->first();
     
     if(!$post) {
-      $post["content"] = "Template '$slug' has not been released yet or is under development.";
+      $post["content"] = "The page for '$slug' has not been released yet or is under development, sorry for the inconvenience.";
       if($this->container->get('settings')['renderer']['debug'])
         die($post["content"]);
     }
