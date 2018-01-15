@@ -503,12 +503,16 @@ svg.loading path.lights {
   background-image: linear-gradient(45deg, transparent 0%, transparent 25%, currentColor 26%, currentColor 50%, transparent 51%, transparent 75%, currentColor 76%);
 }
 .maintenance.work-item > div > div.post-thumbnail::after         {  color: #FFF; opacity: 1; background-color: #000; }
-.surface-operations.work-item > div > div.post-thumbnail::after  {  color: #FC0; }
-.outpost-command.work-item > div > div.post-thumbnail::after     {  color: #D00; }
-.mission-control.work-item > div > div.post-thumbnail::after     {  color: #0D0; }
-.medical-personnel.work-item > div > div.post-thumbnail::after   {  color: #000; }
-.science-personnel.work-item > div > div.post-thumbnail::after   {  color: #00D; }
+.lifesupport.work-item > div > div.post-thumbnail::after         {  color: #FFF; opacity: 1; background-color: #000; }
+.surfops.work-item > div > div.post-thumbnail::after  {  color: #FC0; }
+.staffsgt.work-item > div > div.post-thumbnail::after  {  color: #FC0; }
+.command.work-item > div > div.post-thumbnail::after     {  color: #D00; }
+.miscon.work-item > div > div.post-thumbnail::after     {  color: #0D0; }
+.medic.work-item > div > div.post-thumbnail::after   {  color: #000; }
+.science.work-item > div > div.post-thumbnail::after   {  color: #00D; }
 .counselors.work-item > div > div.post-thumbnail::after          {  color: #0CD; }
-.internal-security.work-item > div > div.post-thumbnail::after   {  color: #DF0; }
-.quartermasters.work-item > div > div.post-thumbnail::after      {  color: #0CC; }
+.intsec.work-item > div > div.post-thumbnail::after   {  color: #DF0; }
+.qmaster.work-item > div > div.post-thumbnail::after      {  color: #0CC; }
+.intel.work-item > div > div.post-thumbnail::after      {  color: #D00; }
+.logistics.work-item > div > div.post-thumbnail::after      {  color: #FFF; opacity:1; background-color:#000; }
 
