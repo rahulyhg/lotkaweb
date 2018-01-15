@@ -23,6 +23,20 @@ use Slim\Views\Twig as View;
 class OnboardingPageController extends Controller
 {
   
+  private function getParticipantFromHash($arguments) {
+    $user_hash = filter_var($arguments['hash'], FILTER_SANITIZE_STRING);
+    $user = User::where('hash', $user_hash)->first();
+    $participant = [];
+      
+    if($user) {
+      $participant["user"] = $user;
+      $participant["attributes"] = self::mapAttributes($user->attr);
+      $participant["hash"] = $user_hash;
+    }
+    
+    return $participant;
+  }
+  
   private function sendEmail($recipient, $subject, $body, $vars) {
     $mail = new Sender($this->container->get('settings'));
     return $mail->send($recipient, $subject, $body, $vars);
@@ -113,57 +127,6 @@ class OnboardingPageController extends Controller
     
     return $user_data;
   }
-  
-  
-  private function getAttributeIds($attributes = [ 'keys' => [], 'values' => [] ]) {
-    $attribute_ids = [];
-    foreach ($attributes['keys'] as $i => $attr_key) {
-      $attribute_ids[] = Attribute::firstOrCreate([
-        'name' => $attr_key, 
-        'value' => $attributes['values'][$i]
-      ])->id;
-    }
-    return $attribute_ids;
-  }
-  
-  private function setUserAttributes($request, $participant) {
-    $user_attribute_set = self::onboardingAttributes();
-    $user_attributes = $participant["attributes"];
-    $request_attributes = $request->getParsedBody();
-
-    # We prepopulate boolean attributes so they can be deactivated, otherwise they are not even sent
-    if( isset($request_attributes["boolean_attributes"]) ) {
-      $boolean_attributes = explode(',', $request->getParam("boolean_attributes"));
-      foreach ($boolean_attributes as $a) {
-        $request_attributes[$a] = isset($request_attributes[$a]) ? $request_attributes[$a] : 'false';
-      }
-    }
-    
-    $attributes = [ 'keys' => [], 'values' => [] ];
-
-    foreach ($user_attribute_set as $attr) {
-      $attribute_value = null;
-      
-      if(array_key_exists($attr, $user_attributes)) $attribute_value = $user_attributes[$attr]; //Prepolulate existing attr
-      if(isset($request_attributes[$attr])) $attribute_value = $request_attributes[$attr]; //Update if we have new values
-
-      if ( is_array($attribute_value) ? count($attribute_value) : strlen($attribute_value) ) {
-        if(is_array($attribute_value)) {
-          foreach ($attribute_value as $i => $val) {
-            $attributes['keys'][] = $attr;
-            $attributes['values'][] = $attribute_value[$i];
-          }
-        } else {
-          $attributes['keys'][] = $attr;
-          $attributes['values'][] = $attribute_value;
-        }
-      }
-    }
-
-    $updated_attribute_ids = self::getAttributeIds( $attributes );
-    
-    return $participant["user"]->attr()->sync($updated_attribute_ids);
-  }
 
   private function updateAttributes($attributes, $user) {
     foreach ($attributes as $name => $value) {
@@ -204,15 +167,6 @@ class OnboardingPageController extends Controller
       
       //die($directory . "scaled" . DIRECTORY_SEPARATOR . $filename);
     }
-  }  
-  
-  private function getCurrentUser($hash) {
-    $participant = User::where('hash', $hash)->first();
-    
-    return $participant ? [
-      "user" => $participant,
-      "attributes" => self::mapAttributes( $participant->attr ),
-    ] : false;
   }
   
   private function getStageData($arguments, $participant) {
@@ -233,10 +187,9 @@ class OnboardingPageController extends Controller
   
   public function onboarding($request, $response, $arguments)
   {    
-    $user_hash = filter_var($arguments['hash'], FILTER_SANITIZE_STRING);
-    $participant = self::getCurrentUser($user_hash);
-    
-    if(!$participant["user"] || isset($participant["attributes"]["onboarding_complete"])) {
+    $participant = self::getParticipantFromHash($arguments);
+          
+    if(!$participant["user"] || isset($participant["attributes"]["onboarding_complete"])) {      
       $this->flash->addMessage(
         'error', 
         "Sorry, this participant could not be found for onboarding or the link has allready been used."
@@ -289,28 +242,34 @@ class OnboardingPageController extends Controller
       'stages_total' => $stage_data['total'],
       'stage' => $stage,
       'participant' => $participant,
-      'hash' => $user_hash,
+      'hash' => $participant["hash"],
     ]);
   }
   
   public function save($request, $response, $arguments)
   {
-    $user_hash = filter_var($arguments['hash'], FILTER_SANITIZE_STRING);
-    $participant = self::getCurrentUser($user_hash);
+    $participant = self::getParticipantFromHash($arguments);
     
-    if(!$participant) {
+    if(!$participant["user"]) {
       return $response->withRedirect($this->router->pathFor('home'));
     }
     
     $stage_data = self::getStageData($arguments, $participant);
-    
-    $participant['attributes']['onboarding_stage'] = $stage_data['stage'] + 1;
-    $participant['attributes']['onboarding_complete'] = $stage_data['total'] == $stage_data['stage'];
-    
     $user_data = self::getUserData($request, $participant);
+    $user_attribute_list = self::onboardingAttributes();    
     
-    self::setUserAttributes($request, $participant);
+    $onbording_stage_attributes = [
+      'onboarding_stage' => $stage_data['stage'] + 1,
+      'onboarding_complete' => $stage_data['total'] == $stage_data['stage'],
+    ];
     
+    $save_results = self::setModelAttributes(
+      $request, 
+      $user_attribute_list, 
+      $participant["user"], 
+      $onbording_stage_attributes
+    );
+            
     # Check if we have updated data
     $hasUpload = $request->getUploadedFiles();
     if( isset($hasUpload['portrait']) ) {
@@ -322,7 +281,7 @@ class OnboardingPageController extends Controller
                                "have a look and make sure that you have filled out all the required fields.");
     }
     
-    if($participant['attributes']['onboarding_complete']) {
+    if($onbording_stage_attributes['onboarding_complete']) {
       
       $user_role = $this->container->sentinel->findRoleBySlug('user');
       $user_role->users()->detach($participant["user"]);
@@ -347,9 +306,8 @@ class OnboardingPageController extends Controller
       };      
     }
     
-    return $response->withRedirect($this->router->pathFor(
-      'participant.onboarding', 
-      ['hash' => $user_hash, 'stage' => $participant['attributes']['onboarding_stage']]
+    return $response->withRedirect($this->router->pathFor('participant.onboarding', 
+      ['hash' => $participant["hash"], 'stage' => $onbording_stage_attributes['onboarding_stage']]
     ));
   }  
 }

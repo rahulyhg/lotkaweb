@@ -1,22 +1,15 @@
 <div class="col-sm-12">
   <ul class="filter font-alt" id="filters">
     <li>
-      <a class="wow fadeInUp" href="{{ path_for('participant.page', { 'page': 'players' }) }}" data-filter=".character" data-wow-delay="0.2s">Player List</a>
+      <a href="#" class="wow fadeInUp" data-filter="*" data-wow-delay="0.0s">All</a>
     </li>
     <li>
-      <a class="wow fadeInUp" href="{{ path_for('participant.page', { 'page': 'relationships' }) }}" data-filter=".messages" data-wow-delay="0.4s">Relationships</a>
-    </li>
+      <a href="#" class="wow fadeInUp" data-filter=".my" data-wow-delay="0.1s">My</a>
+    </li>  
+    {% for key, section in dashboard.sections %} 
     <li>
-      <a class="wow fadeInUp" href="{{ path_for('participant.page', { 'page': 'character' }) }}" data-filter=".relationships" data-wow-delay="0.6s"></a>My Character
+      <a href="{{ section.target }}" {% if section.pages %}class="wow fadeInUp" data-filter=".{{ key }}" data-wow-delay="{{ (loop.index1 / 10) * 2 }}s"{% endif %}>{{ section.title }}</a>
     </li>
-    <li>
-      <a class="wow fadeInUp" href="{{ path_for('participant.page', { 'page': 'plots' }) }}" data-filter=".groups" data-wow-delay="0.8s">Plots</a>
-    </li>
-    <li>
-      <a class="wow fadeInUp" href="{{ path_for('participant.page', { 'page': 'groups' }) }}" data-filter=".plots" data-wow-delay="1.0s">Groups</a>
-    </li>
-    <li>
-      <a class="wow fadeInUp" href="{{ path_for('participant.page', { 'page': 'schedules' }) }}" data-filter=".plots" data-wow-delay="1.2s">Schedules</a>
-    </li>
+    {% endfor %}
   </ul>
 </div>

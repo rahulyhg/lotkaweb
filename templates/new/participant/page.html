@@ -1,8 +1,12 @@
 {% extends "/new/layout.html" %}
 
-{% block title %} {{ post.title }} : {{ parent() }} {% endblock %}
+{% block title %} {{ post.title }} {{ parent() }} {% endblock %}
 
-{% block headCover %}{% endblock %}
+{% block headCover %}
+{{ include('/new/partials/fragments/flash.html') }}
+{% endblock %}
+
+{% block mainClass %}{% endblock %}
 
 {% block content %}
 <div class="col-sm-8 col-sm-offset-2">

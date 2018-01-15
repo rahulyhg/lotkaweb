@@ -19,32 +19,49 @@ class AttributeActionController extends Controller
 {
   private function options($attr = false) {
     return [
-      'characters'  => Character::where('name', '<>', '')->orderBy('name')->get(),
-      'groups'      => Group::where('name', '<>', '')->orderBy('name')->get(),
-      'plots'       => Plot::where('name', '<>', '')->orderBy('name')->get(),
-      'posts'       => Post::where('title', '<>', '')->orderBy('title')->get(),
-      'rel'         => Relation::where('name', '<>', '')->orderBy('name')->get(),
-      'tickets'     => Ticket::where('sku', '<>', '')->orderBy('sku')->get(),
-      'users'       => User::where('displayname', '<>', '')->orderBy('displayname')->get(),
-      'media'       => Media::where('name', '<>', '')->orderBy('name')->get(), 
+      'characters'  => Character::orderBy('name')->get(),
+      'groups'      => Group::orderBy('name')->get(),
+      'plots'       => Plot::orderBy('name')->get(),
+      'posts'       => Post::orderBy('title')->get(),
+      'rel'         => Relation::orderBy('name')->get(),
+      'tickets'     => Ticket::orderBy('sku')->get(),
+      'users'       => User::orderBy('displayname')->get(),
+      'media'       => Media::orderBy('name')->get(), 
     ];
   }
   
-  private function handlePostData($request) {
+  private function handlePostData($request) {    
     return [ 
       'values' => [ 
-        'keys' => $request->getParam('name'), 
-        'values' => $request->getParam('value')
+        'name'      => $request->getParam('name'), 
+        'value'     => $request->getParam('value')
       ],
-    ];    
+      'characters'  => is_null($request->getParam('character_ids')) ? [] : $request->getParam('character_ids'),
+      'groups'      => is_null($request->getParam('group_ids')) ? [] : $request->getParam('group_ids'),
+      'plots'       => is_null($request->getParam('plot_ids')) ? [] : $request->getParam('plot_ids'),
+      'posts'       => is_null($request->getParam('post_ids')) ? [] : $request->getParam('post_ids'),
+      'rel'         => is_null($request->getParam('rel_ids')) ? [] : $request->getParam('rel_ids'),
+      'tickets'     => is_null($request->getParam('ticket_ids')) ? [] : $request->getParam('ticket_ids'),
+      'users'       => is_null($request->getParam('user_ids')) ? [] : $request->getParam('user_ids'),
+      'media'       => is_null($request->getParam('media_ids')) ? [] : $request->getParam('media_ids'),      
+    ];
   }
   
   private function save($requestData, $request, $response, $arguments) {
     // update data
     $item = Attribute::firstOrCreate(['id' => $arguments['uid']]);
     $item->update($requestData['values']);
-    
-    if($item->id) {  
+
+    $item->characters()->sync($requestData['characters']);
+    $item->groups()->sync($requestData['groups']);
+    $item->plots()->sync($requestData['plots']);
+    $item->posts()->sync($requestData['posts']);
+    $item->rel()->sync($requestData['rel']);
+    $item->tickets()->sync($requestData['tickets']);
+    $item->users()->sync($requestData['users']);
+    $item->media()->sync($requestData['media']);
+
+    if($item->id) {
       $this->flash->addMessage('success', "Details have been saved.");
     } else {
       $this->flash->addMessage('error', "The details could not be saved.");
@@ -83,15 +100,15 @@ class AttributeActionController extends Controller
   {
     $item = Attribute::where('id', $arguments['uid'])->first();
     $this->container->view->getEnvironment()->addGlobal('current', [
-      'data' => $item,
-      'characters' => $item->characters()->get(),
-      'groups' => $item->groups()->get(),
-      'plots' => $item->plots()->get(),
-      'posts' => $item->posts()->get(),
-      'rel' => $item->rel()->get(),
-      'tickets' => $item->tickets()->get(),
-      'users' => $item->users()->get(),
-      'media' => $item->media()->get(),
+      'data'        => $item,
+      'characters'  => $item->characters()->get(),
+      'groups'      => $item->groups()->get(),
+      'plots'       => $item->plots()->get(),
+      'posts'       => $item->posts()->get(),
+      'rel'         => $item->rel()->get(),
+      'tickets'     => $item->tickets()->get(),
+      'users'       => $item->users()->get(),
+      'media'       => $item->media()->get(),
     ]);
     
     return $this->view->render($response, 'admin/attributes/edit.html', self::options($item));
