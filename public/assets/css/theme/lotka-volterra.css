@@ -516,3 +516,67 @@ svg.loading path.lights {
 .intel.work-item > div > div.post-thumbnail::after      {  color: #D00; }
 .logistics.work-item > div > div.post-thumbnail::after      {  color: #FFF; opacity:1; background-color:#000; }
 
+
+/* ---- table-like ---- */
+
+.table-like {
+  max-width: 1200px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* clear fix */
+.table-like:after {
+  content: '';
+  display: block;
+  clear: both;
+}
+
+/* ---- vertical table-like ---- */
+
+.table-like__item {
+  width: 100%;
+  clear: both;
+  border-top: 1px solid rgba(255,255,255,.45);
+}
+
+.table-like__item > * {
+  display: inline-block;
+  padding: 4px 4px;
+}
+
+.table-like__item.header {
+  border-bottom: 1px dotted rgba(255,255,255,.75);
+}
+
+.table-like__item.header div {
+  cursor: pointer;
+}
+
+.table-like__item.header div {
+  cursor: pointer;
+}
+.table-like__item.header div.active {
+  opacity: .5;
+}
+
+.table-like__item div { width: 20%; }
+
+.table-like__item .character-name { width: 20%; color: #91e28f; }
+.table-like__item .player { width: 20%; }
+.table-like__item .country { width: 20%; }
+.table-like__item .team { width: 20%; }
+.table-like__item .shift { width: 20%; }
+
+.player-item .team a { color: currentcolor; }
+.player-item.maintenance .team         {  color: #FFF; background-color: #000; }
+.player-item.surface-operations .team  {  color: #FC0; }
+.player-item.outpost-command .team     {  color: #D00; }
+.player-item.mission-control .team     {  color: #0D0; }
+.player-item.medical-personnel .team   {  color: #000; }
+.player-item.science-personnel .team   {  color: #00D; }
+.player-item.counselors .team          {  color: #0CD; }
+.player-item.internal-security .team   {  color: #DF0; }
+.player-item.quartermasters .team      {  color: #0CC; }
+

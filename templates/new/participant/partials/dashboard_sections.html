@@ -1,17 +1,31 @@
-<div class="col-sm-20">
-  <div class="well well-lg mb-20 mt-20">
-      <h1 class="font-alt mb-20 mt-20" style="text-align: center;">Dashboard - Comming soon</h1>
-  </div>
-</div>
-{#
 <ul class="works-grid works-grid-gut works-grid-3 works-hover-w" id="works-grid">
-{% for section in sections %}  
-  <li class="work-item {{ section.types|join(' ') }}"><a href="{{ path_for('participant.page', { 'page': section.slug }) }}">
-      <div class="work-image"><img src="{{ section.image }}" alt="{{ section.title}} Item"/></div>
+{% for key, section in dashboard.sections %}
+  {% if section.pages %}
+    {% for page_key, page in section.pages %}
+  <li class="work-item {{ page_key }} {{ key }}">
+    <a href="{{ page.target }}">
+      {% if page.image %}
+      <div class="work-image"><img src="{{ page.image }}" alt="{{ page.title }}"/></div>
+      {% else %}
+      <div class="work-image"><img src="/assets/images/logos/lotka-volterra-logo.svg" alt="{{ page.title }}"/></div>
+      {% endif %}
       <div class="work-caption font-alt">
-        <h3 class="work-title">{{ section.title}}</h3>
-        <div class="work-descr">{{ section.info }}</div>
-      </div></a></li>
+        <h3 class="work-title">{{ page.title}}</h3>
+        {% if page.info %}
+        <div class="work-descr">
+          <h6>
+            {{ page.info }}
+          </h6>
+        </div>
+        {% endif %}
+      </div>
+      <hr class="divider-w mt-0 mb-10">
+      <h5 class="font-alt  mt-0 mb-20">
+        {{ page.title}}
+      </h5>
+    </a>
+  </li>
+    {% endfor %}
+  {% endif %}
 {% endfor %}
 </ul>
-#}

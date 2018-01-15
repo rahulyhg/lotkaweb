@@ -192,7 +192,7 @@ class OrderActionController extends Controller
     $credentials = self::orderPostData($request);
 
     // update data
-    if($order->update($credentials)) {
+    if($order->update($credentials)) {      
       $this->flash->addMessage('success', "Order details have been changed.");
     } else {
       $this->flash->addMessage('error', "Order could not be updated.");

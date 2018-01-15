@@ -54,11 +54,11 @@
             <div class="control-group">
               <label class="control-label">Icon :</label>
               <div class="controls">
-                <select name="relationship_icon">
+                <select name="relationship_icon" class="special icon_select">
                   <option value=""> - No Icon - </option>
                 {% for icon in icons %}
                   <option value="{{ icon }}" {% if icon == current.attr.relationship_icon %}selected="selected"{% endif %}>
-                    <i class="{{ icon }}"></i> {{ icon }}
+                    {{ icon }}
                   </option>
                 {% endfor %}
                 </select>

@@ -166,10 +166,23 @@ window.onload = function() {
       }));
   }
   
-  $("#organizers figure img, img.portrait").on('mousemove', function() {
+  $("#organizers figure img, img.portrait:not(.lazy)").on('mousemove', function() {
     $(this).data('glitch').ones(4);
   }).each(glitchSetup).on('mouseleave', function() {
     $(this).data('glitch').reset();
   });
   
+  $('.lazy').Lazy({
+    afterLoad: function(element) {
+      element.attr('src', element.data('src'));
+      element.on('mousemove', function() {
+        $(this).data('glitch').ones(4);
+      }).each(glitchSetup).on('mouseleave', function() {
+        $(this).data('glitch').reset();
+      });
+    }, 
+    onFinishedAll: function() {
+        $('#works-grid').isotope();
+    }    
+  });
 };

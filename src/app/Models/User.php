@@ -30,7 +30,7 @@ class User extends SentinelUser
   
   public function character()
   {
-      return $this->hasOne('App\Models\Character');
+      return $this->hasOne('App\Models\Character', 'user_id');
   }
   
   public function groups()

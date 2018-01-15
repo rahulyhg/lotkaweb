@@ -31,7 +31,7 @@
             <div class="control-group">
               <label class="control-label">Surname :</label>
               <div class="controls">
-                <input type="text" class="span11" name="name" placeholder="Name" value="{{ current.data.name }}">
+                <input type="text" class="span11" name="name" placeholder="Name" value="{{ current.data.name|default(current.order.name) }}">
              </div>
             </div>
             
