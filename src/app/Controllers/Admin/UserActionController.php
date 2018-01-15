@@ -49,12 +49,13 @@ class UserActionController extends Controller
       'allergies',
       'medical_conditions',
       'npc',
+      'checked_in',
     ];
   }
   
   private function userOptions() {
     return [
-      'character' => Character::orderBy('name')->get(),
+      'characters' => Character::orderBy('name')->get(),
       'groups' => Group::orderBy('name')->get(),
       'set_attr' => self::user_attributes(),
       'genders' => ['Non-binary','Female','Male','Other'],
@@ -75,12 +76,20 @@ class UserActionController extends Controller
     }
     
     $attribute_ids = [];
-    
+    $attr = [];
     foreach ($attributes['keys'] as $i => $attr_key) {
       $attribute_ids[] = Attribute::firstOrCreate([
         'name' => $attr_key, 
         'value' => $attributes['values'][$i]
       ])->id;
+      
+      if(isset($attr[$attr_key]) && is_array($attr[$attr_key])) {
+        $attr[$attr_key][] = $attributes['values'][$i];
+      } elseif (isset($attr[$attr_key])) {
+        $attr[$attr_key] = [$attr[$attr_key], $attributes['values'][$i]];
+      } else {
+        $attr[$attr_key] = $attributes['values'][$i];      
+      }
     }
     
     $groups = $request->getParam('group_ids');
@@ -88,6 +97,7 @@ class UserActionController extends Controller
 
     return [ 
       'attributes' => $attribute_ids,
+      'attr' => $attr, 
       'groups' => $groups,
     ];
   }
@@ -168,12 +178,18 @@ class UserActionController extends Controller
     }
     
     $getCurrentUserRole = $this->container->sentinel->findById($getCurrentUserData->id)->roles()->get()->first();
-
-    $this->container->view->getEnvironment()->addGlobal('current', [
+    $current = [
       'data' => $getCurrentUserData,
       'attr' => self::mapAttributes( $getCurrentUserData->attr ),
       'role' => $getCurrentUserRole->slug
-    ]);
+    ];
+    
+    $user_character = Character::where('user_id', $getCurrentUserData->id)->first();
+    if($user_character) {
+      $current['data']['character_id'] = $user_character->id;
+    }
+    
+    $this->container->view->getEnvironment()->addGlobal('current', $current);
 
     return $this->view->render($response, 'admin/user/edit.html', self::userOptions());
   }
@@ -190,8 +206,60 @@ class UserActionController extends Controller
     if($getCurrentUserRole) {
       $getCurrentUserRole = $getCurrentUserRole->roles()->get()->first();
     }
+    
+    $requestData = self::handlePostData($request);
+    
+    $character_id = $request->getParam('character_id');
+    if(is_null($character_id)) {
+      $character = Character::where('id', $getCurrentUserData->id)->first();      
+      if($character) {
+        $character->user_id = 0;
+        $character->save();
+      }
+    } else {
+      $character = Character::where('id', $character_id)->first();
+      if($character) {
+        $order = Order::where('user_id', $getCurrentUserData->id)->first();
+
+        $character_data = [
+          'user_id' => $getCurrentUserData->id,
+        ];
+        
+        if($order && strlen($character->name) == 0) {
+          $character_data['name'] = $order->name;   
+        }
+        
+        $groups_lookup = [$requestData["attr"]["group"], $requestData["attr"]["shift"]];
+        $group_ids = [];
+        foreach ($groups_lookup as $group_name) {
+          $group_ids[] = Group::firstOrCreate(['name' => $group_name])->id;       
+        }
+        
+        $char_attribs = [
+          "org" => $requestData["attr"]["group"], 
+          "shift" => $requestData["attr"]["shift"],
+          "role" => $requestData["attr"]["role"]
+        ];
+        
+        $attribute_ids = [];
+        foreach ($char_attribs as $name => $value) {
+          if($value) {
+            $attribute_ids[] = Attribute::firstOrCreate([
+              'name' => $name, 
+              'value' => $value
+            ])->id;
+          }
+        }
+                
+        $character->groups()->sync($group_ids);
+        $character->attr()->sync($attribute_ids, false);
+        
+        $character->update($character_data);
+      }
+    }    
         
     $credentials = [
+      'character_id' => $request->getParam('character_id'),
       'username' => $request->getParam('username'),
       'displayname' => $request->getParam('displayname'),
       'email' => $request->getParam('email'),
@@ -218,7 +286,6 @@ class UserActionController extends Controller
     // update user data
     $this->container->sentinel->update($getCurrentUserData, $credentials);
 
-    $requestData = self::handlePostData($request);
     $getCurrentUserData->attr()->sync($requestData['attributes']);
     $getCurrentUserData->groups()->sync($requestData['groups']);
     

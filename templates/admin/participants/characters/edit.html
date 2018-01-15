@@ -82,7 +82,7 @@
                 <select name="org">
                   <option value=""> - No Group - </option>
                 {% for org in orgs %}
-                  <option value="{{ org.value }}" {% if org.value == current.attr.org %}selected="selected"{% endif %}>
+                  <option value="{{ org.value }}" {% if org.value == current.attr.org|flatten(1) %}selected="selected"{% endif %}>
                     {{ org.value }}
                   </option>
                 {% endfor %}
@@ -93,11 +93,12 @@
             
             <div class="control-group">
               <label class="control-label">Shift :</label>
+                            
               <div class="controls">
                 <select name="shift">
                   <option value=""> - No Shift - </option>
                 {% for shift in shifts %}
-                  <option value="{{ shift.value }}" {% if shift.value == current.attr.shift %}selected="selected"{% endif %}>
+                  <option value="{{ shift.value }}" {% if shift.value == current.attr.shift|flatten(1) %}selected="selected"{% endif %}>
                     {{ shift.value }}
                   </option>
                 {% endfor %}
@@ -109,7 +110,7 @@
             <div class="control-group">
               <label class="control-label">Team Role/Specialization :</label>
               <div class="controls">
-                <input type="text" class="span11" name="role" placeholder="Team Role/Specialization" value="{{ current.attr.role }}">
+                <input type="text" class="span11" name="role" placeholder="Team Role/Specialization" value="{{ current.attr.role|flatten(1) }}">
              </div>
             </div>  
             
@@ -120,6 +121,13 @@
                 <input type="text" class="span5" name="age_nightfall" placeholder="Age at Nighfall" style="margin-top: .5em;" disabled="true" value="{% if current.attr.age %}{{ current.attr.age - 13 }}{% endif %}">
              </div>
             </div>
+            
+            <div class="control-group">
+              <label class="control-label">Time in Thermopylae :</label>
+              <div class="controls">
+                <input type="text" class="span11" name="time_in_thermopylae" placeholder="Time spent at the outpost" value="{{ current.attr.time_in_thermopylae }}">
+             </div>
+            </div>            
             
             <div class="control-group">
               <label class="control-label">Bunk Budy :</label>
@@ -134,6 +142,20 @@
                 </select>
              </div>
             </div>
+            
+            <div class="control-group">
+              <label class="control-label">Personal property items :</label>
+              <div class="controls">
+                <textarea class="span11" name="personal_property_items" rows="8">{{ current.attr.personal_property_items }}</textarea>
+             </div>
+            </div>
+            
+            <div class="control-group">
+              <label class="control-label">Contacts in Haven :</label>
+              <div class="controls">
+                <textarea class="span11" name="contacts_in_haven" rows="8">{{ current.attr.contacts_in_haven }}</textarea>
+             </div>
+            </div>            
             
             <div class="control-group">
               <label class="control-label">Public Synopsis :</label>

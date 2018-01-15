@@ -34,6 +34,36 @@
               </div>
             </div>
             
+            <h6 style="margin-left: 1.5em;">Game information</h6>
+            <div class="control-group">
+              <label class="control-label">NPC :</label>
+              <div class="controls">
+                <input type="checkbox" class="span11" name="npc" {% if current.attr.npc %}checked{% endif %}>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <label class="control-label">Assigned character :</label>
+              <div class="controls">
+                <select name="character_id">
+                  <option value=""> - No Character Assigned - </option>
+                {% for character in characters %}
+                  <option value="{{ character.id }}" {% if character.id == current.data.character_id %}selected="selected"{% endif %}>
+                    {{ character.name|default('Character ID: ' ~ character.id) }}
+                  </option>
+                {% endfor %}
+                </select>
+             </div>
+            </div>          
+            
+            <div class="control-group">
+              <label class="control-label">Checked in :</label>
+              <div class="controls">
+                <input type="checkbox" class="span11" name="checked_in" {% if current.attr.checked_in %}checked{% endif %}>
+              </div>
+            </div>
+
+            
             <h6 style="margin-left: 1.5em;">Login and display information</h6>
             <div class="control-group">
               <label class="control-label">User Name :</label>
@@ -228,14 +258,7 @@
                 <input type="text" class="span11" disabled value="{{ current.data.hash }}">
               </div>
             </div>
-            
-            <div class="control-group">
-              <label class="control-label">NPC :</label>
-              <div class="controls">
-                <input type="checkbox" class="span11" name="npc" {% if current.attr.npc %}checked{% endif %}>
-              </div>
-            </div> 
-            
+                        
             <div class="control-group">
               <label class="control-label">Organizers Notes :</label>
               <div class="controls">
