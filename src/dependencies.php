@@ -73,6 +73,13 @@ $container['view'] = function($container) {
       })
   );
   
+  $view->getEnvironment()->addFilter(new Twig_SimpleFilter(
+      'flatten', 
+      function ($set, $only_last = false) { 
+        return is_array($set) ? $only_last ? array_pop($set) : implode(', ', $set) : $set; 
+      })
+  );
+  
   $view->getEnvironment()->addGlobal('auth', [
     'check' => $container->sentinel->check(),
     'user' => $container->sentinel->getUser(),
