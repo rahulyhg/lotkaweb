@@ -49,8 +49,13 @@ class PlayersPageController extends Controller
     $users = $role->users()->orderBy('displayname', 'ASC')->get();
     $user_list = [];
     
-    foreach ($users as $user) {        
-      $user_list[] = self::getPlayerInfo($user->id);
+    foreach ($users as $user) {
+      $player = self::getPlayerInfo($user->id);
+      $is_npc = isset($player["attributes"]["npc"]) ? $player["attributes"]["npc"] == "true" : false;
+      
+      if(!$is_npc) {
+        $user_list[] = $player;
+      }
     }
         
     return $user_list;
