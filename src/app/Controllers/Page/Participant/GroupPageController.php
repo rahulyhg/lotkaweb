@@ -21,7 +21,7 @@ class GroupPageController extends Controller
     return self::render(
       "group-list", 
       [
-        "groups" => [], #self::getGroupsInfo()
+        "groups" => self::getGroupsInfo(),
       ], 
       $response
     );
@@ -31,7 +31,7 @@ class GroupPageController extends Controller
     return self::render(
       "groups-my", 
       [
-        "groups" => [], #self::getGroupsInfo($arguments["uid"])
+        "groups" => self::getUsersGroups($this->container->sentinel->getUser()),
       ], 
       $response
     );
@@ -41,7 +41,7 @@ class GroupPageController extends Controller
     return self::render(
       "group", 
       [
-        "group" => [], #self::getGroupInfo($arguments["uid"])
+        "group" => self::getGroupInfo($arguments["uid"]),
       ], 
       $response
     );
@@ -65,5 +65,44 @@ class GroupPageController extends Controller
   
   public function post($request, $response, $arguments){
     return "TODO : save";
+  }
+  
+  private function getUsersGroups($user) {
+    $groups = $user->groups();
+    
+    $group_list = [];
+    foreach ($groups as $group) {
+      $group_list[] = [
+        "data" =>$group,
+        "attributes" => self::mapAttributes( $group->attr ),
+      ];
+    }
+        
+    return $group_list;
+  }  
+  
+  private function getGroupsInfo() {
+    $groups = Group::visible()->get();
+    
+    #die(var_dump($groups->toSql()));
+    
+    $group_list = [];
+    foreach ($groups as $group) {
+      $group_list[] = [
+        "data" =>$group,
+        "attributes" => self::mapAttributes( $group->attr ),
+      ];
+    }
+        
+    return $group_list;
+  }
+  
+  private function getGroupInfo($name) {
+    $group = Group::where('name', $name)->first();
+    
+    return $group ? [
+      "data" => $group,
+      "attributes" => self::mapAttributes( $group->attr ),
+    ] : [];    
   }
 }

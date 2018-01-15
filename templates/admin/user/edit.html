@@ -214,18 +214,28 @@
                 <input type="checkbox" class="span11" name="onboarding_complete" {% if current.attr.onboarding_complete %}checked{% endif %}>
               </div>
             </div>
+            
             <div class="control-group">
               <label class="control-label">Last login :</label>
               <div class="controls">
                 <input type="text" class="span11" disabled value="{{ current.data.last_login }}">
               </div>
             </div>
+            
             <div class="control-group">
               <label class="control-label">User hash :</label>
               <div class="controls">
                 <input type="text" class="span11" disabled value="{{ current.data.hash }}">
               </div>
             </div>
+            
+            <div class="control-group">
+              <label class="control-label">NPC :</label>
+              <div class="controls">
+                <input type="checkbox" class="span11" name="npc" {% if current.attr.npc %}checked{% endif %}>
+              </div>
+            </div> 
+            
             <div class="control-group">
               <label class="control-label">Organizers Notes :</label>
               <div class="controls">

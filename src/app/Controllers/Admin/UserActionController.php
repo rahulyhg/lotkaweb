@@ -48,6 +48,7 @@ class UserActionController extends Controller
       'emergency_phone',
       'allergies',
       'medical_conditions',
+      'npc',
     ];
   }
   

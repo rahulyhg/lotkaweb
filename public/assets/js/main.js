@@ -334,9 +334,6 @@
           $table.isotope({ 
             filter: function() {
               var txt = $(this).text().toLowerCase();
-              
-              console.log($(this), $(this).hasClass('header') )
-              
               return $(this).hasClass('header') || txt.match(search_string);
             },
             animationOptions: {

@@ -41,5 +41,21 @@ class Group extends Model
   public function rel()
   {
       return $this->belongsToMany('App\Models\Relation', 'group_relation')->withTimeStamps(); 
-  }    
+  }
+  
+  
+  /**
+   * Scope a query to only include published posts.
+   *
+   * @param \Illuminate\Database\Eloquent\Builder $query
+   * @return \Illuminate\Database\Eloquent\Builder
+   */
+  public function scopeVisible($query)
+  {
+      return $query->whereHas(
+        'attr', function ($query) {
+            $query->where([['name','visible'],['value', 'true']]);
+        }
+      )->with('attr');
+  }  
 }
