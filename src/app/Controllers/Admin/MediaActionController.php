@@ -25,7 +25,7 @@ class MediaActionController extends Controller
   
   public function index($request, $response)
   {
-    $media_files = Media::select('*')->orderBy('name')->get();
+    $media_files = Media::orderBy('name')->get();
     $settings = [
       'name' => 'Media',
       'title' => 'Media Management',
@@ -133,6 +133,29 @@ class MediaActionController extends Controller
   public function delete($request, $response, $arguments)
   { 
   }
+  
+  public function portraits($request, $response, $arguments) {
+    $originals_path = '../public/assets/portraits/';
+    $original_portraits = preg_grep('/\..{3,}$/i', scandir($originals_path));
+# {jpg,JPG,jpeg,JPEG,png,PNG}
+#    $converted_path = $originals_path . 'scaled/';
+#    foreach(glob($converted_path.'*.{jpg,JPG,jpeg,JPEG,png,PNG}',GLOB_BRACE) as $file){
+#        $converted_portraits[] =  basename($file);
+#    }
+
+    $settings = [
+      'name' => 'Media',
+      'title' => 'Portrait Management',
+      'breadcrumb' => [
+//          ['name' => '', 'path' => '']
+      ],    
+    ];
+    
+    return $this->view->render($response, 'admin/media/gallery.html', [
+      'settings' => $settings,
+      'list' => $original_portraits,
+    ]);    
+  } 
   
   public function convertPortrait($inputfile, $outputfile) {
   // input/output should be COMPLETE absolute path+filename

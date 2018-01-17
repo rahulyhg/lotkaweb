@@ -306,6 +306,8 @@ $app->group('/admin', function() use ($container) {
     $this->get('/add', 'MediaActionController:add')->setName('admin.media.add');
     $this->post('/add', 'MediaActionController:postAdd');
     
+    $this->get('/portraits', 'MediaActionController:portraits')->setName('admin.media.portraits');
+    
     $this->get('/{uid}/edit', 'MediaActionController:edit')->setName('admin.media.edit');
     $this->post('/{uid}/edit', 'MediaActionController:postEdit');
 

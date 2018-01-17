@@ -1,0 +1,44 @@
+{% extends 'admin/dashboard/main.twig' %}
+
+{% block title %}{{ settings.title }}{% endblock %}
+
+{% block contentHeader %}
+  <div id="content-header">
+    <div id="breadcrumb"> 
+      <a href="#" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a> 
+      {% for nav in settings.breadcrumb %}
+      <a href="{{ path_for(nav.path) }}">{{ nav.name }}</a>
+      {% endfor %}
+      <a href="#" class="current">{{ settings.name }}</a>
+    </div>
+    
+    <h1>{{ settings.name }} {{ current.data.sku }}</h1>
+  </div>
+{% endblock %}
+
+{% block content %}
+  <div class="container-fluid">
+    <hr>
+    <div class="row-fluid">
+      <div class="span12">
+        <div class="widget-box">
+          <div class="widget-title"> <span class="icon"><i class="icon-th"></i></span>
+            <h5>Portrait Gallery</h5>
+          </div>
+          <div class="widget-content gallery">
+            {% for item in list %}
+              <figure>
+                <a href="/assets/portraits/{{ item }}">
+                  <img src="/assets/portraits/scaled/{{ item}}">
+                </a>
+                <figcaption class="font-alt">
+                  <a href="/assets/portraits/{{ item }}">{{ item }}</a>
+                </figcaption>
+              </figure>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
