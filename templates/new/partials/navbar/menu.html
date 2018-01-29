@@ -6,12 +6,18 @@
   </ul>
 </li>
 {# <li><a href="{{ path_for('participant.page', { 'page': 'shop' }) }}"> Shop</a></li> #}
-<li><a href="https://lotkavolterra.slack.com/" target="_new"> Slack</a></li>
-{# https://join.slack.com/t/lotkavolterra/shared_invite/enQtMjkyNjMyOTI1MTg1LWQxYWI5NThmY2Y5ZDZlMmQ5Y2E3OWMxZjFkY2E0ZjA2NDI4Yzc2Mzk0YjA1YWUyYzgxNGNjM2Y2YTc4OGI4OGU #}
+
+<li class="dropdown">
+  <a class="dropdown-toggle" data-toggle="dropdown" href="https://lotkavolterra.slack.com/" target="_new"><i class="fa fa-chat"></i> Slack</a>
+  <ul class="dropdown-menu" role="menu">
+    <li><a class="dropdown-toggle" data-toggle="dropdown" href="https://lotkavolterra.slack.com/" target="_new"> Participant Slack</a></li>
+    <li><a class="dropdown-toggle" data-toggle="dropdown" href="https://join.slack.com/t/lotkavolterra/shared_invite/enQtMjkyNjMyOTI1MTg1LWQxYWI5NThmY2Y5ZDZlMmQ5Y2E3OWMxZjFkY2E0ZjA2NDI4Yzc2Mzk0YjA1YWUyYzgxNGNjM2Y2YTc4OGI4OGU" target="_new"> Join Slack</a></li>
+  </ul>
+</li>
 
 {% if dashboard %}
 <li class="dropdown">
-  <a class="dropdown-toggle" href="{{ path_for('participant.home') }}" data-toggle="dropdown"><i class="fa fa-home"></i> Dashboard</a>
+  <a class="dropdown-toggle" href="{{ path_for('participant.home') }}" data-toggle="dropdown"><i class="fa fa-home"></i> Communituy</a>
   <ul class="dropdown-menu" role="menu">
   {% for key, section in dashboard.sections %}
     <li class="{{section.pages ? 'dropdown' : ''}}">
@@ -57,7 +63,7 @@
 
 {% else %}
 {{ include('new/partials/navbar/site_menu.html') }}
-<li><a href="{{ path_for(auth.isParticipant ? 'participant.home' : 'user.login') }}"><span class="icon-key"></span> Participants</a></li>
+<li><a href="{{ path_for(auth.isParticipant ? 'participant.home' : 'user.login') }}"><span class="icon-key"></span> Participant Login In</a></li>
 <!--
 <li><a href="{{ path_for('open.page', { 'category': 'tickets' }) }}" class="btn btn-d btn-round btn-block" type="submit">TICKETS</a></li>
 //-->

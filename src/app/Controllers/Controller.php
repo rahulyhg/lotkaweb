@@ -178,12 +178,27 @@ class Controller
     
     return [
       'sections' => [
-/*
-          'profile' => [
-            'title' => 'My Profile',
-            'target' => $this->router->pathFor('participant.page', ['page' => 'profile']),
+
+          'players' => [
+            'title' => 'Players',
+            'target' => $this->router->pathFor('participant.player.list'),
+            'pages' => [
+              'players' => [
+                'title' => 'Participant List',
+                'target' => $this->router->pathFor('participant.player.list'),
+                'info' => 'Participant list',
+                'image' => '/img/dashboard/' . 'player-list.jpg'
+              ],
+              'gallery' => [
+                'title' => 'Participant Gallery',
+                'target' => $this->router->pathFor('participant.player.gallery'),
+                'info' => 'Participant profile image gallery',
+                'image' => '/img/dashboard/' . 'player-gallery.jpg'
+              ],
+            ]
           ],
 
+/*        
           'my' => [
             'title' => 'My Pages',
             'pages' => [
@@ -262,26 +277,7 @@ class Controller
               ],
             ]
           ],
-*/          
-          'players' => [
-            'title' => 'Players',
-            'target' => $this->router->pathFor('participant.player.list'),
-            'pages' => [
-              'players' => [
-                'title' => 'Participant List',
-                'target' => $this->router->pathFor('participant.player.list'),
-                'info' => 'Participant list',
-                'image' => '/img/dashboard/' . 'player-list.jpg'
-              ],
-              'gallery' => [
-                'title' => 'Participant Gallery',
-                'target' => $this->router->pathFor('participant.player.gallery'),
-                'info' => 'Participant profile image gallery',
-                'image' => '/img/dashboard/' . 'player-gallery.jpg'
-              ],
-            ]
-          ],
-/*            
+
           'relationships' => [
             'title' => 'Relationships',
             'target' => $this->router->pathFor('participant.relation.list'),
@@ -339,7 +335,7 @@ class Controller
               ],
             ]
           ],
-*/          
+*/
       ]
     ];
   }  
