@@ -1,6 +1,7 @@
 <?php
 use App\Middleware\AdminMiddleware;
 use App\Middleware\ParticipantMiddleware;
+use App\Middleware\WriterMiddleware;
 
 /*
 | API ROUTES

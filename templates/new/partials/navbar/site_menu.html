@@ -1,0 +1,70 @@
+<li class="dropdown"><a class="dropdown-toggle" href="{{ site.navPath }}" data-toggle="dropdown">About</a>
+  <ul class="dropdown-menu" role="menu">
+    <li><a href="{{ path_for('open.page', { 'category': 'faq' }) }}"><i class="fa fa-question-circle"></i> FAQ</a></li>
+    <li><a href="{{ path_for('open.page', { 'category': 'organizers' }) }}"><i class="fa fa-sitemap"></i> Organizers</a></li>
+    <li><a href="{{ path_for('page.press') }}">Press</a></li>
+  </ul>
+</li>
+
+<li class="dropdown"><a class="dropdown-toggle" href="{{ path_for('open.page', { 'category': 'story' }) }}" data-toggle="dropdown">The Story</a>
+  <ul class="dropdown-menu" role="menu">
+    <li><a href="{{ path_for('open.page', { 'category': 'story' }) }}#arrival">The Arrival</a></li>
+    <li><a href="{{ path_for('open.page', { 'category': 'story' }) }}#starving">The Starving Years</a></li>
+    <li><a href="{{ path_for('open.page', { 'category': 'story' }) }}#colony">Haven Colony</a></li>
+    <li><a href="{{ path_for('open.page', { 'category': 'story' }) }}#outpost">The Outpost</a></li>
+    <li class="dropdown"><a class="dropdown-toggle" href="{{ path_for('open.page', { 'category': 'story' }) }}#teams" data-toggle="dropdown">Teams</a>
+      <ul class="dropdown-menu">
+        <li><a href="{{ path_for('open.page', { 'category': 'story', 'page': 'maint' }) }}">maintenance</a></li>
+        <li><a href="{{ path_for('open.page', { 'category': 'story', 'page': 'surfops' }) }}">Surface Operations</a></li>
+        <li><a href="{{ path_for('open.page', { 'category': 'story', 'page': 'command' }) }}">Outpost Command</a></li>
+        <li><a href="{{ path_for('open.page', { 'category': 'story', 'page': 'miscon' }) }}">Mission Control</a></li>
+        <li><a href="{{ path_for('open.page', { 'category': 'story', 'page': 'other' }) }}">Other</a></li>
+      </ul>
+    </li>
+  </ul>
+</li>
+<li class="dropdown"><a class="dropdown-toggle" href="{{ path_for('open.page', { 'category': 'experience' }) }}" data-toggle="dropdown">The Experience</a>
+  <ul class="dropdown-menu">             
+    <li><a href="{{ path_for('open.page', { 'category': 'experience' }) }}#scifi">Naturalistic science fiction</a></li>
+    <li><a href="{{ path_for('open.page', { 'category': 'experience' }) }}#play_style">Collaborative play-style</a></li>
+    <li><a href="{{ path_for('open.page', { 'category': 'experience' }) }}#ideal360">360 design ideals</a></li>
+    <li><a href="{{ path_for('open.page', { 'category': 'experience' }) }}#workshops">Workshops & Briefings</a></li>
+    <li><a href="{{ path_for('open.page', { 'category': 'experience' }) }}#wider_world">Wider world simulation</a></li>
+    <li><a href="{{ path_for('open.page', { 'category': 'experience' }) }}#work">Work & shifts</a></li>
+    <li><a href="{{ path_for('open.page', { 'category': 'experience' }) }}#conflict">Conflict & Drama</a></li>
+    <li><a href="{{ path_for('open.page', { 'category': 'experience', 'page': 'characters' }) }}">Characters</a></li>
+    <li class="dropdown"><a class="dropdown-toggle" href="{{ path_for('open.page', { 'category': 'aestethics' }) }}" data-toggle="dropdown">Aestethics</a>
+      <ul class="dropdown-menu" role="menu">
+        <li><a href="{{ path_for('open.page', { 'category': 'aestethics' }) }}#location">Location</a></li>
+        <li><a href="{{ path_for('open.page', { 'category': 'aestethics' }) }}#clothing">Clothing & Costume</a></li>
+        <li><a href="{{ path_for('open.page', { 'category': 'aestethics' }) }}#scenography">Tech & Scenography</a></li>
+      </ul>
+    </li>       
+  </ul>
+</li>
+
+<li class="dropdown"><a class="dropdown-toggle" href="{{ path_for('open.page', { 'category': 'practical' }) }}" data-toggle="dropdown">Practical</a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown"><a class="dropdown-toggle" href="{{ path_for('open.page', { 'category': 'practical' }) }}" data-toggle="dropdown">For Participants</a>
+      <ul class="dropdown-menu" role="menu">
+        <li><a href="{{ path_for('open.page', { 'category': 'practical' }) }}#what_to_bring">What you need to bring</a></li>
+        <li><a href="{{ path_for('open.page', { 'category': 'practical' }) }}#clothing">Clothing</a></li>
+        <li><a href="{{ path_for('open.page', { 'category': 'practical' }) }}#personal_items">Personal items</a></li>
+        <li><a href="{{ path_for('open.page', { 'category': 'practical' }) }}#provided">What we will provide</a></li>
+        <li><a href="{{ path_for('open.page', { 'category': 'practical' }) }}#smoking">Smoking</a></li>
+        <li><a href="{{ path_for('open.page', { 'category': 'practical' }) }}#safety">Safety & Sanity</a></li>
+        <li><a href="{{ path_for('open.page', { 'category': 'practical' }) }}#accessibility">Accessibility</a></li>
+        <li><a href="{{ path_for('open.page', { 'category': 'practical' }) }}#toilets">Toilets</a></li>
+        <li><a href="{{ path_for('open.page', { 'category': 'practical' }) }}#transportation">Transportation</a></li>
+        <li><a href="{{ path_for('open.page', { 'category': 'practical' }) }}#timetable">Timetable</a></li>
+      </ul>
+    </li>    
+    <li><a href="{{ path_for('open.page', { 'category': 'practical' }) }}#where">Where</a></li>
+    <li><a href="{{ path_for('open.page', { 'category': 'practical' }) }}#when">When</a></li>
+{#    <li><a href="{{ path_for('open.page', { 'category': 'practical' }) }}#participants">Participants</a></li> #}
+    <li><a href="{{ path_for('open.page', { 'category': 'practical' }) }}#language">Language</a></li>
+    <li><a href="{{ path_for('open.page', { 'category': 'practical' }) }}#cost">Cost</a></li>
+  </ul>
+</li>
+
+<li><a href="http://lotka-volterra.se/dev/"><span class="icon-notebook"></span> Dev-Blog</a></li>

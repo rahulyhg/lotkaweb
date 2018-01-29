@@ -36,7 +36,16 @@ class AuthController extends Controller
       return $response->withRedirect($this->router->pathFor('user.login'));
     } else {
       $this->container->sentinel->login($attempt);
-      return $response->withRedirect($this->router->pathFor('home'));
+      
+      if($this->auth->isAdmin() || $this->auth->isWriter()) {
+        return $response->withRedirect($this->router->pathFor('admin.index'));      
+      }
+
+      if($this->auth->isParticipant()) {
+        return $response->withRedirect($this->router->pathFor('participant.home'));      
+      }
+      
+      return $response->withRedirect($this->router->pathFor('home'));      
     }
   }
 
