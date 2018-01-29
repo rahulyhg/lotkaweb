@@ -54,6 +54,20 @@ class Controller
     return $attribute_ids;
   }
   
+  public function setAttribute($model, $name, $value) {
+    self::removeAttribute($model, $name);
+    $attribute_id = self::getAttributeIds([
+      'keys' => [$name], 'values' => [$value]
+    ]);
+      
+    return $model->attr()->sync($attribute_id, false);
+  }
+  
+  public function removeAttribute($model, $name) {
+    $currentAttributes = $model->attr->where('name', $name)->get();
+    return $model->attr()->detach($currentAttributes);
+  }  
+  
   public function setModelAttributes($request, $model_attribute_list, $model, $extra_attributes = []) {
     $model_attributes = self::mapAttributes($model->attr);
     #Supply extra attributes not present in the origninal request to be able to set system attributes.
@@ -116,6 +130,7 @@ class Controller
     }
     
     return $this->view->render($response, '/new/participant/page.html', [
+      'dashboard' => self::dashboardSections(),
       'post' => $post,
       'current' => $participant
     ]);
@@ -155,5 +170,177 @@ class Controller
       "order" => Order::where('user_id', $participant->id)->first(),
       "character" => self::getPlayerCharacter($participant->id),
     ] : [];
-  }    
+  }
+  
+  #TODO: Move this to a menu controller
+  public function dashboardSections() {
+    $participant = self::getCurrentUser();
+    
+    return [
+      'sections' => [
+/*
+          'profile' => [
+            'title' => 'My Profile',
+            'target' => $this->router->pathFor('participant.page', ['page' => 'profile']),
+          ],
+
+          'my' => [
+            'title' => 'My Pages',
+            'pages' => [
+              'character' => [
+                'title' => 'My Character',
+                'target' => $this->router->pathFor('participant.character.my'),
+                'info' => 'My character page',
+                'image' => '/assets/portraits/scaled/' . $participant["attributes"]["portrait"]
+              ],
+              'relationships' => [
+                'title' => 'My Relationships',
+                'target' => $this->router->pathFor('participant.relation.my'),
+                'info' => 'My characters relationships',
+                'image' => '/img/dashboard/' . 'my-relationships.jpg'
+              ],
+              'plots' => [
+                'title' => 'My Plots',
+                'target' => $this->router->pathFor('participant.plot.my'),
+                'info' => 'My characters plots, and plots that my team or groups are involved in',
+                'image' => '/img/dashboard/' . 'my-plots.jpg'
+              ],
+              'groups' => [
+                'title' => 'My Groups',
+                'target' => $this->router->pathFor('participant.group.my'),
+                'info' => 'Groups that I\'m part of',
+                'image' => '/img/dashboard/' . 'my-groups.jpg'
+              ],
+              'schedules' => [
+                'title' => 'My Schedule',
+                'target' => $this->router->pathFor('participant.schedules.my'),
+                'info' => 'My work schedule',
+                'image' => '/img/dashboard/' . 'my-schedules.jpg'
+              ],
+              'check_list' => [
+                'title' => 'Check list',
+                'target' => $this->router->pathFor('participant.schedules.my'),
+                'info' => 'The things you need to have done before attending',
+                //'image' => '/img/dashboard/' . 'my-schedules.jpg'
+              ],
+              'reading' => [
+                'title' => 'Required reading',
+                'target' => $this->router->pathFor('participant.schedules.my'),
+                'info' => 'Books and articles you should read before Lotka-Volterra',
+                //'image' => '/img/dashboard/' . 'my-schedules.jpg'
+              ],
+            ],
+          ],
+        
+          'characters' => [
+            'title' => 'Participants',
+            'target' => $this->router->pathFor('participant.character.list'),
+            'pages' => [
+              'players' => [
+                'title' => 'Participant List',
+                'target' => $this->router->pathFor('participant.player.list'),
+                'info' => 'Participant list',
+                'image' => '/img/dashboard/' . 'player-list.jpg'
+              ],
+              'gallery' => [
+                'title' => 'Participant Gallery',
+                'target' => $this->router->pathFor('participant.player.gallery'),
+                'info' => 'Participant profile image gallery',
+                'image' => '/img/dashboard/' . 'player-gallery.jpg'
+              ],
+              'characters' => [
+                'title' => 'Character List',
+                'target' => $this->router->pathFor('participant.character.list'),
+                'info' => 'Get the characters in list form',
+                'image' => '/img/dashboard/' . 'character-list.jpg'
+              ],
+              'gallery' => [
+                'title' => 'Character Gallery',
+                'target' => $this->router->pathFor('participant.character.gallery'),
+                'info' => 'Character profile images',
+                'image' => '/img/dashboard/' . 'character-gallery.jpg'
+              ],
+            ]
+          ],
+*/          
+          'players' => [
+            'title' => 'Players',
+            'target' => $this->router->pathFor('participant.player.list'),
+            'pages' => [
+              'players' => [
+                'title' => 'Participant List',
+                'target' => $this->router->pathFor('participant.player.list'),
+                'info' => 'Participant list',
+                'image' => '/img/dashboard/' . 'player-list.jpg'
+              ],
+              'gallery' => [
+                'title' => 'Participant Gallery',
+                'target' => $this->router->pathFor('participant.player.gallery'),
+                'info' => 'Participant profile image gallery',
+                'image' => '/img/dashboard/' . 'player-gallery.jpg'
+              ],
+            ]
+          ],
+/*            
+          'relationships' => [
+            'title' => 'Relationships',
+            'target' => $this->router->pathFor('participant.relation.list'),
+            'pages' => [
+              'list' => [
+                'title' => 'Relationships',
+                'target' => $this->router->pathFor('participant.relation.list'),
+                'info' => 'Public relationships',
+                'image' => '/img/dashboard/' . 'relationships.jpg'
+              ],
+             'pending' => [
+                'title' => 'Pending Relationships',
+                'target' => $this->router->pathFor('participant.relation.pending'),
+                'info' => 'Your pending relationships and public relationship requests',
+                'image' => '/img/dashboard/' . 'pending-relationships.jpg'
+              ],              
+            ]
+          ],
+        
+          'plots' => [
+            'title' => 'Plots',
+            'target' => $this->router->pathFor('participant.plot.list'),
+            'pages' => [
+              'list' => [
+                'title' => 'Plots',
+                'target' => $this->router->pathFor('participant.plot.list'),
+                'info' => 'Public plots list',
+                'image' => '/img/dashboard/' . 'plots.jpg'
+              ],
+            ]
+          ],
+        
+          'groups' => [
+            'title' => 'Groups',
+            'target' => $this->router->pathFor('participant.group.list'),
+            'pages' => [
+              'list' => [
+                'title' => 'Groups',
+                'target' => $this->router->pathFor('participant.group.list'),
+                'info' => 'Public groups',
+                'image' => '/img/dashboard/' . 'groups.jpg'
+              ],
+            ]
+          ],
+        
+          'schedules' => [
+            'title' => 'Schedules',
+            'target' => $this->router->pathFor('participant.schedules'),
+            'pages' => [
+              'list' => [
+                'title' => 'Schedules',
+                'target' => $this->router->pathFor('participant.schedules'),
+                'info' => 'Schedule lists',
+                'image' => '/img/dashboard/' . 'schedules.jpg'
+              ],
+            ]
+          ],
+*/          
+      ]
+    ];
+  }  
 }

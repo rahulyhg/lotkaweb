@@ -3,9 +3,6 @@
     <li>
       <a href="#" class="wow fadeInUp" data-filter="*" data-wow-delay="0.0s">All</a>
     </li>
-    <li>
-      <a href="#" class="wow fadeInUp" data-filter=".my" data-wow-delay="0.1s">My</a>
-    </li>  
     {% for key, section in dashboard.sections %} 
     <li>
       <a href="{{ section.target }}" {% if section.pages %}class="wow fadeInUp" data-filter=".{{ key }}" data-wow-delay="{{ (loop.index1 / 10) * 2 }}s"{% endif %}>{{ section.title }}</a>
