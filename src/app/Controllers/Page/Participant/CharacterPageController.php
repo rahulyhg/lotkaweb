@@ -43,6 +43,7 @@ class CharacterPageController extends Controller
       "character-my", 
       [
         "character" => $character ? self::getCharacterInfo($character->id) : [],
+        "current" => $user,        
       ], 
       $response
     );
@@ -57,6 +58,14 @@ class CharacterPageController extends Controller
       $response
     );
   }
+  
+  public function save($request, $response, $arguments){
+    return "TODO : save";
+  }
+  
+  //===========================================================================
+  // Helpers
+  //===========================================================================  
   
   private function isNpc($character) {
     return !is_null( $character->attr->where('name','npc')->where('value','on')->first() );

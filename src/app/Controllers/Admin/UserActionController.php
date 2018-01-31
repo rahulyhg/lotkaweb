@@ -368,6 +368,7 @@ class UserActionController extends Controller
       'username' => v::noWhitespace()->notEmpty()->userAvailable(),
       'email' => v::noWhitespace()->notEmpty()->emailAvailable(),
       'password' => v::noWhitespace()->notEmpty(),
+      'order_id' => v::noWhitespace()->notEmpty(),
     ];
 
     $validation_fails = "";
@@ -382,7 +383,7 @@ class UserActionController extends Controller
       }, array_keys($validators), $validators)
     );
 
-    if (count($validated) !== count($credentials)) {
+    if (in_array(false, $validated)) {
       $this->flash->addMessage('error', "Validation of user '{$credentials['username']}' failed. ({$validation_fails} not valid)");
       return $response->withRedirect($this->router->pathFor('admin.order.attest', [ 'uid' => $order->id ]));
     }
