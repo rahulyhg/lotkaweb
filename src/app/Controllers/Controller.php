@@ -42,7 +42,11 @@ class Controller
     return $a;
   }
   
-  # Helpers
+  //===========================================================================
+  // Helpers
+  //===========================================================================  
+  
+  
   public function getAttributeIds($attributes = [ 'keys' => [], 'values' => [] ]) {
     $attribute_ids = [];
     foreach ($attributes['keys'] as $i => $attr_key) {
@@ -54,6 +58,8 @@ class Controller
     return $attribute_ids;
   }
   
+  # Sets Attribute of Name: Value to supplied Model instance
+  # Use in controller like: self::setAttribute($user, 'npc', 'on');
   public function setAttribute($model, $name, $value) {
     self::removeAttribute($model, $name);
     $attribute_id = self::getAttributeIds([
@@ -61,13 +67,16 @@ class Controller
     ]);
       
     return $model->attr()->sync($attribute_id, false);
-  }
+  }  
   
+  # Removes all Attributes of Name to supplied Model instance
+  # Use in controller like: self::removeAttribute($user, 'npc');
   public function removeAttribute($model, $name) {
     $currentAttributes = $model->attr->where('name', $name)->get();
     return $model->attr()->detach($currentAttributes);
   }  
   
+  # See OnboardingPageController.php:266 for usage.
   public function setModelAttributes($request, $model_attribute_list, $model, $extra_attributes = []) {
     $model_attributes = self::mapAttributes($model->attr);
     #Supply extra attributes not present in the origninal request to be able to set system attributes.
