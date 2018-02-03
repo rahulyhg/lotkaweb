@@ -286,6 +286,10 @@ svg.loading path.lights {
   line-height: 3em;
 }
 
+.checkboxes ul {
+	padding-left: 0;
+}
+
 .check {
   display: block;
 }

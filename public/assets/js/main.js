@@ -917,7 +917,28 @@
       this.rows = minRows;
       rows = Math.ceil((this.scrollHeight - this.baseScrollHeight) / 16);
       this.rows = minRows + rows;
-    }); 
+    });
+  
+  $(".range [type=range]").on('input change', function () {
+    var min = $(this).attr('min'); 
+    var max = $(this).attr('max');
+    var val = $(this).val();
+    var mid = (max - min) / 2;
+    var dist = Math.abs(val - mid) / mid;
+    var col = 'rgb(' + [ 255 * dist, 255 - ( 255 * dist ), 0].join() + ')';
+    $(this).css('border-bottom', '.15em solid ' + col);
+    
+    if($(this).siblings(".desc").length) {
+      $(this).siblings(".desc").hide().html(
+        (character_descriptions[$(this).attr('id')] || [])[+$(this).val()] || ''
+      ).fadeIn(200);
+    }
+  }).trigger('change');  
+  
+  $("[name=age]").on("change load keyup", function () {
+    var age = parseInt($(this).val(), 10);
+    $("[name=age_nightfall], #age_nightfall").val(isNaN(age)?'':age-13);
+  })  
 
 })(jQuery);
 
