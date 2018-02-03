@@ -904,6 +904,17 @@
 
     });
 
+  $("input[name='char_age']").change(function() {
+    $("#calc_age").html(calcAge($(this).val()));
+  });
+  $("input[name='char_age']").keyup(function() {
+    $("#calc_age").html(calcAge($(this).val()));
+  });
+
+  function calcAge(age) {
+    return (parseInt(age) - 13 );
+  }
+
 })(jQuery);
 
 
