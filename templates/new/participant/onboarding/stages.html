@@ -125,20 +125,7 @@ window.onload=function(){
   character_descriptions.char_phy_non[0] = "You are very physical to the exclusion of other means, always expressing things with your body and in contact with others. You take up a lot of space and energy, and you are up in peoples faces all the time.";
   character_descriptions.char_phy_non[100] = "You actively dislike physical touch and getting too close to people, and prefer to keep conversations and interactions to the terminal or phone. You come off as introvert or shy.";
   character_descriptions.char_mal_con[0] = "You are constantly angry or frustrated with all the things you perceive as being wrong. You have a lot of resentment growing inside you, and it more than often spills over into harsh words, smack talk and airing your grievances to anyone close by. People no doubt see you as angry, frustrated and a bit of a troublemaker.";
-  character_descriptions.char_mal_con[100] = "You are mellow, happy-go-lucky. People see you as positive and easy going. You rarely voice a negative opinion, and for the most part you feel quite at home with your life and work. You feel like you're at the right place, at the right time, doing what you love. The downside is you accept things you perhaps shouldn't but you feel ok anyway. You are the one to cheer others up.";  
-  $("[type=range]").on('input change', function () {
-    var min = $(this).attr('min'); 
-    var max = $(this).attr('max');
-    var val = $(this).val();
-    var mid = (max - min) / 2;
-    var dist = Math.abs(val - mid) / mid;
-    var col = 'rgb(' + [ 255 * dist, 255 - ( 255 * dist ), 0].join() + ')';
-    $(this).css('border-bottom', '.15em solid ' + col);
-    
-    $(this).siblings(".desc").hide().html(
-      (character_descriptions[$(this).attr('id')] || [])[+$(this).val()] || ''
-    ).fadeIn(200);
-  }).trigger('change');
+  character_descriptions.char_mal_con[100] = "You are mellow, happy-go-lucky. People see you as positive and easy going. You rarely voice a negative opinion, and for the most part you feel quite at home with your life and work. You feel like you're at the right place, at the right time, doing what you love. The downside is you accept things you perhaps shouldn't but you feel ok anyway. You are the one to cheer others up.";
   
   if($("#country-selector").length) {
     $("#country-selector")

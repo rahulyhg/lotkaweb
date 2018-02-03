@@ -36,14 +36,18 @@ class CharacterPageController extends Controller
   }
   
   public function my($request, $response, $arguments){
-    $user = self::getCurrentUser();
+    $user = $this->container->auth->isWriter() && isset($arguments["uid"]) ?
+      self::getPlayerInfo($arguments["uid"]) : self::getCurrentUser();
+    
     $character = $user["user"]->character;
     
     return self::render(
       "character-my", 
       [
         "character" => $character ? self::getCharacterInfo($character->id) : [],
-        "current" => $user
+        "current" => $user,
+        "genders" => ['Non-binary','Female','Male','Other'],
+        "uid" => isset($arguments["uid"]) ? $arguments["uid"] : false,
       ], 
       $response
     );
