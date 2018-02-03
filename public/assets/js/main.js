@@ -937,19 +937,32 @@
   
   $("[name=age]").on("change load keyup", function () {
     var age = parseInt($(this).val(), 10);
-    $("[name=age_nightfall], #age_nightfall").val(isNaN(age)?'':age-13);
-  })  
+    age = isNaN(age)?'':age-13
+    $("[name=age_nightfall], #age_nightfall").val(age).text(age);
+  })
+ 
+  $(".player_defined > input").on("change", function () {
+    var input = $(this)
+      .siblings('label')
+      .children()
+      .filter('input');
 
-  $("input[name='char_age']").change(function() {
-    $("#calc_age").html(calcAge($(this).val()));
-  });
-  $("input[name='char_age']").keyup(function() {
-    $("#calc_age").html(calcAge($(this).val()));
-  });
+    input.prop('disabled', !$(this).is(':checked'))
 
-  function calcAge(age) {
-    return (parseInt(age) - 13 );
-  }
+    if(!$(this).is(':checked')) {
+      input.val(null).trigger('change');
+    } else {
+      input.focus();
+    }
+  }).trigger("change");
+
+  $(".player_defined > label input").on('change', function () {
+    var checkbox = $(this)
+      .parent()
+      .siblings('input');
+
+    checkbox.val($(this).val());
+  }).trigger("change");  
 
 })(jQuery);
 
