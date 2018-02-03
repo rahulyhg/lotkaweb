@@ -9,7 +9,6 @@ $sshift = null;
 
 if((int)$player_id > 0) {
   $sql = "SELECT users.displayname,attributes.value,user_attribute.attribute_id FROM users, user_attribute, attributes WHERE users.id = user_attribute.user_id AND attributes.id = user_attribute.attribute_id AND user_id=".$player_id." AND attribute_id IN(SELECT id FROM attributes WHERE name=\"group\")";
-echo $sql."\n";
   $res = $db->query($sql);
   if ($res->num_rows <1) die("No such user\n");
   $group = null;
