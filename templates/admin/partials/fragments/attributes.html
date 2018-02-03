@@ -8,7 +8,7 @@
   <div class="collapse" id="collapseNotes">
     <div class="widget-content attributes"> 
       {% for attribute in current.data.attr %}
-      {# if attribute.name and (attribute.name not in set_attr) #}
+      { if attribute.name and (attribute.name not in set_attr) }
       {% if attribute.value is iterable %}
       {% for value in attribute.value %}
       <div class="attribute">
@@ -25,7 +25,7 @@
       </div>
       {% endif %}      
 
-      {# endif #}
+      { endif }
       {% endfor %}
       <div class="attribute">
         <input type="text" class="span6" name="attrKey[]" placeholder="Name" value="">
