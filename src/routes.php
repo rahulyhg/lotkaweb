@@ -1,6 +1,7 @@
 <?php
 use App\Middleware\AdminMiddleware;
 use App\Middleware\ParticipantMiddleware;
+use App\Middleware\WriterMiddleware;
 
 /*
 | API ROUTES
@@ -391,7 +392,7 @@ $app->group('/participants', function () {
   $this->group('/characters', function () {
     $this->get('[/]',       'CharacterPageController:index')
       ->setName('participant.character.list');
-    $this->get('/my',       'CharacterPageController:my')
+    $this->get('/my[/{uid}]',       'CharacterPageController:my')
       ->setName('participant.character.my');      
     $this->get('/gallery',  'CharacterPageController:gallery')
       ->setName('participant.character.gallery');
@@ -414,7 +415,7 @@ $app->group('/participants', function () {
     $this->get('[/]',         'GroupPageController:index')
       ->setName('participant.group.list');
 
-    $this->get('/my',         'GroupPageController:my')
+    $this->get('/my[/{uid}]', 'GroupPageController:my')
       ->setName('participant.group.my');
 
     $this->get('/add',        'GroupPageController:add')
@@ -441,7 +442,7 @@ $app->group('/participants', function () {
     $this->get('[/]', 'PlotPageController:index')
       ->setName('participant.plot.list');
 
-    $this->get('/my', 'PlotPageController:my')
+    $this->get('/my[/{uid}]', 'PlotPageController:my')
       ->setName('participant.plot.my');
 
     $this->get('/add', 'PlotPageController:add')
@@ -468,10 +469,10 @@ $app->group('/participants', function () {
     $this->get('[/]', 'RelationPageController:index')
       ->setName('participant.relation.list');
 
-    $this->get('/pending', 'RelationPageController:pending')
+    $this->get('/pending[/{uid}]', 'RelationPageController:pending')
       ->setName('participant.relation.pending');
 
-    $this->get('/my', 'RelationPageController:my')
+    $this->get('/my[/{uid}]', 'RelationPageController:my')
       ->setName('participant.relation.my');
 
     $this->get('/add', 'RelationPageController:add')
@@ -502,7 +503,7 @@ $app->group('/participants', function () {
   $this->group('/schedules', function () {
     $this->get('[/]',       'SchedulePageController:index')
       ->setName('participant.schedules');
-    $this->get('/my',       'SchedulePageController:my')
+    $this->get('/my[/{uid}]',       'SchedulePageController:my')
       ->setName('participant.schedules.my');      
   });  
   

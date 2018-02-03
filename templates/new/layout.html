@@ -104,7 +104,7 @@
         {{ include('new/partials/headcover.html') }}   
         {{ include('/new/partials/fragments/flash.html') }}
         {% endblock %}
-        <section class="module{% block mainClass %}{% endblock %}">
+        <section class="{{ mainClass|default('module') }}">
           <div class="container">
 
             <div class="row">

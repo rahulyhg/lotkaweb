@@ -20,14 +20,21 @@ class Auth
       return $this->container->sentinel->getUser()->inRole('admin');
     }
   }
+  
+  public function isWriter()
+  {
+    if ($this->container->sentinel->getUser()) {
+      return $this->container->sentinel->getUser()->inRole('writer') || self::isAdmin();
+    }
+  }
 
   public function isParticipant()
   {
     if ($this->container->sentinel->getUser()) {
-      return $this->container->sentinel->getUser()->inRole('participant') || self::isAdmin();
+      return $this->container->sentinel->getUser()->inRole('participant') || self::isWriter();
     }
   }
-  
+    
   public function roles()
   {
     $roles = Roles::all();

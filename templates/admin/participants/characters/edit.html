@@ -70,6 +70,13 @@
             </div>
             
             <div class="control-group">
+              <label class="control-label">NPC :</label>
+              <div class="controls">
+                <input type="checkbox" class="span11" name="npc" {% if current.attr.npc %}checked{% endif %}>
+              </div>
+            </div>            
+            
+            <div class="control-group">
               <label class="control-label">Quote :</label>
               <div class="controls">
                 <textarea class="span11" name="quote" rows="2">{{ current.attr.quote }}</textarea>
@@ -144,20 +151,6 @@
             </div>
             
             <div class="control-group">
-              <label class="control-label">Personal property items :</label>
-              <div class="controls">
-                <textarea class="span11" name="personal_property_items" rows="8">{{ current.attr.personal_property_items }}</textarea>
-             </div>
-            </div>
-            
-            <div class="control-group">
-              <label class="control-label">Contacts in Haven :</label>
-              <div class="controls">
-                <textarea class="span11" name="contacts_in_haven" rows="8">{{ current.attr.contacts_in_haven }}</textarea>
-             </div>
-            </div>            
-            
-            <div class="control-group">
               <label class="control-label">Public Synopsis :</label>
               <div class="controls">
                 <textarea class="span11" name="synopsis" rows="5">{{ current.attr.synopsis }}</textarea>
@@ -171,6 +164,41 @@
              </div>
             </div>
 
+            <div class="control-group">
+              <label class="control-label">Background history :</label>
+              <div class="controls">
+                <textarea class="span11" name="history" rows="8">{{ current.attr.history }}</textarea>
+             </div>
+            </div> 
+
+            <div class="control-group">
+              <label class="control-label">Traumas :</label>
+              <div class="controls">
+                <textarea class="span11" name="traumas" rows="8">{{ current.attr.traumas }}</textarea>
+             </div>
+            </div> 
+
+            <div class="control-group">
+              <label class="control-label">Personnel file :</label>
+              <div class="controls">
+                <textarea class="span11" name="personnel_file" rows="8">{{ current.attr.personnel_file }}</textarea>
+             </div>
+            </div> 
+
+            <div class="control-group">
+              <label class="control-label">Personal property items :</label>
+              <div class="controls">
+                <textarea class="span11" name="personal_property_items" rows="8">{{ current.attr.personal_property_items }}</textarea>
+             </div>
+            </div>
+            
+            <div class="control-group">
+              <label class="control-label">Contacts in Haven :</label>
+              <div class="controls">
+                <textarea class="span11" name="contacts_in_haven" rows="8">{{ current.attr.contacts_in_haven }}</textarea>
+             </div>
+            </div>            
+            
             <div class="control-group">
               <label class="control-label">Personal traits :</label>
               <div class="controls">

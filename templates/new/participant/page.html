@@ -9,7 +9,7 @@
 {% block mainClass %}{% endblock %}
 
 {% block content %}
-<div class="col-sm-8 col-sm-offset-2">
+<div class="{{ postClass|default('col-sm-8 col-sm-offset-2') }}">
     {{ include(template_from_string(post.content|raw)) }}
 </div>
 {% endblock %}

@@ -85,6 +85,7 @@ $container['view'] = function($container) {
     'user' => $container->sentinel->getUser(),
     'isAdmin' => $container->auth->isAdmin(),
     'isParticipant' => $container->auth->isParticipant(),
+    'isWriter' => $container->auth->isWriter(),
     'getRoles' => $container->auth->roles(),
   ]);
 
