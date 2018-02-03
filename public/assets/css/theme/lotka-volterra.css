@@ -580,3 +580,43 @@ svg.loading path.lights {
 .player-item.internal-security .team   {  color: #DF0; }
 .player-item.quartermasters .team      {  color: #0CC; }
 
+.help-text {
+  font-size:13px !important;
+  line-height: normal !important;
+  display: inline-block;
+  padding: 3px 0 0 3px;
+}
+.help-text .fa {
+  color: #91e28f !important;
+}
+.card-body textarea {
+  width:100%;
+}
+
+.btn-green {
+  background-color: #91e28f !important;
+}
+.dashed {
+  background-color:transparent;
+  border:none;
+  border-bottom: 1px dashed #91e28f;
+  outline: none;
+  min-width:10px;
+  font-family: "Roboto Condensed", sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+/*   -webkit-appearance: none;
+   -moz-appearance: none;
+   appearance: none;
+*/
+}
+
+.dashed option {
+  color:#91e28f;
+  background-color:#1d1d1d;
+  border: 1px dashed #91e28f;
+  outline: none;
+}
+.small {
+  font-size:13px !important;
+}
