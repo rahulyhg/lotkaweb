@@ -43,7 +43,7 @@ class CharacterPageController extends Controller
       "character-my", 
       [
         "character" => $character ? self::getCharacterInfo($character->id) : [],
-        "current" => $user,        
+        "current" => $user
       ], 
       $response
     );
@@ -54,6 +54,8 @@ class CharacterPageController extends Controller
       "character", 
       [
         "character" => self::getCharacterInfo($arguments["uid"]),
+        "postClass" => "mt-10",
+        "mainClass" => "mt-0 pt-10"
       ], 
       $response
     );
@@ -96,6 +98,7 @@ class CharacterPageController extends Controller
     return $character && !self::isNpc($character) ? [
         "data" => $character, 
         "attributes" => self::mapAttributes($character->attr),
+        "player" => self::getPlayerInfo($character->user->id),
       ] : [];
   } 
 }

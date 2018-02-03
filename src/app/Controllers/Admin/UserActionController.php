@@ -238,7 +238,8 @@ class UserActionController extends Controller
         $char_attribs = [
           "org" => $requestData["attr"]["group"], 
           "shift" => $requestData["attr"]["shift"],
-          "role" => $requestData["attr"]["role"]
+          "role" => $requestData["attr"]["role"],
+          "gender" => $requestData["attr"]["char_gender"]
         ];
         
         $attribute_ids = [];
