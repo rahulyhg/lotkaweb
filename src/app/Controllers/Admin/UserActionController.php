@@ -238,7 +238,8 @@ class UserActionController extends Controller
         $char_attribs = [
           "org" => $requestData["attr"]["group"], 
           "shift" => $requestData["attr"]["shift"],
-          "role" => $requestData["attr"]["role"]
+          "role" => $requestData["attr"]["role"],
+          "gender" => $requestData["attr"]["char_gender"]
         ];
         
         $attribute_ids = [];
@@ -368,16 +369,23 @@ class UserActionController extends Controller
       'username' => v::noWhitespace()->notEmpty()->userAvailable(),
       'email' => v::noWhitespace()->notEmpty()->emailAvailable(),
       'password' => v::noWhitespace()->notEmpty(),
+      'order_id' => v::noWhitespace()->notEmpty(),
     ];
-   
+
+    $validation_fails = "";
     $validated = array_filter(
       array_map(function ($k, $v) use ($credentials) { 
-        return $v->validate($credentials[$k]);
+         if($v->validate($credentials[$k])) {
+           return true;
+         } else {
+           $validation_fails .= " {$k}";
+           return false;
+         }           
       }, array_keys($validators), $validators)
     );
 
-    if (count($validated) !== count($credentials)) {
-      $this->flash->addMessage('error', "Validation of user '{$credentials['username']}' failed.");
+    if (in_array(false, $validated)) {
+      $this->flash->addMessage('error', "Validation of user '{$credentials['username']}' failed. ({$validation_fails} not valid)");
       return $response->withRedirect($this->router->pathFor('admin.order.attest', [ 'uid' => $order->id ]));
     }
     

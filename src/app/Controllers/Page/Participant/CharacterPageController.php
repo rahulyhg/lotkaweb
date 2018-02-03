@@ -36,15 +36,18 @@ class CharacterPageController extends Controller
   }
   
   public function my($request, $response, $arguments){
-    $user = self::getCurrentUser();
-    $character = $user["user"]->character;
+    $user = $this->container->auth->isWriter() && isset($arguments["uid"]) ?
+      self::getPlayerInfo($arguments["uid"]) : self::getCurrentUser();
     
-    //die(var_dump($character->id));
+    $character = $user["user"]->character;
     
     return self::render(
       "character-my", 
       [
         "character" => $character ? self::getCharacterInfo($character->id) : [],
+        "current" => $user,
+        "genders" => ['Non-binary','Female','Male','Other'],
+        "uid" => isset($arguments["uid"]) ? $arguments["uid"] : false,
       ], 
       $response
     );
@@ -55,34 +58,51 @@ class CharacterPageController extends Controller
       "character", 
       [
         "character" => self::getCharacterInfo($arguments["uid"]),
+        "postClass" => "mt-10",
+        "mainClass" => "mt-0 pt-10"
       ], 
       $response
     );
   }
   
+  public function save($request, $response, $arguments){
+    return "TODO : save";
+  }
+  
+  //===========================================================================
+  // Helpers
+  //===========================================================================  
+  
+  private function isNpc($character) {
+    return !is_null( $character->attr->where('name','npc')->where('value','on')->first() );
+  }
+  
   private function getCharacersInfo($AttributeFilter = [['name','like','%']]) {
     $characters = Character::whereHas(
         'attr', function ($query) use ($AttributeFilter) {
-            $query->where( $AttributeFilter);
+            $query->where( $AttributeFilter );
         }
     )->where('name', '<>', '')->with('attr')->get();
     
-    $character_list = [];    
+    $character_list = [];
     foreach ($characters as $character) {
-      $character_list[] = [
-        "data" => $character, 
-        "attributes" => self::mapAttributes($character->attr),
-      ];
+      if(!self::isNpc($character)) {
+        $character_list[] = [
+          "data" => $character, 
+          "attributes" => self::mapAttributes($character->attr),
+        ];
+      }
     }
         
     return $character_list;
   }
   
   private function getCharacterInfo($uid) {
-    $character = Character::where('id', $uid)->first();
-    return $character ? [
+    $character = Character::where('id', $uid)->first();    
+    return $character && !self::isNpc($character) ? [
         "data" => $character, 
         "attributes" => self::mapAttributes($character->attr),
+        "player" => self::getPlayerInfo($character->user->id),
       ] : [];
   } 
 }
