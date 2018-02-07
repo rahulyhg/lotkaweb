@@ -26,6 +26,30 @@
     </a>
   </li>
     {% endfor %}
+  {% else %}
+  <li class="work-item {{ key }}">
+    <a href="{{ section.target }}">
+      {% if section.image %}
+      <div class="work-image"><img src="{{ section.image }}" alt="{{ section.title }}"/></div>
+      {% else %}
+      <div class="work-image"><img src="/assets/images/logos/lotka-volterra-logo.svg" alt="{{ section.title }}"/></div>
+      {% endif %}
+      <div class="work-caption font-alt">
+        <h3 class="work-title">{{ section.title}}</h3>
+        {% if section.info %}
+        <div class="work-descr">
+          <h6>
+            {{ section.info }}
+          </h6>
+        </div>
+        {% endif %}
+      </div>
+      <hr class="divider-w mt-0 mb-10">
+      <h5 class="font-alt  mt-0 mb-20">
+        {{ section.title}}
+      </h5>
+    </a>
+  </li>
   {% endif %}
 {% endfor %}
 </ul>
