@@ -155,11 +155,12 @@ class Controller
   public function getPlayerCharacter($user_id) {
     $player_characer = Character::where('user_id', $user_id)->first();
     
-    $character = [ "data" => [], "attributes" => [] ];
+    $character = [ "data" => [], "attributes" => [], "hasCharacter" => false ];
     if($player_characer) {
       $character["data"] = $player_characer;
       $character["attributes"] = self::mapAttributes($player_characer->attr);
-    }    
+      $character["hasCharacter"] = true;
+    }  
     return $character;
   }
   
@@ -192,7 +193,7 @@ class Controller
   public function dashboardSections() {
     $participant = self::getCurrentUser();
     
-    return [
+    $menu = [
       'sections' => [
 
           'players' => [
@@ -213,6 +214,18 @@ class Controller
               ],
             ]
           ],
+        
+      ]
+    ];
+    
+    if($participant["character"]["hasCharacter"]) {
+      $menu["sections"]['character'] = [
+        'title' => 'My Character',
+        'target' => $this->router->pathFor('participant.character.my'),
+        'info' => 'My character page',
+        'image' => '/assets/portraits/scaled/' . $participant["attributes"]["portrait"]
+      ];
+    }
 
 /*        
           'my' => [
@@ -351,8 +364,8 @@ class Controller
               ],
             ]
           ],
-*/
-      ]
-    ];
+*/    
+    
+    return $menu;
   }  
 }
