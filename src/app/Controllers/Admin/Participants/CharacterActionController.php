@@ -30,7 +30,7 @@ class CharacterActionController extends Controller
   private function characterOptions() {
     return [
       'users' => User::orderBy('displayname')->get(),
-      'characters' => Character::where('character_id', null)->orderBy('name')->get(),
+      'characters' => Character::orderBy('name')->get(),
       'groups' => Group::orderBy('name')->get(),
       'plots' => Plot::orderBy('name')->get(),
       'relations' => Relation::orderBy('name')->get(),
