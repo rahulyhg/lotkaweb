@@ -10,7 +10,8 @@ use App\Models\Task;
 
 use App\Controllers\Controller;
 use App\Controllers\Admin\Participants\CharacterActionController as CharacterActions;
-
+use App\Controllers\Page\Participant\OnboardingPageController as OnboardingActions;
+  
 use Slim\Views\Twig as View;
 
 class CharacterPageController extends Controller
@@ -66,7 +67,65 @@ class CharacterPageController extends Controller
   }
   
   public function save($request, $response, $arguments){
-    return "TODO : save";
+    $player = $this->container->auth->isWriter() && isset($arguments["uid"]) ?
+      self::getPlayerInfo($arguments["uid"]) : self::getCurrentUser();    
+    
+    $character = $player["user"]->character;
+    $user = $player["user"];
+
+    #$character
+    $character_attributes = [
+      'nickname' => $request->getParam('nickname'),
+      'gender' => $request->getParam('gender'),
+      'pronoun' => $request->getParam('pronoun'),
+      'age' => $request->getParam('age'),
+      'synopsis' => $request->getParam('synopsis'),
+      'history' => $request->getParam('history'),
+      'traumas' => $request->getParam('traumas'),
+      'contacts_in_haven' => $request->getParam('contacts_in_haven'),
+      'personnel_file' => $request->getParam('personnel_file'),
+    ];
+      
+    #$user
+    $user_attributes = [
+      'pref_romance' => $request->getParam('pref_romance'),
+      'pref_fall_from_grace' => $request->getParam('pref_fall_from_grace'),
+      'pref_shared_trauma' => $request->getParam('pref_shared_trauma'),
+      'pref_shared_secret' => $request->getParam('pref_shared_secret'),
+      'pref_everyday' => $request->getParam('pref_everyday'),
+      'pref_counselling' => $request->getParam('pref_counselling'),
+      'pref_conflict' => $request->getParam('pref_conflict'),
+      'pref_conflict_ideological' => $request->getParam('pref_conflict_ideological'),
+      'pref_conflict_intrapersonal' => $request->getParam('pref_conflict_intrapersonal'),
+      'pref_friendships' => $request->getParam('pref_friendships'),
+      'pref_social_climb' => $request->getParam('pref_social_climb'),
+      'pref_enemies' => $request->getParam('pref_enemies'),
+      'pref_player_def_1' => $request->getParam('pref_player_def_1'),
+      'pref_player_def_2' => $request->getParam('pref_player_def_2'),
+      'pref_player_def_3' => $request->getParam('pref_player_def_3'),
+    ];
+    
+    # Saving User Attributes
+    foreach($user_attributes as $key => $value) {
+      self::setAttribute($user, $key, $value);
+    }
+    
+    # Saving Character Attributes
+    foreach($character_attributes as $key => $value) {
+      self::setAttribute($character, $key, $value);
+    }
+
+    # Check if we have updated data
+    $hasUpload = $request->getUploadedFiles();
+    if( isset($hasUpload['portrait']) ) {
+      self::setAttribute(
+        $user, 
+        'portrait', 
+        OnboardingActions::uploadFile($hasUpload, $user, true)
+      );
+    }    
+    
+    return $response->withRedirect($this->router->pathFor('participant.character.my'));
   }
   
   //===========================================================================
@@ -98,11 +157,12 @@ class CharacterPageController extends Controller
   }
   
   private function getCharacterInfo($uid) {
-    $character = Character::where('id', $uid)->first();    
+    $character = Character::where('id', $uid)->first();
+    
     return $character && !self::isNpc($character) ? [
         "data" => $character, 
         "attributes" => self::mapAttributes($character->attr),
-        "player" => self::getPlayerInfo($character->user->id),
+        "player" => self::getPlayerInfo($character->user_id),
       ] : [];
   } 
 }

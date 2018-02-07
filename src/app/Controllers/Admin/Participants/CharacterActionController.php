@@ -22,7 +22,7 @@ class CharacterActionController extends Controller
       'iso_int_note','mil_dem_note','nos_pro_note','lib_col_note','log_int_note','dir_avo_note','phy_non_note','mal_con_note',
        'iso_int','mil_dem','nos_pro','lib_col','log_int','dir_avo','phy_non','mal_con',
       'self_vision', 'others_vision', 'notes', 'bunk_budy', 'age',
-      'gender','time_in_thermopylae', 'contacts_in_haven',
+      'gender','time_in_thermopylae', 'contacts_in_haven', 'pronoun', 'history', 'traumas', 'personnel_file',
     ];
   }
   
@@ -30,7 +30,7 @@ class CharacterActionController extends Controller
   private function characterOptions() {
     return [
       'users' => User::orderBy('displayname')->get(),
-      'characters' => Character::orderBy('name')->get(),
+      'characters' => Character::where('character_id', null)->orderBy('name')->get(),
       'groups' => Group::orderBy('name')->get(),
       'plots' => Plot::orderBy('name')->get(),
       'relations' => Relation::orderBy('name')->get(),
@@ -116,6 +116,14 @@ class CharacterActionController extends Controller
     }
   }
   
+  private function removeCharacterFromUsers($character) {
+    $users = User::where('id', $item->user_id)->get();      
+    foreach ($users as $user) {
+      $user->character_id = 0;
+      $user->save();
+    }
+  }
+  
   private function save($requestData, $request, $response, $arguments) {
     // update data
     $item = Character::firstOrCreate(['id' => $arguments['uid']]);
@@ -127,6 +135,8 @@ class CharacterActionController extends Controller
         $user->save();
       }
     } else {
+      self::removeCharacterFromUsers($item);
+      
       $user = User::where('id', $requestData['values']['user_id'])->first();
       if($user) {
         $user->character_id = $item->id;
@@ -274,9 +284,6 @@ class CharacterActionController extends Controller
   {
     $character = Character::where('id', $arguments['uid'])->first();
     $order = [];
-    
-//    die(var_dump($character->user));
-    
     
     if($character->user_id) {
       $order = Order::where('user_id', $character->user_id)->first();

@@ -145,7 +145,7 @@ class OnboardingPageController extends Controller
     }
   }  
   
-  private function uploadFile($uploadedFiles, $user) {
+  public function uploadFile($uploadedFiles, $user, $stop_attribute_propagation = fase) {
     $directory = $this->container->get('settings')['user_images'];
 
     // handle single input with single file upload
@@ -158,13 +158,15 @@ class OnboardingPageController extends Controller
 
       $uploadedFile->moveTo($directory . $filename);
       
-      self::updateAttributes(['portrait' => $filename], $user);
-      
       MediaActionController::convertPortrait(
         $directory . $filename, 
         $directory . "scaled" . DIRECTORY_SEPARATOR . $filename
       );
       
+      if(!$stop_attribute_propagation) 
+        self::updateAttributes(['portrait' => $filename], $user);
+      else
+        return $filename;
       //die($directory . "scaled" . DIRECTORY_SEPARATOR . $filename);
     }
   }

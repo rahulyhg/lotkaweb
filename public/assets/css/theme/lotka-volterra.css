@@ -609,6 +609,7 @@ svg.loading path.lights {
   font-family: "Roboto Condensed", sans-serif;
   text-transform: uppercase;
   letter-spacing: 2px;
+  color: #FFF;	
 /*   -webkit-appearance: none;
    -moz-appearance: none;
    appearance: none;

@@ -61,19 +61,26 @@ class Controller
   # Sets Attribute of Name: Value to supplied Model instance
   # Use in controller like: self::setAttribute($user, 'npc', 'on');
   public function setAttribute($model, $name, $value) {
+    if (!is_object($model)) return false;
     self::removeAttribute($model, $name);
     $attribute_id = self::getAttributeIds([
       'keys' => [$name], 'values' => [$value]
     ]);
-      
+    
+    //var_dump($attribute_id, $name, $value);
+    
+    //echo "<br>";
+    
     return $model->attr()->sync($attribute_id, false);
   }  
   
   # Removes all Attributes of Name to supplied Model instance
   # Use in controller like: self::removeAttribute($user, 'npc');
   public function removeAttribute($model, $name) {
-    $currentAttributes = $model->attr->where('name', $name)->get();
-    return $model->attr()->detach($currentAttributes);
+    if (!is_object($model)) return false;
+    $currentAttributes = $model->attr()->where('name', $name)->get();
+    
+    return count($currentAttributes) ? $model->attr()->detach($currentAttributes) : false;
   }  
   
   # See OnboardingPageController.php:266 for usage.
