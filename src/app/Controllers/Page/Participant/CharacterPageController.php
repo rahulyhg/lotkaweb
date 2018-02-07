@@ -125,7 +125,11 @@ class CharacterPageController extends Controller
       );
     }    
     
-    return $response->withRedirect($this->router->pathFor('participant.character.my'));
+    return $response->withRedirect(
+      isset($arguments["uid"])  ? 
+      $this->router->pathFor('participant.character.my.admin', ['uid' => $arguments["uid"]]):
+      $this->router->pathFor('participant.character.my')
+    );
   }
   
   //===========================================================================
