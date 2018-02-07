@@ -393,7 +393,8 @@ $app->group('/participants', function () {
     $this->get('[/]',       'CharacterPageController:index')
       ->setName('participant.character.list');
     $this->get('/my/{uid}', 'CharacterPageController:my');      
-    $this->post('/my/{uid}','CharacterPageController:save');    
+    $this->post('/my/{uid}','CharacterPageController:save')
+      ->setName('participant.character.my.admin'); ;    
     $this->get('/my',       'CharacterPageController:my')
       ->setName('participant.character.my');      
     $this->post('/my',       'CharacterPageController:save');
