@@ -84,6 +84,9 @@ class CharacterPageController extends Controller
       'traumas' => $request->getParam('traumas'),
       'contacts_in_haven' => $request->getParam('contacts_in_haven'),
       'personnel_file' => $request->getParam('personnel_file'),
+      'haven_id' => $request->getParam('haven_id'),
+      'how_survived' => $request->getParam('how_survived'),
+      'submitted_for_review' => $request->getParam('submitted_for_review'),
     ];
       
     #$user
@@ -107,17 +110,19 @@ class CharacterPageController extends Controller
     
     # Saving User Attributes
     foreach($user_attributes as $key => $value) {
+      $value = is_null($value) ? false : $value;
       self::setAttribute($user, $key, $value);
     }
     
     # Saving Character Attributes
     foreach($character_attributes as $key => $value) {
+      $value = is_null($value) ? false : $value;
       self::setAttribute($character, $key, $value);
     }
 
     # Check if we have updated data
     $hasUpload = $request->getUploadedFiles();
-    if( isset($hasUpload['portrait']) ) {
+    if( isset($hasUpload['portrait']) && strlen($hasUpload['portrait']->file) ) {      
       self::setAttribute(
         $user, 
         'portrait', 

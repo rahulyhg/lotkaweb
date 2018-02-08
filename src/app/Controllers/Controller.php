@@ -31,14 +31,15 @@ class Controller
   
   public function mapAttributes($collection) {
     $a = [];
-    foreach ($collection as $name => $value) {
-      if(isset($a[$value->name])) {
-        if(!is_array($a[$value->name])) $a[$value->name] = [$a[$value->name]];
-        $a[$value->name][] = $value->value;
+    foreach ($collection as $id => $attr) {      
+      if(isset($a[$attr->name])) {
+        if(!is_array($a[$attr->name])) $a[$attr->name] = [$a[$attr->name]];
+        $a[$attr->name][] = $attr->value ? $attr->value : false;
       } else {     
-        $a[$value->name] = $value->value; 
+        $a[$attr->name] = $attr->value ? $attr->value : false; 
       }
-    }        
+    }
+    
     return $a;
   }
   
