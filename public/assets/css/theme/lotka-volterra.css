@@ -520,7 +520,30 @@ svg.loading path.lights {
 .intel.work-item > div > div.post-thumbnail::after      {  color: #D00; }
 .logistics.work-item > div > div.post-thumbnail::after      {  color: #FFF; opacity:1; background-color:#000; }
 
+.bg45 {
+  background-image: -moz-linear-gradient(45deg, transparent 0%, transparent 25%, currentColor 26%, currentColor 50%, transparent 51%, transparent 75%, currentColor 76%);
+  background-image: -webkit-gradient(linear, right bottom, , color-stop(0%, transparent), color-stop(25%, transparent), color-stop(26%, currentColor), color-stop(50%, currentColor), color-stop(51%, transparent), color-stop(75%, transparent), color-stop(76%, currentColor));
+  background-image: -webkit-linear-gradient(45deg, transparent 0%, transparent 25%, currentColor 26%, currentColor 50%, transparent 51%, transparent 75%, currentColor 76%);
+  background-image: -o-linear-gradient(45deg, transparent 0%, transparent 25%, currentColor 26%, currentColor 50%, transparent 51%, transparent 75%, currentColor 76%);
+  background-image: -ms-linear-gradient(45deg, transparent 0%, transparent 25%, currentColor 26%, currentColor 50%, transparent 51%, transparent 75%, currentColor 76%);
+  background-image: linear-gradient(45deg, transparent 0%, transparent 25%, currentColor 26%, currentColor 50%, transparent 51%, transparent 75%, currentColor 76%);
+}
 
+.under_review {
+	color: #000; 
+	opacity: 1; 
+	background-color: #FFF;
+  padding: .05em;
+  background-size: 1em 1em;	
+}
+.under_review .inner {
+	background: #FFF;
+	border: .25em solid #000;
+	color: #000;
+	margin: .75em;
+	padding: .75em;
+	text-align:center;
+}
 /* ---- table-like ---- */
 
 .table-like {
