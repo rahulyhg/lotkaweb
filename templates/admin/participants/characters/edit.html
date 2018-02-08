@@ -53,7 +53,14 @@
                 {% endfor %}    
                 </select>
              </div>
-            </div>            
+            </div>
+            
+            <div class="control-group">
+              <label class="control-label">Pronoun :</label>
+              <div class="controls">
+                <input type="text" class="span11" name="pronoun" value="{{ current.attr.pronoun }}">
+              </div>
+            </div>
             
             <div class="control-group{% if (current.data.user_id == null) and (current.new != true) %} error{% endif %}">
               <label class="control-label">Player :</label>
@@ -68,6 +75,24 @@
                 </select>
               </div>
             </div>
+
+            {% if not current.attr.reviewed %}
+            <div class="control-group">
+              <label class="control-label">Submitted for review :</label>
+              <div class="controls">
+                <input type="checkbox" class="span11" name="submitted_for_review" {% if current.attr.submitted_for_review %}checked{% endif %}>
+              </div>
+            </div>
+            {% endif %}
+            
+            {% if current.attr.submitted_for_review %}
+            <div class="control-group">
+              <label class="control-label">Reviewed :</label>
+              <div class="controls">
+                <input type="checkbox" class="span11" name="reviewed" {% if current.attr.reviewed %}checked{% endif %}>
+              </div>
+            </div>              
+            {% endif %}
             
             <div class="control-group">
               <label class="control-label">NPC :</label>
@@ -114,6 +139,13 @@
              </div>
             </div>
 
+            <div class="control-group">
+              <label class="control-label">Haven ID :</label>
+              <div class="controls">
+                <input type="text" class="span11" name="haven_id" placeholder="Haven Identification number" value="{{ current.attr.haven_id }}">
+             </div>
+            </div>
+            
             <div class="control-group">
               <label class="control-label">Team Role/Specialization :</label>
               <div class="controls">
@@ -178,6 +210,13 @@
              </div>
             </div> 
 
+            <div class="control-group">
+              <label class="control-label">How did you survive? :</label>
+              <div class="controls">
+                <textarea class="span11" name="traumas" rows="8">{{ current.attr.how_survived }}</textarea>
+             </div>
+            </div> 
+            
             <div class="control-group">
               <label class="control-label">Personnel file :</label>
               <div class="controls">

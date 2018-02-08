@@ -111,11 +111,29 @@ class AttributeActionController extends Controller
       'media'       => $item->media()->get(),
     ]);
     
+    if(is_null($item->value)) $item->value = '';
     return $this->view->render($response, 'admin/attributes/edit.html', self::options($item));
   }
   
   public function delete($request, $response, $arguments)
   {
-    return "TODO";
+    $item = Attribute::where('id', $arguments['uid'])->first();
+
+    $item->characters()->sync([]);
+    $item->groups()->sync([]);
+    $item->plots()->sync([]);
+    $item->posts()->sync([]);
+    $item->rel()->sync([]);
+    $item->tickets()->sync([]);
+    $item->users()->sync([]);
+    $item->media()->sync([]);
+
+    if($item->delete()) {
+      $this->flash->addMessage('success', "Attribute has been removed from all entities and deleted.");
+    } else {
+      $this->flash->addMessage('error', "The attribute could not be deleted.");
+    }
+
+    return $response->withRedirect($this->router->pathFor('admin.attributes.list'));    
   }
 }

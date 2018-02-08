@@ -38,7 +38,7 @@
             <div class="control-group">
               <label class="control-label">Value :</label>
               <div class="controls">
-                <textarea class="span11" name="value" rows="5">{{ current.data.value }}</textarea>
+                <textarea class="span11" name="value" rows="5">{{ current.data ? current.data.value|default('') : '' }}</textarea>
              </div>
             </div>
             
