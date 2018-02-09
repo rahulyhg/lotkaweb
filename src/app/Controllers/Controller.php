@@ -153,12 +153,66 @@ class Controller
     ]);
   }
   
+  #=====================================
+  # Community Helpers
+  #=====================================
+  
+  public function getRelations($model) {
+    $modelRelations = $model->rel();
+    $r = [];
+    foreach($modelRelations as $relation) {
+      $r["data"] = $relation;
+      $r["attributes"] = self::mapAttributes($relation->attr);
+      $r["characters"] = [];
+      foreach($relation->characters() as $character) {
+        $r["characters"][] = self::getCharacter($character->id);
+      }      
+      $r["groups"] = [];
+      foreach($relation->groups() as $group) {
+        $r["groups"][] = self::getGroup($group->id);
+      }      
+    }
+    
+    return $r;
+  }
+  
+  public function getGroup($uid) {
+    $group = Group::where('id', $uid)->first();
+    
+    return $group ? [
+      "data" => $group,
+      "attributes" => self::mapAttributes( $group->attr ),
+      "characters" => self::getGroupCharacters( $group ),
+    ] : [];    
+  }  
+  
+  public function getGroupCharacters($group) {
+    $groupCharacters = $group->characters();
+    
+    $characterCollection = [];
+    foreach($groupCharacters as $character) {
+      $characterCollection[] = self::getCharacter($character->id);
+    }
+    return $characterCollection;    
+  }  
+  
+  public function getCharacter($uid) {
+    $character = Character::where('id', $uid)->first();
+    
+    return $character && !self::isNpc($character) ? [
+        "data" => $character, 
+        "attributes" => self::mapAttributes($character->attr),
+        "player" => self::getPlayerInfo($character->user_id),
+      ] : [];
+  }   
+  
   public function getPlayerCharacter($user_id) {
     $player_characer = Character::where('user_id', $user_id)->first();
     
     $character = [ "data" => [], "attributes" => [], "hasCharacter" => false ];
     if($player_characer) {
       $character["data"] = $player_characer;
+      $character["relations"] = self::getRelations($player_characer);
       $character["attributes"] = self::mapAttributes($player_characer->attr);
       $character["hasCharacter"] = true;
     }  

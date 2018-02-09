@@ -4,6 +4,7 @@ namespace App\Controllers\Admin;
 
 use App\Models\User;
 use App\Models\Order;
+use App\Models\Character;
 use App\Controllers\Controller;
 use Slim\Views\Twig as View;
 
@@ -44,6 +45,7 @@ class AdminController extends Controller
     $user_countries = [];
     $user_genders = [];
     $user_ages = [];
+    $casting_status = [];
     
     foreach ($users as $user) {
       $role_name = $user->roles()->first()->name;
@@ -62,6 +64,14 @@ class AdminController extends Controller
         $gender_name = strlen($gender_name->value) ? $gender_name->value : "[NOT SET]";
         $user_genders[$gender_name] = isset($user_genders[$gender_name]) ? 
           $user_genders[$gender_name] + 1 : 1;
+      }
+      
+      if($user->character_id != 0 && !is_null($user->character_id)) {
+        $casting_status['casted'] = isset($casting_status['casted']) ? 
+          $casting_status['casted'] + 1 : 1;
+      } else {
+        $casting_status['not_casted'] = isset($casting_status['not_casted']) ? 
+          $casting_status['not_casted'] + 1 : 1;
       }
   
       $birth_date = $user->attr->where('name', 'birth_date')->first();
@@ -87,6 +97,27 @@ class AdminController extends Controller
       
     }
     
+    $characters = Character::all();
+    $review_status = [];
+    
+    foreach ($characters as $character) {
+      $sent_to_review = $character->attr->where('name', 'submitted_for_review')->first();      
+      if($sent_to_review) {
+        if($character->attr->where('name', 'reviewed')->first()) {
+          $review_status['reviewed'] = isset($review_status['reviewed']) ? 
+            $review_status['reviewed'] + 1 : 1;
+        } else {
+          $review_status['submitted'] = isset($review_status['submitted']) ? 
+            $review_status['submitted'] + 1 : 1;
+        }
+      } else {
+        $review_status['not_submitted'] = isset($review_status['not_submitted']) ? 
+          $review_status['not_submitted'] + 1 : 1;
+      }
+      
+      
+    }
+    
     $ticket_sales = Order::query()
       ->select(
         $DB->raw("DATE(orderdate) AS OrderDay"),
@@ -97,6 +128,8 @@ class AdminController extends Controller
       ->orderBy('OrderDay');
     
     return $this->view->render($response, 'admin/dashboard/main.twig', [
+      'castedPlayers' => $casting_status,
+      'reviewStatus' => $review_status,
       'orderStatus' => $order_status,
       'userRoles' => $user_roles,
       'userCountries' => $user_countries,
