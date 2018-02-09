@@ -183,6 +183,34 @@ window.onload = function () {
     }    
   };
   
+  var casted_players_data = [
+  {% if castedPlayers %}
+    {'label': "Casted", 'data': {{ castedPlayers.casted|default('0') }} },
+    {'label': "Not Casted", 'data': {{ castedPlayers.not_casted|default('0') }} }
+  {% endif %}
+  ]; 
+  if(casted_players_data.length)
+  $.plot('#casted_players', casted_players_data, settings);
+  
+  var reviewed_characters_data = [
+  {% if reviewStatus %}
+    {'label': "Reviewed", 'data': {{ reviewStatus.reviewed|default('0') }} },
+    {'label': "Submitted", 'data': {{ reviewStatus.submitted|default('0') }} },
+    {'label': "Not Submitted", 'data': {{ reviewStatus.not_submitted|default('0') }} }
+  {% endif %}
+  ]; 
+  if(reviewed_characters_data.length)
+  $.plot('#reviewed_characters', reviewed_characters_data, settings);
+  
+  var orders_attested_data = [
+  {% if orderStatus %}
+    {'label': "Unattested", 'data': {{ orderStatus.unattested|default('0') }} },
+    {'label': "Attested", 'data': {{ orderStatus.attested|default('0') }} }
+  {% endif %}
+  ]; 
+  if(orders_attested_data.length)
+  $.plot('#orders_attested', orders_attested_data, settings);
+  
   var orders_attested_data = [
   {% if orderStatus %}
     {'label': "Unattested", 'data': {{ orderStatus.unattested|default('0') }} },

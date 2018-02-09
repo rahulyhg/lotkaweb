@@ -103,6 +103,17 @@ class GroupPageController extends Controller
     return $group ? [
       "data" => $group,
       "attributes" => self::mapAttributes( $group->attr ),
+      "characters" => self:getGroupCharacters( $group ),
     ] : [];    
   }
+  
+  private function getGroupPlayers($group) {
+    $groupPlayers = $group->users();
+    
+    $playerCollection = [];
+    for($groupPlayers as $player) {
+      $playerCollection[] = self::getPlayerInfo($player->id);
+    }
+    return $playerCollection;    
+  }  
 }
