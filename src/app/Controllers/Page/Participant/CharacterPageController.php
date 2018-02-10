@@ -67,8 +67,8 @@ class CharacterPageController extends Controller
     );
   }
   
-  private function has() {
-    
+  private function has($collection, $key) {
+    return isset($collection[$key]) ? $collection[$key] : false;
   }
   
   public function save($request, $response, $arguments){
@@ -78,7 +78,7 @@ class CharacterPageController extends Controller
     $character = $player["user"]->character;
     $user = $player["user"];
     
-    //die(var_dump($request->getParsedBody()));
+    $body_payload = $request->getParsedBody();
     
     #$character
     $character_attributes = [
@@ -99,18 +99,18 @@ class CharacterPageController extends Controller
       
     #$user
     $user_attributes = [
-      'pref_romance' =>                 !!$request->getParam('pref_romance'),
-      'pref_fall_from_grace' =>         !!$request->getParam('pref_fall_from_grace'),
-      'pref_shared_trauma' =>           !!$request->getParam('pref_shared_trauma'),
-      'pref_shared_secret' =>           !!$request->getParam('pref_shared_secret'),
-      'pref_everyday' =>                !!$request->getParam('pref_everyday'),
-      'pref_counselling' =>             !!$request->getParam('pref_counselling'),
-      'pref_conflict' =>                !!$request->getParam('pref_conflict'),
-      'pref_conflict_ideological' =>    !!$request->getParam('pref_conflict_ideological'),
-      'pref_conflict_intrapersonal' =>  !!$request->getParam('pref_conflict_intrapersonal'),
-      'pref_friendships' =>             !!$request->getParam('pref_friendships'),
-      'pref_social_climb' =>            !!$request->getParam('pref_social_climb'),
-      'pref_enemies' =>                 !!$request->getParam('pref_enemies'),
+      'pref_romance' =>                 !!self::has($body_payload, 'pref_romance'),
+      'pref_fall_from_grace' =>         !!self::has($body_payload, 'pref_fall_from_grace'),
+      'pref_shared_trauma' =>           !!self::has($body_payload, 'pref_shared_trauma'),
+      'pref_shared_secret' =>           !!self::has($body_payload, 'pref_shared_secret'),
+      'pref_everyday' =>                !!self::has($body_payload, 'pref_everyday'),
+      'pref_counselling' =>             !!self::has($body_payload, 'pref_counselling'),
+      'pref_conflict' =>                !!self::has($body_payload, 'pref_conflict'),
+      'pref_conflict_ideological' =>    !!self::has($body_payload, 'pref_conflict_ideological'),
+      'pref_conflict_intrapersonal' =>  !!self::has($body_payload, 'pref_conflict_intrapersonal'),
+      'pref_friendships' =>             !!self::has($body_payload, 'pref_friendships'),
+      'pref_social_climb' =>            !!self::has($body_payload, 'pref_social_climb'),
+      'pref_enemies' =>                 !!self::has($body_payload, 'pref_enemies'),
       'pref_player_def_1' =>            $request->getParam('pref_player_def_1'),
       'pref_player_def_2' =>            $request->getParam('pref_player_def_2'),
       'pref_player_def_3' =>            $request->getParam('pref_player_def_3'),
@@ -128,7 +128,7 @@ class CharacterPageController extends Controller
       self::setAttribute($character, $key, $value);
     }
 
-    $this->flash->addMessage('debug', [$request->getParsedBody()]);
+//    $this->flash->addMessage('debug', [$request->getParsedBody()]);
     
     # Check if we have updated data
     $hasUpload = $request->getUploadedFiles();
