@@ -117,15 +117,15 @@ class CharacterPageController extends Controller
     ];
     
     # Saving User Attributes
+    $debug = [];
     foreach($user_attributes as $key => $value) {
       $value = is_null($value) ? false : $value;
-      self::setAttribute($user, $key, $value);
+      $debug[] = self::setAttribute($user, $key, $value);
     }
 
 if($character->id == 363) {
   
-  $user = $user->fresh();
-  die(var_dump(self::mapAttributes( $user->attr )));
+  die(var_dump( $debug ));
   
 }    
     
