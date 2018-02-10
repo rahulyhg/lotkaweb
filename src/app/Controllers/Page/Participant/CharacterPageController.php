@@ -69,11 +69,13 @@ class CharacterPageController extends Controller
   
   public function save($request, $response, $arguments){
     $player = $this->container->auth->isWriter() && isset($arguments["uid"]) ?
-      self::getPlayerInfo($arguments["uid"]) : self::getCurrentUser();    
+      self::getPlayerInfo($arguments["uid"]) : self::getCurrentUser();
     
     $character = $player["user"]->character;
     $user = $player["user"];
 
+    $this->flash->addMessage('debug', $user["attributes"]);
+    
     #$character
     $character_attributes = [
       'nickname' =>                 $request->getParam('nickname'),
