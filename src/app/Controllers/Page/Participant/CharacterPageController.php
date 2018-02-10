@@ -111,12 +111,11 @@ class CharacterPageController extends Controller
     ];
     
     
-    $this->flash->addMessage('debug', $user_attributes);
-    
+    $debug = [];
     # Saving User Attributes
     foreach($user_attributes as $key => $value) {
       $value = is_null($value) ? false : $value;
-      self::setAttribute($user, $key, $value);
+      $debug[] = [self::setAttribute($user, $key, $value), $key, $value] ;
     }
     
     # Saving Character Attributes
@@ -125,6 +124,8 @@ class CharacterPageController extends Controller
       self::setAttribute($character, $key, $value);
     }
 
+    $this->flash->addMessage('debug', [$debug, $user_attributes]);
+    
     # Check if we have updated data
     $hasUpload = $request->getUploadedFiles();
     if( isset($hasUpload['portrait']) && strlen($hasUpload['portrait']->file) ) {
