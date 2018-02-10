@@ -73,6 +73,11 @@
                   </option>
                 {% endfor %}
                 </select>
+                <span class="span12" style="margin-top: .5em;">
+                  <a href="{{ path_for('participant.character.my.admin', { 'uid': current.data.user_id }) }}" target="_new">Participant Character Editor</a> : 
+                  <a href="{{ path_for('participant.character', { 'uid': current.data.id }) }}" target="_new">Character View</a> :
+                  <a href="{{ path_for('admin.user.edit', { 'uid': current.data.user.username }) }}" target="_new">User Admin</a>
+                </span>
               </div>
             </div>
 
