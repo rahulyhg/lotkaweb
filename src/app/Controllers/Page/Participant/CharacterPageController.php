@@ -74,7 +74,7 @@ class CharacterPageController extends Controller
     $character = $player["user"]->character;
     $user = $player["user"];
 
-    $this->flash->addMessage('debug', $user["attributes"]);
+    $this->flash->addMessage('debug', $user->id);
     
     #$character
     $character_attributes = [
