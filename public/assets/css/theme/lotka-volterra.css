@@ -616,6 +616,9 @@ svg.loading path.lights {
 .help-text .fa {
   color: #91e28f !important;
 }
+.help-text .non-public {
+  color: #e29c8f !important;
+}
 .card-body textarea {
   width:100%;
 }
@@ -709,7 +712,8 @@ svg.loading path.lights {
 }
 
 #dossier article > div {
-    max-width: 520px;
+/*    max-width: 520px; */
+  width:100% !important;
 }
 
 #dossier article h2 {

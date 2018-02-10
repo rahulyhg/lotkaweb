@@ -84,6 +84,7 @@ class CharacterPageController extends Controller
       'traumas' => $request->getParam('traumas'),
       'contacts_in_haven' => $request->getParam('contacts_in_haven'),
       'personnel_file' => $request->getParam('personnel_file'),
+      'personal_property_items' => $request->getParam('personal_property_items'),
       'haven_id' => $request->getParam('haven_id'),
       'how_survived' => $request->getParam('how_survived'),
       'submitted_for_review' => $request->getParam('submitted_for_review'),
