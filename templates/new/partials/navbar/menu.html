@@ -63,7 +63,7 @@
 
 {% else %}
 {{ include('new/partials/navbar/site_menu.html') }}
-<li><a href="{{ path_for(auth.isParticipant ? 'participant.home' : 'user.login') }}"><span class="icon-key"></span> Participant Login In</a></li>
+<li><a href="{{ path_for(auth.isParticipant ? 'participant.home' : 'user.login') }}"><span class="icon-key"></span> Participant Login</a></li>
 <!--
 <li><a href="{{ path_for('open.page', { 'category': 'tickets' }) }}" class="btn btn-d btn-round btn-block" type="submit">TICKETS</a></li>
 //-->

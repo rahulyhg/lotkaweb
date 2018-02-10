@@ -207,7 +207,7 @@ class Controller
   }   
   
   public function getPlayerCharacter($user_id) {
-    $player_characer = Character::where('user_id', $user_id)->first();
+    $player_characer = Character::where('user_id', $user_id)->orderBy('created_at', 'desc')->first();
     
     $character = [ "data" => [], "attributes" => [], "hasCharacter" => false ];
     if($player_characer) {
