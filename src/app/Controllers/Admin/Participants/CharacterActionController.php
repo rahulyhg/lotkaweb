@@ -117,7 +117,7 @@ class CharacterActionController extends Controller
   }
   
   private function removeCharacterFromUsers($character) {
-    $users = User::where('id', $item->user_id)->get();      
+    $users = User::where('id', $character->user_id)->get();      
     foreach ($users as $user) {
       $user->character_id = 0;
       $user->save();
