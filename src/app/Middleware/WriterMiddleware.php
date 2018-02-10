@@ -13,6 +13,7 @@ class WriterMiddleware extends Middleware
 
     if (!$isWriter) {
       $this->container->flash->addMessage('error', 'You have no access to view this page.');
+      $_SESSION['redirect_uri'] = $request->getUri()->getPath();
       return $response->withRedirect($this->container->router->pathFor('user.login'));
     }
 

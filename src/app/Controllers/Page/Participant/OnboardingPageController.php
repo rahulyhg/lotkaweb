@@ -145,9 +145,7 @@ class OnboardingPageController extends Controller
     }
   }  
   
-  public function uploadFile($uploadedFiles, $user, $stop_attribute_propagation = fase) {
-    $directory = $this->container->get('settings')['user_images'];
-
+  public function uploadFile($uploadedFiles, $user, $directory, $stop_attribute_propagation = fase) {
     // handle single input with single file upload
     $uploadedFile = $uploadedFiles['portrait'];
     
@@ -274,8 +272,8 @@ class OnboardingPageController extends Controller
             
     # Check if we have updated data
     $hasUpload = $request->getUploadedFiles();
-    if( isset($hasUpload['portrait']) ) {
-      self::uploadFile($hasUpload, $participant['user']);
+    if( isset($hasUpload['portrait'])  && strlen($hasUpload['portrait']->file) ) {
+      self::uploadFile($hasUpload, $participant['user'], $this->container->get('settings')['user_images']);
     }
     
     if( !$this->container->sentinel->update($participant['user'], $user_data) ) {

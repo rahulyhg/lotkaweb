@@ -70,14 +70,14 @@ class CharacterActionController extends Controller
     }
     
     if($request->getParam('new_org')) {
-      $attribute_ids[] = Attribute::create([
+      $attribute_ids[] = Attribute::firstOrCreate([
         'name' => 'org', 
         'value' => $request->getParam('new_org')
       ])->id;
     }
     
     if($request->getParam('new_shift')) {
-      $attribute_ids[] = Attribute::create([
+      $attribute_ids[] = Attribute::firstOrCreate([
         'name' => 'shift', 
         'value' => $request->getParam('new_shift')
       ])->id;
@@ -144,6 +144,19 @@ class CharacterActionController extends Controller
                 
         if($order && strlen($requestData['values']['name'] == 0)) {
           $requestData['values']['name'] = $order->name;
+        }
+
+        if($user_group = $user->attr->where('name', 'group')->first()) {
+          $requestData['attributes'][] = Attribute::firstOrCreate([
+                                          'name' => 'org', 
+                                          'value' => $user_group->value
+                                        ])->id;
+        }
+        if($user_role = $user->attr->where('name', 'role')->first()) {
+          $requestData['attributes'][] = $user_role->id;
+        }
+        if($user_shift = $user->attr->where('name', 'shift')->first()) {
+          $requestData['attributes'][] = $user_shift->id;
         }
         
         $user->save();
