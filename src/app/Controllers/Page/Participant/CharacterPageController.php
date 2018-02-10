@@ -73,8 +73,6 @@ class CharacterPageController extends Controller
     
     $character = $player["user"]->character;
     $user = $player["user"];
-
-    $this->flash->addMessage('debug', $user->id);
     
     #$character
     $character_attributes = [
@@ -111,6 +109,9 @@ class CharacterPageController extends Controller
       'pref_player_def_2' =>            $request->getParam('pref_player_def_2'),
       'pref_player_def_3' =>            $request->getParam('pref_player_def_3'),
     ];
+    
+    
+    $this->flash->addMessage('debug', $user_attributes);
     
     # Saving User Attributes
     foreach($user_attributes as $key => $value) {
