@@ -14,7 +14,8 @@ class AdminMiddleware extends Middleware
 
     if (!$isAdmin) {
       $this->container->flash->addMessage('error', 'You have no access to view this page.');
-      return $response->withRedirect($this->container->router->pathFor('home'));
+      $_SESSION['redirect_uri'] = $request->getUri()->getPath();
+      return $response->withRedirect($this->container->router->pathFor('user.login'));
     }
 
     $response = $next($request, $response);

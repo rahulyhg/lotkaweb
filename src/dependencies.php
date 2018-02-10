@@ -49,6 +49,9 @@ $container['view'] = function($container) {
   $view->getEnvironment()->addFilter(new Twig_SimpleFilter(
       'key', 
       function ($collection, $key) {
+        $item = $collection->where('name', $key)->first();
+        return $item ? $item->value : false;
+        
         $a = [];
         foreach ($collection as $name => $value) {
           $a[$value->name] = $value->value; 

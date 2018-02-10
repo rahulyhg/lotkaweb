@@ -122,11 +122,12 @@ class CharacterPageController extends Controller
 
     # Check if we have updated data
     $hasUpload = $request->getUploadedFiles();
-    if( isset($hasUpload['portrait']) && strlen($hasUpload['portrait']->file) ) {      
+    if( isset($hasUpload['portrait']) && strlen($hasUpload['portrait']->file) ) {
+      $file_name = OnboardingActions::uploadFile($hasUpload, $user, $this->container->get('settings')['user_images'], true);
       self::setAttribute(
         $user, 
         'portrait', 
-        OnboardingActions::uploadFile($hasUpload, $user, true)
+        $file_name
       );
     }    
     
