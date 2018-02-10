@@ -93,6 +93,7 @@ class CharacterPageController extends Controller
       
     #$user
     $user_attributes = [
+      /*
       'pref_romance' =>                 !!$request->getParam('pref_romance'),
       'pref_fall_from_grace' =>         !!$request->getParam('pref_fall_from_grace'),
       'pref_shared_trauma' =>           !!$request->getParam('pref_shared_trauma'),
@@ -105,17 +106,16 @@ class CharacterPageController extends Controller
       'pref_friendships' =>             !!$request->getParam('pref_friendships'),
       'pref_social_climb' =>            !!$request->getParam('pref_social_climb'),
       'pref_enemies' =>                 !!$request->getParam('pref_enemies'),
+      */
       'pref_player_def_1' =>            $request->getParam('pref_player_def_1'),
       'pref_player_def_2' =>            $request->getParam('pref_player_def_2'),
       'pref_player_def_3' =>            $request->getParam('pref_player_def_3'),
     ];
-    
-    
-    $debug = [];
+        
     # Saving User Attributes
     foreach($user_attributes as $key => $value) {
       $value = is_null($value) ? false : $value;
-      $debug[] = [self::setAttribute($user, $key, $value), $key, $value] ;
+      self::setAttribute($user, $key, $value);
     }
     
     # Saving Character Attributes
