@@ -22,7 +22,7 @@ class CharacterActionController extends Controller
       'iso_int_note','mil_dem_note','nos_pro_note','lib_col_note','log_int_note','dir_avo_note','phy_non_note','mal_con_note',
        'iso_int','mil_dem','nos_pro','lib_col','log_int','dir_avo','phy_non','mal_con',
       'self_vision', 'others_vision', 'notes', 'bunk_budy', 'age',
-      'gender','time_in_thermopylae', 'contacts_in_haven', 'pronoun', 'history', 'traumas', 'personnel_file', 'how_survived'
+      'gender','time_in_thermopylae', 'contacts_in_haven', 'pronoun', 'history', 'traumas', 'personnel_file', 'how_survived', 'personal_property_items'
     ];
   }
   
