@@ -99,8 +99,8 @@ class CharacterPageController extends Controller
       
     #$user
     $user_attributes = [
-      'pref_romance' =>                 !!self::has($body_payload, 'pref_romance'),
 /*      
+      'pref_romance' =>                 !!self::has($body_payload, 'pref_romance'),
       'pref_fall_from_grace' =>         !!self::has($body_payload, 'pref_fall_from_grace'),
       'pref_shared_trauma' =>           !!self::has($body_payload, 'pref_shared_trauma'),
       'pref_shared_secret' =>           !!self::has($body_payload, 'pref_shared_secret'),
@@ -112,10 +112,10 @@ class CharacterPageController extends Controller
       'pref_friendships' =>             !!self::has($body_payload, 'pref_friendships'),
       'pref_social_climb' =>            !!self::has($body_payload, 'pref_social_climb'),
       'pref_enemies' =>                 !!self::has($body_payload, 'pref_enemies'),
+*/
       'pref_player_def_1' =>            $request->getParam('pref_player_def_1'),
       'pref_player_def_2' =>            $request->getParam('pref_player_def_2'),
       'pref_player_def_3' =>            $request->getParam('pref_player_def_3'),
-*/
     ];
         
     # Saving User Attributes
