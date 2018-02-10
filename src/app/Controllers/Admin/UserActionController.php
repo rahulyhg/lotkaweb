@@ -194,6 +194,14 @@ class UserActionController extends Controller
     return $this->view->render($response, 'admin/user/edit.html', self::userOptions());
   }
 
+  private function removeUsersFromCharacter($character_id) {
+    $characters = Character::where('id', $character_id)->get();      
+    foreach ($characters as $character) {
+      $character->user_id = 0;
+      $character->save();
+    }
+  }  
+  
   public function postEditUser($request, $response, $arguments)
   {
     $getCurrentUserData = User::where('username', $arguments['uid'])->first();
@@ -211,7 +219,7 @@ class UserActionController extends Controller
     
     $character_id = $request->getParam('character_id');
     if(is_null($character_id)) {
-      $character = Character::where('id', $getCurrentUserData->id)->first();      
+      $character = Character::where('user_id', $getCurrentUserData->id)->first();      
       if($character) {
         $character->user_id = 0;
         $character->save();
@@ -219,6 +227,10 @@ class UserActionController extends Controller
     } else {
       $character = Character::where('id', $character_id)->first();
       if($character) {
+        self::removeUsersFromCharacter($character_id);
+        $character->user_id = $getCurrentUserData->id;
+        $character->save();        
+        
         $order = Order::where('user_id', $getCurrentUserData->id)->first();
 
         $character_data = [
@@ -232,7 +244,7 @@ class UserActionController extends Controller
         $groups_lookup = [$requestData["attr"]["group"], $requestData["attr"]["shift"]];
         $group_ids = [];
         foreach ($groups_lookup as $group_name) {
-          $group_ids[] = Group::firstOrCreate(['name' => $group_name])->id;       
+          if(strlen($group_name)) $group_ids[] = Group::firstOrCreate(['name' => $group_name])->id;       
         }
         
         $char_attribs = [
