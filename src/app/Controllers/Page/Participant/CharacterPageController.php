@@ -124,7 +124,7 @@ class CharacterPageController extends Controller
       self::setAttribute($character, $key, $value);
     }
 
-    $this->flash->addMessage('debug', [$user->displayname, self::mapAttributes($user->fresh()->attr)]);
+    $this->flash->addMessage('debug', [$request->getParam('pref_romance'),$user->fresh()->attr->where('name', 'pref_romance')->get()]);
     
     # Check if we have updated data
     $hasUpload = $request->getUploadedFiles();
