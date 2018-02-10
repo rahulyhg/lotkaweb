@@ -115,18 +115,20 @@ class CharacterPageController extends Controller
       'pref_player_def_2' =>            $request->getParam('pref_player_def_2'),
       'pref_player_def_3' =>            $request->getParam('pref_player_def_3'),
     ];
-
-if($character->id == 363) {
-  
-  die(var_dump($user_attributes));
-  
-}    
     
     # Saving User Attributes
     foreach($user_attributes as $key => $value) {
       $value = is_null($value) ? false : $value;
       self::setAttribute($user, $key, $value);
     }
+
+if($character->id == 363) {
+  
+  $user = $user->fresh();
+  die(var_dump(self::mapAttributes( $user->attr )));
+  
+}    
+    
     
     # Saving Character Attributes
     foreach($character_attributes as $key => $value) {
