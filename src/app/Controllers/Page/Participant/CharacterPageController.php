@@ -46,7 +46,7 @@ class CharacterPageController extends Controller
     return self::render(
       "character-my", 
       [
-        "character" => $character ? self::getCharacterInfo($character->id, $user) : [],
+        "character" => $character ? self::getCharacterInfo($character->id) : [],
         "current" => $user,
         "genders" => ['Non-binary','Female','Male','Other'],
         "uid" => isset($arguments["uid"]) ? $arguments["uid"] : false,
@@ -59,7 +59,7 @@ class CharacterPageController extends Controller
     return self::render(
       "character", 
       [
-        "character" => self::getCharacterInfo($arguments["uid"]),
+        "character" => self::getCharacterInfo($arguments["uid"], true),
         "postClass" => "mt-10",
         "mainClass" => "mt-0 pt-10"
       ], 
@@ -172,10 +172,10 @@ class CharacterPageController extends Controller
     return $character_list;
   }
   
-  private function getCharacterInfo($uid) {
+  private function getCharacterInfo($uid, $filterNPC = false) {
     $character = Character::where('id', $uid)->first();
     
-    return $character && !self::isNpc($character) ? [
+    return $character && !($filterNPC && self::isNpc($character)) ? [
         "data" => $character, 
         "attributes" => self::mapAttributes($character->attr),
         "player" => self::getPlayerInfo($character->user_id),
