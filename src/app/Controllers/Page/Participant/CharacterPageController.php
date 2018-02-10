@@ -67,12 +67,18 @@ class CharacterPageController extends Controller
     );
   }
   
+  private function has() {
+    
+  }
+  
   public function save($request, $response, $arguments){
     $player = $this->container->auth->isWriter() && isset($arguments["uid"]) ?
       self::getPlayerInfo($arguments["uid"]) : self::getCurrentUser();
     
     $character = $player["user"]->character;
     $user = $player["user"];
+    
+    //die(var_dump($request->getParsedBody()));
     
     #$character
     $character_attributes = [
@@ -94,7 +100,6 @@ class CharacterPageController extends Controller
     #$user
     $user_attributes = [
       'pref_romance' =>                 !!$request->getParam('pref_romance'),
-/*      
       'pref_fall_from_grace' =>         !!$request->getParam('pref_fall_from_grace'),
       'pref_shared_trauma' =>           !!$request->getParam('pref_shared_trauma'),
       'pref_shared_secret' =>           !!$request->getParam('pref_shared_secret'),
@@ -106,7 +111,6 @@ class CharacterPageController extends Controller
       'pref_friendships' =>             !!$request->getParam('pref_friendships'),
       'pref_social_climb' =>            !!$request->getParam('pref_social_climb'),
       'pref_enemies' =>                 !!$request->getParam('pref_enemies'),
-*/      
       'pref_player_def_1' =>            $request->getParam('pref_player_def_1'),
       'pref_player_def_2' =>            $request->getParam('pref_player_def_2'),
       'pref_player_def_3' =>            $request->getParam('pref_player_def_3'),
@@ -124,7 +128,7 @@ class CharacterPageController extends Controller
       self::setAttribute($character, $key, $value);
     }
 
-    $this->flash->addMessage('debug', [$request->getParam('pref_romance'),$user->fresh()->attr->where('name', 'pref_romance')->get()]);
+    $this->flash->addMessage('debug', [$request->getParsedBody()]);
     
     # Check if we have updated data
     $hasUpload = $request->getUploadedFiles();
