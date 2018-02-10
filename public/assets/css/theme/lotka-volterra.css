@@ -712,9 +712,8 @@ svg.loading path.lights {
 }
 
 #dossier article > div {
-    max-width: 520px;
-/*width:100% !important;
-max-width:100% !important;*/
+/*    max-width: 520px; */
+  width:100% !important;
 }
 
 #dossier article h2 {
