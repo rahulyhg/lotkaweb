@@ -35,7 +35,7 @@ class AuthController extends Controller
       $this->flash->addMessage('error', "There was an error with your login. Please check your credentials.");
       return $response->withRedirect($this->router->pathFor('user.login'));
     } else {
-      $this->container->sentinel->login($attempt);      
+      $this->container->sentinel->loginAndRemember($attempt);      
       $return_to = $_SESSION['redirect_uri'];
       if($return_to) {
         $_SESSION['redirect_uri'] = false;
