@@ -211,6 +211,38 @@ class CharacterActionController extends Controller
     ]);
   }
   
+  public function submitted_for_review($request, $response, $arguments)
+  {
+    //Filter by attribute
+    $characters = Character::whereHas(
+        'attr', function ($query) {
+            $query->where([['name', 'submitted_for_review'],['value','on']]);
+        }
+    )
+    ->with('attr');
+    
+    return $this->view->render($response, 'admin/participants/characters/list.html', [
+      'characters' => $characters->get(),
+      'debug' => $characters->toSql(),
+    ]);
+  }
+  
+  public function reviewed($request, $response, $arguments)
+  {
+    //Filter by attribute
+    $characters = Character::whereHas(
+        'attr', function ($query) {
+            $query->where([['name', 'reviewed'],['value','on']]);
+        }
+    )
+    ->with('attr');
+    
+    return $this->view->render($response, 'admin/participants/characters/list.html', [
+      'characters' => $characters->get(),
+      'debug' => $characters->toSql(),
+    ]);
+  }
+  
   public function add($request, $response, $arguments)
   {
     $this->container->view->getEnvironment()->addGlobal('current', [

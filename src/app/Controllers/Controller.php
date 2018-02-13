@@ -275,10 +275,23 @@ class Controller
     
     if($participant["character"]["hasCharacter"]) {
       $menu["sections"]['character'] = [
-        'title' => 'My Character',
-        'target' => $this->router->pathFor('participant.character.my'),
-        'info' => 'My character page',
-        'image' => '/assets/portraits/scaled/' . $participant["attributes"]["portrait"]
+            'title' => 'My Character',
+            'target' => $this->router->pathFor('participant.character.my'),
+            'pages' => [
+              'editor' => [
+                'title' => 'Character Editor',
+                'target' => $this->router->pathFor('participant.character.my'),
+                'info' => 'My character Editor',
+                'image' => '/assets/portraits/scaled/' . $participant["attributes"]["portrait"],
+              ],
+              'presentetaion' => [
+                'title' => 'Character Presentation',
+                'target' => $this->router->pathFor('participant.character', [ 'uid' => $participant["character"]["data"]->id]),
+                'info' => 'My character presentation',
+                'image' => '/assets/images/logos/outposts/outposts.svg#theta',
+              ],
+
+            ]
       ];
     }
 
