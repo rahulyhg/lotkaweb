@@ -838,3 +838,8 @@ svg.loading path.lights {
 #dossier label > span {
   float: right;
 }
+
+.notification {
+    position: absolute;
+    right: 0;
+}
