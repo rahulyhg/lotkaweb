@@ -36,7 +36,7 @@ class AuthController extends Controller
       return $response->withRedirect($this->router->pathFor('user.login'));
     } else {
       $this->container->sentinel->loginAndRemember($attempt);      
-      $return_to = $_SESSION['redirect_uri'];
+      $return_to = isset($_SESSION['redirect_uri']) ? $_SESSION['redirect_uri'] : false;
       if($return_to) {
         $_SESSION['redirect_uri'] = false;
         return $response->withRedirect($return_to);        

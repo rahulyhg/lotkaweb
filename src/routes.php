@@ -395,7 +395,7 @@ $app->group('/participants', function () use ($container) {
     $user_model = \App\Models\User::find($auth['user']->id);
     $container->get('view')->getEnvironment()->addGlobal('userData', [
       'todos' => $user_model->tasks()->where('status', '<>', 1)->get(),
-      'notifications' => $user_model->notifications()->where('seen_at', null)->get(),
+//      'notifications' => $user_model->notifications()->where('seen_at', null)->get(),
       'user' => $auth['user'],
       'character' => \App\Models\Character::where('user_id', $auth['user']->id)->first(),
     ]);
