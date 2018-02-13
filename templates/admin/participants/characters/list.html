@@ -3,6 +3,12 @@
 {% block title %}Character Manager{% endblock %}
 
 {% block contentHeader %}
+{% if debug %}
+  <!--
+  {{ dump(debug)|raw }}
+  //-->
+{% endif %}
+
   <div id="content-header">
     <div id="breadcrumb"> 
       <a href="{{ path_for('admin.index') }}" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a> 
@@ -32,6 +38,8 @@
                   <th>Player</th>
                   <th>Group</th>
                   <th>Shift</th>
+                  <th>Submitted</th>
+                  <th>Reviewed</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -43,7 +51,9 @@
                   <td>{{ character.user.displayname }}</td>
                   <td>{{ character.attr|key('org') }}</td>
                   <td>{{ character.attr|key('shift') }}</td>
-                  
+                  <td class="btn-{{ character.attr|key('submitted_for_review') ? 'success' : 'warning' }}"><i class="icon-check{{ character.attr|key('submitted_for_review') ? '' : '-empty' }}"></i> {{ character.attr|key('submitted_for_review') ? 'Yes' : 'No' }}</td>
+                  <td class="btn-{{ character.attr|key('reviewed') ? 'success' : character.attr|key('submitted_for_review') ? 'danger' : 'warning' }}"><i class="icon-check{{ character.attr|key('reviewed') ? '' : '-empty' }}"></i> {{ character.attr|key('reviewed') ? 'Yes' : 'No' }}</td>                  
+
                   <td class="center">
                     <a href="{{ path_for('admin.character.edit', { 'uid': character.id }) }}" class="btn btn-default" title="Edit Character"><i class="icon-edit"></i></a>
                     <a href="{{ path_for('admin.character.delete', { 'uid': character.id }) }}" class="btn btn-danger" title="Delete Character"><i class="icon-remove"></i></a>
