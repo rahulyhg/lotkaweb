@@ -12,6 +12,7 @@ class AdminMiddleware extends Middleware
       $isAdmin = $this->container->sentinel->getUser()->inRole('admin');
     }
 
+    
     if (!$isAdmin) {
       $this->container->flash->addMessage('error', 'You have no access to view this page.');
       $_SESSION['redirect_uri'] = $request->getUri()->getPath();

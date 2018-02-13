@@ -84,5 +84,5 @@ class ParticipantPageController extends Controller
       'post' => $post,
       'current' => $participant
     ]);
-  }  
+  } 
 }

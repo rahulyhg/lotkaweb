@@ -6,6 +6,8 @@ class ParticipantMiddleware extends Middleware
 {
   public function __invoke($request, $response, $next)
   {
+    $isParticipant = false;
+    
     if ($this->container->sentinel->getUser()) {
       $isAdmin = $this->container->sentinel->getUser()->inRole('admin');
       $isParticipant = $this->container->sentinel->getUser()->inRole('participant') || $isAdmin;
