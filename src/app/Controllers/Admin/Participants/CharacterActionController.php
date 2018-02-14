@@ -216,7 +216,7 @@ class CharacterActionController extends Controller
     //Filter by attribute
     $characters = Character::whereHas(
         'attr', function ($query) {
-            $query->where([['name', 'submitted_for_review'],['value','on']]);
+            $query->where([['name', 'submitted_for_review'], ['value', '<>', '0'], ['value', '<>', 'off']]);
         }
     )
     ->with('attr');
@@ -232,7 +232,7 @@ class CharacterActionController extends Controller
     //Filter by attribute
     $characters = Character::whereHas(
         'attr', function ($query) {
-            $query->where([['name', 'reviewed'],['value','on']]);
+            $query->where([['name', 'reviewed'], ['value', '<>', '0'], ['value', '<>', 'off']]);
         }
     )
     ->with('attr');
