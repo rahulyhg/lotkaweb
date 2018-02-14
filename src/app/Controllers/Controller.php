@@ -274,7 +274,7 @@ class Controller
     ];
     
     if($participant["character"]["hasCharacter"]) {
-      $menu["sections"]['character'] = [
+      $menu["sections"]["character"] = [
         'title' => 'My Character',
         'target' => $this->router->pathFor('participant.character.my'),
         'pages' => [
@@ -282,7 +282,7 @@ class Controller
             'title' => 'Character Editor',
             'target' => $this->router->pathFor('participant.character.my'),
             'info' => 'My character Editor',
-            'image' => '/assets/portraits/scaled/' . $participant["attributes"]["portrait"],
+            'image' => isset($participant["attributes"]["portrait"]) ? '/assets/portraits/scaled/' . $participant["attributes"]["portrait"] : '/images/logos/lotka-volterra-logo.svg',
           ],
           'presentetaion' => [
             'title' => 'Character Presentation',
