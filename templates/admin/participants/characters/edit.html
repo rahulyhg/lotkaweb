@@ -81,23 +81,19 @@
               </div>
             </div>
 
-            {% if not current.attr.reviewed %}
             <div class="control-group">
               <label class="control-label">Submitted for review :</label>
               <div class="controls">
-                <input type="checkbox" class="span11" name="submitted_for_review" {% if current.attr.submitted_for_review %}checked{% endif %}>
+                <input type="checkbox" class="span11" name="submitted_for_review" {% if current.attr.submitted_for_review %}checked{% endif %} {% if current.attr.reviewed %}disabled{% endif %} >
               </div>
             </div>
-            {% endif %}
             
-            {% if current.attr.submitted_for_review %}
             <div class="control-group">
               <label class="control-label">Reviewed :</label>
               <div class="controls">
-                <input type="checkbox" class="span11" name="reviewed" {% if current.attr.reviewed %}checked{% endif %}>
+                <input type="checkbox" class="span11" name="reviewed" {% if current.attr.reviewed %}checked{% endif %} {% if not current.attr.submitted_for_review %}disabled{% endif %}>
               </div>
-            </div>              
-            {% endif %}
+            </div>
             
             <div class="control-group">
               <label class="control-label">NPC :</label>
