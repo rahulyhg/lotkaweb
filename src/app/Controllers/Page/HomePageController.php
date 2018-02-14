@@ -17,7 +17,7 @@ class HomePageController extends Controller
     
     $ticket_selection = Ticket::orderBy('weight')->where($ticket_filter);
     if ($multiples) {
-      foreach ($array as &$value) {
+      foreach ($multiples as $value) {
         $value = $value.'%';
       }
       unset($value);
