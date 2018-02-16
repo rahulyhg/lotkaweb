@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Order;
 use App\Models\Character;
 use App\Models\Attribute;
+use App\Models\Notification;
 
 class Controller
 {
@@ -156,6 +157,34 @@ class Controller
   #=====================================
   # Community Helpers
   #=====================================
+  
+  public function notify($user, $target, $notification = []) {    
+    $ref = new \ReflectionClass(get_class($target));
+    $target_name = strtolower($ref->getShortName());    
+    
+    $data = [];
+    $data['title'] = isset($notification['title']) ? $notification['title'] : 'New ' . ucfirst($target_name);
+    if ( isset($notification['description']) ) $data['description'] = $notification['description'];
+    $data['type'] = $target_name;
+    $data['icon'] = isset($notification['icon']) ? $notification['icon'] : $target_name;
+    $data['target'] = $this->router->pathFor('participant.' . $target_name, ['uid'=> $target->id ]);
+    
+    return Notification::add($user, $target, $data);
+  }
+  
+  public function markNotificationsAsSeen($model, $seen_by) {
+    $notifications = $model->notifications()->where('user_id', $seen_by->id)->get();
+    
+    foreach($notifications as $notification) { 
+      $notification->seen_at = date("Y-m-d H:i:s");
+      $notification->save();      
+    }
+    
+    $this->container->view->getEnvironment()->addGlobal(
+        "userData", [ "notifications" => $seen_by->notifications()->where('seen_at', null)->get() ]
+      );
+    
+  }
   
   public function getRelations($model) {
     $modelRelations = $model->rel();

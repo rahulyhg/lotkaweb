@@ -186,6 +186,25 @@
                   </select>
                 </div>
               </div>
+              
+              <div class="widget-title"> 
+                <a href="#collapseGroups" data-toggle="collapse"> 
+                  <span class="icon"><i class="icon-group"></i></span>
+                  <h5>Notifications</h5>
+                </a> 
+              </div>
+              <div class="collapse {{ current.groups|length > 0 ? 'in' : ''}}" id="collapseGroups">
+                <div class="widget-content"> 
+                  <select name="group_ids[]"  multiple="true">
+                  {% for item in notifications %}
+                    <option value="{{ item.id }}" {% for i in current.notifications %}{% if item.id == i.id %}selected="selected"{% endif %}{% endfor %}>
+                      {{ item.title|default(item.id) }}
+                    </option>
+                  {% endfor %}
+                  </select>
+                </div>
+              </div>
+              
             </div>
  
             <div class="form-actions">

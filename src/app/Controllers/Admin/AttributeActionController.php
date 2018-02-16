@@ -11,6 +11,7 @@ use App\Models\Relation;
 use App\Models\Ticket;
 use App\Models\User;
 use App\Models\Media;
+use App\Models\Notification;
 use App\Controllers\Controller;
 use Respect\Validation\Validator as v;
 use Slim\Views\Twig as View;
@@ -19,14 +20,15 @@ class AttributeActionController extends Controller
 {
   private function options($attr = false) {
     return [
-      'characters'  => Character::orderBy('name')->get(),
-      'groups'      => Group::orderBy('name')->get(),
-      'plots'       => Plot::orderBy('name')->get(),
-      'posts'       => Post::orderBy('title')->get(),
-      'rel'         => Relation::orderBy('name')->get(),
-      'tickets'     => Ticket::orderBy('sku')->get(),
-      'users'       => User::orderBy('displayname')->get(),
-      'media'       => Media::orderBy('name')->get(), 
+      'characters'    => Character::orderBy('name')->get(),
+      'groups'        => Group::orderBy('name')->get(),
+      'plots'         => Plot::orderBy('name')->get(),
+      'posts'         => Post::orderBy('title')->get(),
+      'rel'           => Relation::orderBy('name')->get(),
+      'tickets'       => Ticket::orderBy('sku')->get(),
+      'users'         => User::orderBy('displayname')->get(),
+      'media'         => Media::orderBy('name')->get(), 
+      'notifications' => Notification::orderBy('name')->get(),
     ];
   }
   
@@ -36,14 +38,15 @@ class AttributeActionController extends Controller
         'name'      => $request->getParam('name'), 
         'value'     => $request->getParam('value')
       ],
-      'characters'  => is_null($request->getParam('character_ids')) ? [] : $request->getParam('character_ids'),
-      'groups'      => is_null($request->getParam('group_ids')) ? [] : $request->getParam('group_ids'),
-      'plots'       => is_null($request->getParam('plot_ids')) ? [] : $request->getParam('plot_ids'),
-      'posts'       => is_null($request->getParam('post_ids')) ? [] : $request->getParam('post_ids'),
-      'rel'         => is_null($request->getParam('rel_ids')) ? [] : $request->getParam('rel_ids'),
-      'tickets'     => is_null($request->getParam('ticket_ids')) ? [] : $request->getParam('ticket_ids'),
-      'users'       => is_null($request->getParam('user_ids')) ? [] : $request->getParam('user_ids'),
-      'media'       => is_null($request->getParam('media_ids')) ? [] : $request->getParam('media_ids'),      
+      'characters'    => is_null($request->getParam('character_ids')) ? [] : $request->getParam('character_ids'),
+      'groups'        => is_null($request->getParam('group_ids')) ? [] : $request->getParam('group_ids'),
+      'plots'         => is_null($request->getParam('plot_ids')) ? [] : $request->getParam('plot_ids'),
+      'posts'         => is_null($request->getParam('post_ids')) ? [] : $request->getParam('post_ids'),
+      'rel'           => is_null($request->getParam('rel_ids')) ? [] : $request->getParam('rel_ids'),
+      'tickets'       => is_null($request->getParam('ticket_ids')) ? [] : $request->getParam('ticket_ids'),
+      'users'         => is_null($request->getParam('user_ids')) ? [] : $request->getParam('user_ids'),
+      'media'         => is_null($request->getParam('media_ids')) ? [] : $request->getParam('media_ids'), 
+      'notifications' => is_null($request->getParam('notification_ids')) ? [] : $request->getParam('notification_ids'), 
     ];
   }
   
@@ -60,6 +63,7 @@ class AttributeActionController extends Controller
     $item->tickets()->sync($requestData['tickets']);
     $item->users()->sync($requestData['users']);
     $item->media()->sync($requestData['media']);
+    $item->notifications()->sync($requestData['notifications']);
 
     if($item->id) {
       $this->flash->addMessage('success', "Details have been saved.");
@@ -100,15 +104,16 @@ class AttributeActionController extends Controller
   {
     $item = Attribute::where('id', $arguments['uid'])->first();
     $this->container->view->getEnvironment()->addGlobal('current', [
-      'data'        => $item,
-      'characters'  => $item->characters()->get(),
-      'groups'      => $item->groups()->get(),
-      'plots'       => $item->plots()->get(),
-      'posts'       => $item->posts()->get(),
-      'rel'         => $item->rel()->get(),
-      'tickets'     => $item->tickets()->get(),
-      'users'       => $item->users()->get(),
-      'media'       => $item->media()->get(),
+      'data'          => $item,
+      'characters'    => $item->characters()->get(),
+      'groups'        => $item->groups()->get(),
+      'plots'         => $item->plots()->get(),
+      'posts'         => $item->posts()->get(),
+      'rel'           => $item->rel()->get(),
+      'tickets'       => $item->tickets()->get(),
+      'users'         => $item->users()->get(),
+      'media'         => $item->media()->get(),
+      'notifications' => $item->notifications()->get(),
     ]);
     
     if(is_null($item->value)) $item->value = '';
@@ -127,6 +132,7 @@ class AttributeActionController extends Controller
     $item->tickets()->sync([]);
     $item->users()->sync([]);
     $item->media()->sync([]);
+    $item->notifications()->sync([]);
 
     if($item->delete()) {
       $this->flash->addMessage('success', "Attribute has been removed from all entities and deleted.");

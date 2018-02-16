@@ -49,6 +49,7 @@ $container['view'] = function($container) {
   $view->getEnvironment()->addFilter(new Twig_SimpleFilter(
       'key', 
       function ($collection, $key) {
+        if(is_null($collection)) return false;
         $item = $collection->where('name', $key)->first();
         return $item ? $item->value : false;
         
@@ -167,13 +168,14 @@ $container[App\Pages\OpenPage::class]   = function ($c) { return new \App\Pages\
 $container['HomePageController']        = function($c) { return new \App\Controllers\Page\HomePageController($c); };
 
 // Admin
-$container['AuthController']            = function($c) { return new \App\Controllers\Auth\AuthController($c); };
-$container['AdminController']           = function($c) { return new \App\Controllers\Admin\AdminController($c); };
-$container['UserActionController']      = function($c) { return new \App\Controllers\Admin\UserActionController($c); };
-$container['OrderActionController']     = function($c) { return new \App\Controllers\Admin\OrderActionController($c); };
-$container['MediaActionController']     = function($c) { return new \App\Controllers\Admin\MediaActionController($c); };
-$container['BulkmailActionController']  = function($c) { return new \App\Controllers\Admin\BulkmailActionController($c); };
-$container['AttributeActionController'] = function($c) { return new \App\Controllers\Admin\AttributeActionController($c); };
+$container['AuthController']               = function($c) { return new \App\Controllers\Auth\AuthController($c); };
+$container['AdminController']              = function($c) { return new \App\Controllers\Admin\AdminController($c); };
+$container['UserActionController']         = function($c) { return new \App\Controllers\Admin\UserActionController($c); };
+$container['OrderActionController']        = function($c) { return new \App\Controllers\Admin\OrderActionController($c); };
+$container['MediaActionController']        = function($c) { return new \App\Controllers\Admin\MediaActionController($c); };
+$container['BulkmailActionController']     = function($c) { return new \App\Controllers\Admin\BulkmailActionController($c); };
+$container['AttributeActionController']    = function($c) { return new \App\Controllers\Admin\AttributeActionController($c); };
+$container['NotificationActionController'] = function($c) { return new \App\Controllers\Admin\NotificationActionController($c); };
 
 // Participant admin
 $container['RolesActionController']     = function($c) { return new \App\Controllers\Admin\RolesActionController($c); };

@@ -12,7 +12,11 @@ class Attribute extends Model
     "name",
     "value",
   ];
-  
+
+  public function notifications()
+  {
+      return $this->belongsToMany('App\Models\Notification', 'notification_attribute')->withTimeStamps();
+  }
   public function characters()
   {
       return $this->belongsToMany('App\Models\Character', 'character_attribute')->withTimeStamps();

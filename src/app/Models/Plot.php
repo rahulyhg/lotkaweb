@@ -13,6 +13,10 @@ class Plot extends Model
     "description",
   ];
   
+  public function notifications()
+  {
+      return $this->belongsToMany('App\Models\Notification', 'notification_group')->withTimeStamps();
+  }
   public function attr()
   {
       return $this->belongsToMany('App\Models\Attribute', 'plot_attribute')->withTimeStamps(); 

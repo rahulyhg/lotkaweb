@@ -35,35 +35,44 @@
 </li>
 {% endif %}
 
-{% if auth.isAdmin %}
-<li class="dropdown"><a class="dropdown-toggle" href="{{ path_for('admin.index') }}" data-toggle="dropdown"><i class="fa fa-cogs"></i> Admin</a>
-  <ul class="dropdown-menu" role="menu">
-    <li><a href="{{ path_for('admin.index') }}"><i class="fa fa-home"></i> Dashboard</a></li>
-    <li><a href="{{ path_for('admin.orders.all') }}"><i class="fa fa-ticket"></i> Orders</a></li>
-    <li><a href="{{ path_for('admin.orders.external') }}"><i class="fa fa-magnet"></i> External Orders</a></li>
-    <li><a href="{{ path_for('admin.users.all') }}"><i class="fa fa-user"></i> Users</a></li>
-    <li><a href="{{ path_for('admin.posts.all') }}"><i class="fa fa-copy"></i> Posts</a></li>
-  </ul>
-</li>
-{% endif %}
-
 {% if auth.isWriter %}
-<li class="dropdown"><a class="dropdown-toggle" href="{{ path_for('admin.index') }}" data-toggle="dropdown"><i class="fa fa-pencil"></i> Writers</a>
+<li class="dropdown"><a class="dropdown-toggle" href="{{ path_for('admin.index') }}" data-toggle="dropdown"><i class="fa fa-cog"></i> Tools</a>
   <ul class="dropdown-menu" role="menu">
-    <li><a href="{{ path_for('admin.character.list') }}"><i class="fa fa-user"></i> Characters</a></li>
-    <li><a href="{{ path_for('admin.group.list') }}"><i class="fa fa-group"></i> Groups</a></li>
-    <li><a href="{{ path_for('admin.plot.list') }}"><i class="fa fa-bullhorn"></i> Plots</a></li>
-    <li><a href="{{ path_for('admin.relation.list') }}"><i class="fa fa-comments-o"></i> Relations</a></li>
+
+  {% if auth.isAdmin %}
+    <li class="dropdown"><a class="dropdown-toggle" href="{{ path_for('admin.index') }}" data-toggle="dropdown"><i class="fa fa-cogs"></i> Admin</a>
+      <ul class="dropdown-menu" role="menu">
+        <li><a href="{{ path_for('admin.index') }}"><i class="fa fa-home"></i> Dashboard</a></li>
+        <li><a href="{{ path_for('admin.orders.all') }}"><i class="fa fa-ticket"></i> Orders</a></li>
+        <li><a href="{{ path_for('admin.orders.external') }}"><i class="fa fa-magnet"></i> External Orders</a></li>
+        <li><a href="{{ path_for('admin.users.all') }}"><i class="fa fa-user"></i> Users</a></li>
+        <li><a href="{{ path_for('admin.posts.all') }}"><i class="fa fa-copy"></i> Posts</a></li>
+      </ul>
+    </li>
+  {% endif %}
+
+  {% if auth.isWriter %}
+    <li class="dropdown"><a class="dropdown-toggle" href="{{ path_for('admin.index') }}" data-toggle="dropdown"><i class="fa fa-pencil"></i> Writers</a>
+      <ul class="dropdown-menu" role="menu">
+        <li><a href="{{ path_for('admin.character.list') }}"><i class="fa fa-user"></i> Characters</a></li>
+        <li><a href="{{ path_for('admin.group.list') }}"><i class="fa fa-group"></i> Groups</a></li>
+        <li><a href="{{ path_for('admin.plot.list') }}"><i class="fa fa-bullhorn"></i> Plots</a></li>
+        <li><a href="{{ path_for('admin.relation.list') }}"><i class="fa fa-comments-o"></i> Relations</a></li>
+      </ul>
+    </li>
+  {% endif %}
   </ul>
 </li>
 {% endif %}
 
-<li><a href="{{ path_for('participant.page', { 'page': 'profile' }) }}"><i class="fa fa-child"></i> Profile</a></li></a></li>
-<li><a href="{{ path_for('user.logout') }}"><i class="fa fa-power-off"></i> Logout</a></li>
+{{ include('new/partials/navbar/notifications.html') }}
+
+<li><a href="{{ path_for('participant.page', { 'page': 'profile' }) }}" title="Profile"><i class="fa fa-child"></i> <span class="hidden-md-up"></span></a></li></a></li>
+<li><a href="{{ path_for('user.logout') }}" title="Logout"><i class="fa fa-power-off"></i> <span class="hidden-md-up"></a></li>
 
 {% else %}
 {{ include('new/partials/navbar/site_menu.html') }}
-<li><a href="{{ path_for(auth.isParticipant ? 'participant.home' : 'user.login') }}"><span class="icon-key"></span> Participant Login</a></li>
+<li><a href="{{ path_for(auth.isParticipant ? 'participant.home' : 'user.login') }}"><span class="icon-key"></span> <span class="hidden-md-up">Participant Login</a></li>
 <!--
 <li><a href="{{ path_for('open.page', { 'category': 'tickets' }) }}" class="btn btn-d btn-round btn-block" type="submit">TICKETS</a></li>
 //-->

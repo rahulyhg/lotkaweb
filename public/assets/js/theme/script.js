@@ -185,4 +185,40 @@ window.onload = function() {
         $('#works-grid').isotope();
     }    
   });
+  
+  $('.relationship_characters').on('click', '.relationship_remove_from', function () {
+    var char_id = $(this).data('character-id');
+    $(this).parent().parent().fadeOut(200, function () { 
+      var remove_char =  $('[name="character_ids[]"] option[value=' + char_id + ']');
+      remove_char.prop('selected', false);
+      remove_char.detach().appendTo('[name=all_characters]');
+      $(this).remove();
+    });
+  });
+  
+  var container_template = $('<div class="col-sm-6 col-md-6 col-lg-6 relationship_character"><div class="content-box"><div class="content-box-image"><a href="" alt=""><img src="" alt=""></a></div><a href=""><h3 class="content-box-title font-alt"></h3></a><div class="relationship_remove_from"><i class="fa fa-times" title="Remove Character From Relationship"></i></div></div></div>');
+  
+  $('.add_character').on('click', function (e) {
+    e.preventDefault();
+    var sel = $('[name=all_characters]');
+    var opt = sel.find('option:selected');
+    var char = opt.data();
+    
+    if(char.name && sel.val()) {
+      var container = container_template.clone();
+
+      container.find('a').attr('href', char.link);
+      container.find('h3').text(char.name);
+      container.find('.relationship_remove_from').data('character-id', char.id);
+      container.find('img').attr({
+        src: char.portrait, alt: char.name 
+      });
+      container.hide();
+      $('.relationship_characters').append(container);
+      $('[name=all_characters] option:selected').detach().appendTo('[name="character_ids[]"]').prop('selected', true);
+      $('[name=all_characters]').val(null).change();
+     
+      container.fadeIn(150);
+    }    
+  });
 };

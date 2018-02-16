@@ -156,7 +156,8 @@ class CharacterPageController extends Controller
         'attr', function ($query) use ($AttributeFilter) {
             $query->where( $AttributeFilter );
         }
-    )->where('name', '<>', '')->with('attr')->get();
+    )->where('name', '<>', '')
+     ->with('attr')->get();
     
     $character_list = [];
     foreach ($characters as $character) {
