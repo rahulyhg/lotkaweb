@@ -89,6 +89,7 @@ class RelationPageController extends Controller
   public function edit($request, $response, $arguments){
     $relationship = Relation::where('id', $arguments['uid'])->first();
     $currentCharacter = self::getCurrentUser()["character"];
+    $inParty = self::partOfRelationship($relationship, $currentCharacter["data"]);
     
     if(!self::partOfRelationship($relationship, $currentCharacter["data"])) {
       $this->flash->addMessage('error', "You can't edit this relationship.");
@@ -117,11 +118,19 @@ class RelationPageController extends Controller
     
     foreach($characters as $character_id) {
       if( $currentCharacter->id != $character_id) {
-        $char = Character::where('id', $character_id)->first();
-        self::notify($char->user, $relationship, [
+        $notification_data = [
+          'title' => 'New ' . $relation_attributes['relationship_type'] . '!',
           'description' => 'You have been added to a relationship.', 
           'icon' => 'chain',
-        ]);
+        ];
+
+        $char = Character::where('id', $character_id)->first();
+        if ($inParty) {
+          $notification_data['title'] = '"' . $relation_attributes['relationship_type'] . '" updated!';
+          $notification_data['description'] = $currentCharacter['data']['name'] . ' made some changes.';
+        }
+        
+        self::notify($char->user, $relationship, $notification_data);
       }
     }    
     
