@@ -28,6 +28,11 @@ class User extends SentinelUser
       return $this->hasMany('App\Models\Task');
   }
   
+  public function notifications()
+  {
+      return $this->hasMany('App\Models\Notification', 'user_id');
+  }
+  
   public function character()
   {
       return $this->hasOne('App\Models\Character', 'user_id');

@@ -395,13 +395,15 @@ $app->group('/participants', function () use ($container) {
     $user_model = \App\Models\User::find($auth['user']->id);
     $container->get('view')->getEnvironment()->addGlobal('userData', [
       'todos' => $user_model->tasks()->where('status', '<>', 1)->get(),
-//      'notifications' => $user_model->notifications()->where('seen_at', null)->get(),
+      'notifications' => $user_model->notifications()->where('seen_at', null)->get(),
       'user' => $auth['user'],
       'character' => \App\Models\Character::where('user_id', $auth['user']->id)->first(),
     ]);
   }
   
   $this->get('[/]', 'ParticipantPageController:index')->setName('participant.home');
+  
+  $this->get('/notify', 'NotificationActionController:addNotificationToCurrent');
   
   //Characters
   function characterRouring($t) {
@@ -514,9 +516,9 @@ $app->group('/participants', function () use ($container) {
       ->setName('participant.relation.add');
     $t->post('/add', 'RelationPageController:post');
 
-    $t->get('/{uid}/edit', 'RelationPageController:edit')
-      ->setName('participant.relation.edit');
-    $t->post('/{uid}/edit', 'RelationPageController:post');
+//    $t->get('/{uid}/edit', 'RelationPageController:edit')
+//      
+    $t->post('/{uid}/edit', 'RelationPageController:edit')->setName('participant.relation.edit');;
 
     $t->get('/{uid}/delete', 'RelationPageController:delete')
       ->setName('participant.relation.delete');

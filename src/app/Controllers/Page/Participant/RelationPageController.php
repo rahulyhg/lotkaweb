@@ -27,6 +27,41 @@ class RelationPageController extends Controller
     );
   }
   
+  public function relation($request, $response, $arguments) {
+    $relationship = Relation::where('id', $arguments['uid'])->first();  
+    $current = self::getCurrentUser();
+    
+    $currentCharacter = $current["character"];
+    $currentUser = $current["user"];
+    
+    $inParty = self::partOfRelationship($relationship, $currentCharacter["data"]);
+    $isPublic = count($relationship->attr->where('name','public')->whereIn('value',['true','1'])->all()) > 0;
+    
+    if(!$inParty && !$isPublic) {      
+      $this->flash->addMessage('error', "You can't view this relationship.");
+      return $response->withRedirect($this->router->pathFor('participant.home'));
+    }
+    
+    self::markNotificationsAsSeen($relationship, $currentUser);
+    
+    $characters = [];
+    if($inParty) {
+      $characters = self::getCharacers($relationship);        
+    }
+    
+    return self::render(
+      "relation", 
+      [
+        "relation" => $relationship,
+        "canEdit" => $inParty,
+        "types" => Attribute::where('name', 'relationship_type')->get(),
+        "characters" => $characters,
+        "uid" => $arguments['uid'],
+      ], 
+      $response
+    );
+  }
+  
   public function my($request, $response, $arguments){
     return self::render(
       "relations-my", 
@@ -60,7 +95,45 @@ class RelationPageController extends Controller
       return $response->withRedirect($this->router->pathFor('participant.home'));
     }
     
-    echo "can edit";
+    $relation_attributes = [
+      'public' =>                 !!$request->getParam('public'),
+      'relationship_type' =>        $request->getParam('relationship_type'),
+      'source' =>                   $request->getParam('source'),
+      'target' =>                   $request->getParam('target'),
+      'relationship_icon' =>        $request->getParam('relationship_icon'),
+    ];
+    
+    foreach($relation_attributes as $key => $value) {
+      $value = is_null($value) ? false : $value;
+      $debug[] = self::setAttribute($relationship, $key, $value);
+    }
+    
+    $relationship->name = $request->getParam('name');
+    $relationship->description = $request->getParam('description');
+    
+    $characters = $request->getParam('character_ids');
+    $characters = is_array($characters) ? $characters : [$characters];
+    $relationship->characters()->sync($characters);
+    
+    foreach($characters as $character_id) {
+      if( $currentCharacter->id != $character_id) {
+        $char = Character::where('id', $character_id)->first();
+        self::notify($char->user, $relationship, [
+          'description' => 'You have been added to a relationship.', 
+          'icon' => 'chain',
+        ]);
+      }
+    }    
+    
+    if($relationship->save()) {
+      $this->flash->addMessage('success', "Relationship updated."); 
+    } else {
+      $this->flash->addMessage('error', "Something went wrong saving the relationship, sorry."); 
+    }
+    
+    return $response->withRedirect(
+      $this->router->pathFor('participant.relation', ['uid' => $arguments["uid"]])
+    );
   }
   
   public function delete($request, $response, $arguments){
@@ -86,7 +159,7 @@ class RelationPageController extends Controller
   private function partOfRelationship($relationship, $character = false) {
     if($this->container->auth->isWriter()) return true;
     
-    foreach($relationship->characters() as $rel_char) {
+    foreach($relationship->characters as $rel_char) {
       if($rel_char->id == $character->id) return true;
     }
 
@@ -99,13 +172,31 @@ class RelationPageController extends Controller
     }
     
     foreach($relationship->groups() as $rel_group) {
-      foreach($rel_group->characters() as $rel_char) {
+      foreach($rel_group->characters as $rel_char) {
         if($rel_char->id == $character->id) return true;
       }
     }
     
-    die();
-    
     return false;
   }
+  
+  private function isNpc($character) {
+    return !is_null( $character->attr->where('name','npc')->where('value','on')->first() );
+  }
+  
+  private function getCharacers($relationship) {
+    $characters = Character::where('name', '<>', '')->get();
+    
+    $character_list = [];
+    foreach ($characters as $character) {
+      if(
+          !self::isNpc($character) && 
+          !$relationship->characters->where('id', $character->id)->first()
+      ) {
+        $character_list[] = $character;
+      }
+    }
+        
+    return $character_list;
+  }  
 }

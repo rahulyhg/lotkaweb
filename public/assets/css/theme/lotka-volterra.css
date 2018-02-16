@@ -290,6 +290,10 @@ svg.loading path.lights {
 	padding-left: 0;
 }
 
+.checkboxes ul li {
+	list-style: none;
+}
+
 .check {
   display: block;
 }
@@ -636,6 +640,7 @@ svg.loading path.lights {
   text-transform: uppercase;
   letter-spacing: 2px;
   color: #FFF;	
+  font-size: 100%;
 /*   -webkit-appearance: none;
    -moz-appearance: none;
    appearance: none;
@@ -839,7 +844,49 @@ svg.loading path.lights {
   float: right;
 }
 
+.dropdown.callout {
+    background: #d00;
+    padding: 0 .5em;
+    margin: 0 .5em;
+}
+
 .notification {
-    position: absolute;
-    right: 0;
+	position: relative;
+}
+.notification_description {
+	display: block;
+	border-top: 1px solid currentColor;
+	padding-top: .5em;
+	margin-top: .5em;
+} 
+
+.notification_description.seen {
+	opacity: .55;
+}
+
+.notification_dismiss {
+	position: absolute;
+	color: #ccc;
+	top: .25em;
+	right: .25em;
+} 
+
+.relationship_character {
+	position: relative;
+}
+.relationship_remove_from {
+	position: absolute;
+	top: -.25em;
+	right: .5em;
+	background: #91e28f;
+	color: #fff;
+	font-size: 200%;
+	border-radius: 50%;
+	padding: 0em .5em;
+	box-shadow: 0 0 .5em rgba(0,0,0,.25);
+	transition: all 0.125s ease-in-out 0s;
+}
+.relationship_remove_from:hover {
+	color: #000;	
+	box-shadow: 0 0 .125em rgba(0,0,0,.75);
 }

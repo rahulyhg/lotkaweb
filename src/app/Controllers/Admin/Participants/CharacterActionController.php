@@ -26,7 +26,6 @@ class CharacterActionController extends Controller
     ];
   }
   
-
   private function characterOptions() {
     return [
       'users' => User::orderBy('displayname')->get(),
@@ -142,7 +141,7 @@ class CharacterActionController extends Controller
         $user->character_id = $item->id;
         $order = Order::where('user_id', $user->id)->first();
                 
-        if($order && strlen($requestData['values']['name'] == 0)) {
+        if($order && strlen($requestData['values']['name']) == 0) {
           $requestData['values']['name'] = $order->name;
         }
 

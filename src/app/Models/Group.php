@@ -13,6 +13,11 @@ class Group extends Model
     "description",
   ];
   
+  
+  public function notifications()
+  {
+      return $this->belongsToMany('App\Models\Notification', 'notification_group')->withTimeStamps();
+  }
   public function attr()
   {
       return $this->belongsToMany('App\Models\Attribute', 'group_attribute')->withTimeStamps(); 

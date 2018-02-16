@@ -13,6 +13,10 @@ class Relation extends Model
     "description",
   ];
   
+  public function notifications()
+  {
+      return $this->belongsToMany('App\Models\Notification', 'notification_relation')->withTimeStamps();
+  }  
   public function attr()
   {
       return $this->belongsToMany('App\Models\Attribute', 'relation_attribute')->withTimeStamps(); 
