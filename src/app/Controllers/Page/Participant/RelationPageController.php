@@ -185,7 +185,7 @@ class RelationPageController extends Controller
   }
   
   private function getCharacers($relationship) {
-    $characters = Character::where('name', '<>', '')->get();
+    $characters = Character::where('name', '<>', '')->orderBy('name')->get();
     
     $character_list = [];
     foreach ($characters as $character) {
