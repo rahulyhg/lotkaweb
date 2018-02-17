@@ -7,6 +7,7 @@ use App\Models\Plot;
 use App\Models\Group;
 use App\Models\Relation;
 use App\Models\Task;
+use App\Models\Order;
 
 use App\Controllers\Controller;
 use App\Controllers\Admin\Participants\CharacterActionController as CharacterActions;
@@ -167,7 +168,7 @@ class CharacterPageController extends Controller
         $character_list[] = [
           "data" => $character, 
           "attributes" => self::mapAttributes($character->attr),
-          "player" => self::getPlayerInfo($character->user_id),
+          "order" => Order::where('user_id', $character->user->id)->first(),
         ];
       }
     }
