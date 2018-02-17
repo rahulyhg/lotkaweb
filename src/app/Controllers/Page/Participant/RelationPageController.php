@@ -64,7 +64,7 @@ class RelationPageController extends Controller
   
   public function my($request, $response, $arguments){
     $current = $this->container->auth->isWriter() && $arguments["uid"] ?
-      self::getPlayerInfo($arguments["uid"]) : self::getCurrentUser();
+      ["character" => Character::where('id', $arguments["uid"])->first()] : self::getCurrentUser();
 
     $currentCharacter = $current["character"];
     
