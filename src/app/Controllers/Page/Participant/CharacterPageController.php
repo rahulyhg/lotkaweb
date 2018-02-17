@@ -167,6 +167,7 @@ class CharacterPageController extends Controller
         $character_list[] = [
           "data" => $character, 
           "attributes" => self::mapAttributes($character->attr),
+          "player" => self::getPlayerInfo($character->user_id),
         ];
       }
     }
