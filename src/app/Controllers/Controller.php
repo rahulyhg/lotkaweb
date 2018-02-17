@@ -325,6 +325,25 @@ class Controller
           ],
         ]
       ];
+      
+      $menu["sections"]["relationships"] = [
+        'title' => 'Relationships',
+        'target' => $this->router->pathFor('participant.relation.list'),
+        'pages' => [
+          'relationships' => [
+            'title' => 'My Relationships',
+            'target' => $this->router->pathFor('participant.relation.my'),
+            'info' => 'My characters relationships',
+            'image' => '/img/dashboard/' . 'my-relationships.jpg'
+          ],
+          'list' => [
+            'title' => 'Outpost Relationships',
+            'target' => $this->router->pathFor('participant.relation.list'),
+            'info' => 'Public relationships',
+            'image' => '/img/dashboard/' . 'relationships.jpg'
+          ],
+        ]
+      ];
     }
 
 /*        
