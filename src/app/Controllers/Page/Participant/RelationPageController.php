@@ -21,7 +21,7 @@ class RelationPageController extends Controller
     return self::render(
       "relations-list", 
       [
-        "relations" => [], #self::getRalationsInfo()
+        "relations" => self::getRalationsInfo()
       ], 
       $response
     );
@@ -63,10 +63,15 @@ class RelationPageController extends Controller
   }
   
   public function my($request, $response, $arguments){
+    $current = $this->container->auth->isWriter() && $arguments["uid"] ?
+      self::getPlayerInfo($arguments["uid"]) : self::getCurrentUser();
+
+    $currentCharacter = $current["character"];
+    
     return self::render(
-      "relations-my", 
+      "relations-list", 
       [
-        "relations" => [], #self::getRalationsInfo($arguments["uid"])
+        "relations" => self::getRalationsInfo($currentCharacter["data"]->id),
       ], 
       $response
     );
@@ -207,5 +212,21 @@ class RelationPageController extends Controller
     }
         
     return $character_list;
-  }  
+  }
+  
+  private function getRalationsInfo($character_id = 0) {
+    if($character_id > 0) {
+      $relationships = Character::where('id', $character_id)->first()->rel;
+    } else {
+      $relationships = Relation::whereHas(
+          'attr', function ($query) {
+            $query
+              ->where([['name', 'public'], ['value', '1']])
+              ->orWhere([['name', 'public'], ['value', 'true']]);
+          }
+        )->with('attr')->get();
+    }
+    
+    return $relationships;
+  }
 }

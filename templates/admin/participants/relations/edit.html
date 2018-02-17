@@ -66,6 +66,13 @@
             </div>             
             
             <div class="control-group">
+              <label class="control-label">Public :</label>
+              <div class="controls">
+                <input type="checkbox" class="span11" name="public" {% if current.attr.public %}checked{% endif %}>
+              </div>
+            </div>  
+            
+            <div class="control-group">
               <label class="control-label">Description :</label>
               <div class="controls">
                 <textarea class="span11" name="description" rows="10">{{ current.data.description }}</textarea>

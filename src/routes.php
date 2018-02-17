@@ -509,9 +509,12 @@ $app->group('/participants', function () use ($container) {
     $t->get('/pending[/{uid}]', 'RelationPageController:pending')
       ->setName('participant.relation.pending');
 
-    $t->get('/my[/{uid}]', 'RelationPageController:my')
-      ->setName('participant.relation.my');
-
+    $t->get('/my/{uid}', 'RelationPageController:my')      
+      ->setName('participant.relation.my.admin');
+    
+    $t->get('/my', 'RelationPageController:my')
+      ->setName('participant.relation.my');      
+        
     $t->get('/add', 'RelationPageController:add')
       ->setName('participant.relation.add');
     $t->post('/add', 'RelationPageController:post');

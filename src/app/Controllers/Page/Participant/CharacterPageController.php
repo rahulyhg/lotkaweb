@@ -157,7 +157,9 @@ class CharacterPageController extends Controller
             $query->where( $AttributeFilter );
         }
     )->where('name', '<>', '')
-     ->with('attr')->get();
+     ->with('attr')
+     ->orderBy('name')
+     ->get();
     
     $character_list = [];
     foreach ($characters as $character) {
