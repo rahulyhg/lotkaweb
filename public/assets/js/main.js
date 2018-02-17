@@ -297,6 +297,8 @@
             $("#player_filter").val('');
             return false;
         });
+     
+        $('#filters a:first').click()
       
         $("#player_filter").on("input", function () {
           var search_string = $(this).val().toLowerCase();
