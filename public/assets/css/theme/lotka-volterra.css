@@ -484,6 +484,10 @@ svg.loading path.lights {
   text-align: center;
 }
 
+.work-item .post-thumbnail {
+	position: relative;
+}
+
 .post-thumbnail .portrait  {
     object-fit: cover; /* Do not scale the image */
     object-position: center; /* Center the image within the element */    
