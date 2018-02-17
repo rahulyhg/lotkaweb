@@ -225,6 +225,10 @@ class Controller
     return $characterCollection;    
   }  
   
+  public function isNpc($character) {
+    return !is_null( $character->attr->where('name','npc')->where('value','on')->first() );
+  }
+    
   public function getCharacter($uid) {
     $character = Character::where('id', $uid)->first();
     

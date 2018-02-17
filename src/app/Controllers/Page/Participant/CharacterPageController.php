@@ -147,11 +147,7 @@ class CharacterPageController extends Controller
   //===========================================================================
   // Helpers
   //===========================================================================  
-  
-  private function isNpc($character) {
-    return !is_null( $character->attr->where('name','npc')->where('value','on')->first() );
-  }
-  
+
   private function getCharacersInfo($AttributeFilter = [['name','like','%']]) {
     $characters = Character::whereHas(
         'attr', function ($query) use ($AttributeFilter) {
