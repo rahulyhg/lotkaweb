@@ -194,10 +194,6 @@ class RelationPageController extends Controller
     return false;
   }
   
-  private function isNpc($character) {
-    return !is_null( $character->attr->where('name','npc')->where('value','on')->first() );
-  }
-  
   private function getCharacers($relationship) {
     $characters = Character::where('name', '<>', '')->orderBy('name')->get();
     
