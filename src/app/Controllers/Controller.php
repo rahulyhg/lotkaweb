@@ -281,19 +281,19 @@ class Controller
       'sections' => [
 
           'players' => [
-            'title' => 'Players',
-            'target' => $this->router->pathFor('participant.player.list'),
+            'title' => 'Participants',
+            'target' => $this->router->pathFor('participant.character.list'),
             'pages' => [
               'players' => [
                 'title' => 'Participant List',
-                'target' => $this->router->pathFor('participant.player.list'),
-                'info' => 'Participant list',
+                'target' => $this->router->pathFor('participant.character.list'),
+                'info' => 'Thermopylae Population Directory',
                 'image' => '/img/dashboard/' . 'player-list.jpg'
               ],
               'gallery' => [
                 'title' => 'Participant Gallery',
-                'target' => $this->router->pathFor('participant.player.gallery'),
-                'info' => 'Participant profile image gallery',
+                'target' => $this->router->pathFor('participant.character.gallery'),
+                'info' => 'Outpost Thermopylae Population Gallery',
                 'image' => '/img/dashboard/' . 'player-gallery.jpg'
               ],
             ]
