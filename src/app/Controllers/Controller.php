@@ -263,6 +263,12 @@ class Controller
     ] : [];
   }
   
+  public function getCurrentOrById($uid = false) {
+    $current = $this->container->auth->isWriter() && $uid ?
+          ["character" => self::getCharacter($uid)] : self::getCurrentUser();    
+    return $current["character"];
+  }  
+  
   public function getCurrentUser() {
     $participant = User::where(
       'username',
@@ -308,7 +314,7 @@ class Controller
     
     if($participant["character"]["hasCharacter"]) {
       $menu["sections"]["character"] = [
-        'title' => 'My Character',
+        'title' => 'Character',
         'target' => $this->router->pathFor('participant.character.my'),
         'pages' => [
           'editor' => [
@@ -321,7 +327,7 @@ class Controller
             'title' => 'Character Presentation',
             'target' => $this->router->pathFor('participant.character', [ 'uid' => $participant["character"]["data"]->id ]),
             'info' => 'My character presentation',
-            'image' => '/assets/images/logos/outposts/outposts.svg#theta',
+            'image' => '/img/dashboard/' . 'character-presentation.jpg',
           ],
         ]
       ];
@@ -347,6 +353,31 @@ class Controller
             'target' => $this->router->pathFor('participant.relation.list'),
             'info' => 'Public relationships',
             'image' => '/img/dashboard/' . 'relationships.jpg'
+          ],
+        ]
+      ];
+      
+      $menu["sections"]["lists"] = [
+        'title' => 'Lists',
+        'target' => $this->router->pathFor('participant.list.my'),
+        'pages' => [
+          'lists' => [
+            'title' => 'Personal Lists',
+            'target' => $this->router->pathFor('participant.list.my'),
+            'info' => 'My PNQs and TA Items',
+            'image' => '/img/dashboard/' . 'my-lists.jpg'
+          ],
+         'pnqs' => [
+            'title' => 'PNQs Items',
+            'target' => $this->router->pathFor('participant.list.pnqs'),
+            'info' => 'Outpost Private, no consequence Items',
+            'image' => '/img/dashboard/' . 'pnqs-lists.jpg'
+          ],         
+          'ta' => [
+            'title' => 'TA Items',
+            'target' => $this->router->pathFor('participant.list.ta'),
+            'info' => 'Outpost Temporarily Assigned Items',
+            'image' => '/img/dashboard/' . 'ta-lists.jpg'
           ],
         ]
       ];

@@ -103,7 +103,7 @@ class AdminController extends Controller
     foreach ($characters as $character) {
       $sent_to_review = $character->attr->where('name', 'submitted_for_review')->first();      
       if($sent_to_review) {
-        if($character->attr->where('name', 'reviewed')->first()) {
+        if($character->attr->where([['name', 'reviewed'], [['value', '1'], ['value', 'true']]])->first()) {
           $review_status['reviewed'] = isset($review_status['reviewed']) ? 
             $review_status['reviewed'] + 1 : 1;
         } else {

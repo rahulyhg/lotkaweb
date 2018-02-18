@@ -189,6 +189,7 @@ $container['CharacterActionController'] = function($c) { return new \App\Control
 $container['GroupActionController']     = function($c) { return new \App\Controllers\Admin\Participants\GroupActionController($c); };
 $container['PlotActionController']      = function($c) { return new \App\Controllers\Admin\Participants\PlotActionController($c); };
 $container['RelationActionController']  = function($c) { return new \App\Controllers\Admin\Participants\RelationActionController($c); };
+$container['ListActionController']      = function($c) { return new \App\Controllers\Admin\Participants\ListActionController($c); };
 
 // Participant pages
 $container['ParticipantPageController'] = function($c) { return new \App\Controllers\Page\Participant\ParticipantPageController($c); };
@@ -199,4 +200,5 @@ $container['PlotPageController']        = function($c) { return new \App\Control
 $container['RelationPageController']    = function($c) { return new \App\Controllers\Page\Participant\RelationPageController($c); };
 $container['CharacterPageController']   = function($c) { return new \App\Controllers\Page\Participant\CharacterPageController($c); };
 $container['SchedulePageController']    = function($c) { return new \App\Controllers\Page\Participant\SchedulePageController($c); };
+$container['ListPageController']        = function($c) { return new \App\Controllers\Page\Participant\ListPageController($c); };
 

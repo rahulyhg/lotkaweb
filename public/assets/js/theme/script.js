@@ -221,4 +221,18 @@ window.onload = function() {
       container.fadeIn(150);
     }    
   });
+  
+  $(".list_items").on("click", ".add_list_item", function (e) {
+    e.preventDefault();
+    $addDiv = $(this).parent().parent().clone();
+    $addDiv.find('input').each(function () { $(this).val(null); })
+    $(this).parent().parent().after($addDiv);
+    $(this).parent().parent().find('button')
+      .removeClass('btn-green add_list_item').addClass('btn-warning remove_list_item').text('-');
+  });
+
+  $(".list_items").on("click", ".remove_list_item", function (e) {
+    e.preventDefault();
+    $addDiv = $(this).parent().parent().remove();
+  });  
 };
