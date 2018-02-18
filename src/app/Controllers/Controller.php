@@ -325,7 +325,7 @@ class Controller
           ],
         ]
       ];
-      
+      /*
       $menu["sections"]["relationships"] = [
         'title' => 'Relationships',
         'target' => $this->router->pathFor('participant.relation.list'),
@@ -350,6 +350,7 @@ class Controller
           ],
         ]
       ];
+      */
     }
 
 /*        
