@@ -506,7 +506,10 @@ $app->group('/participants', function () use ($container) {
     $t->get('[/]', 'RelationPageController:index')
       ->setName('participant.relation.list');
 
-    $t->get('/pending[/{uid}]', 'RelationPageController:pending')
+    $t->get('/pending/{uid}', 'RelationPageController:pending')
+      ->setName('participant.relation.pending.admin');
+    
+    $t->get('/pending', 'RelationPageController:pending')
       ->setName('participant.relation.pending');
 
     $t->get('/my/{uid}', 'RelationPageController:my')      
@@ -521,14 +524,10 @@ $app->group('/participants', function () use ($container) {
 
 //    $t->get('/{uid}/edit', 'RelationPageController:edit')
 //      
-    $t->post('/{uid}/edit', 'RelationPageController:edit')->setName('participant.relation.edit');;
+    $t->post('/{uid}/edit', 'RelationPageController:edit')->setName('participant.relation.edit');
 
     $t->get('/{uid}/delete', 'RelationPageController:delete')
       ->setName('participant.relation.delete');
-
-    $t->get('/{uid}/join', 'RelationPageController:join')
-      ->setName('participant.relation.request');
-    $t->post('/{uid}/join', 'RelationPageController:postJoin');
 
     $t->get('/{uid}/accept', 'RelationPageController:accept')
       ->setName('participant.relation.accept');
