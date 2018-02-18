@@ -30,7 +30,7 @@ class RelationPageController extends Controller
   public function relation($request, $response, $arguments) {
     $relationship = $arguments['uid'] != 'new' ? 
       Relation::where('id', $arguments['uid'])->first() :
-      Relation::create();
+      Relation::create(['name' => '']);
     $current = self::getCurrentUser();
     
     $currentCharacter = $current["character"];
@@ -41,11 +41,18 @@ class RelationPageController extends Controller
     
     self::markNotificationsAsSeen($relationship, $currentUser);
     
-    if(!$inParty && !$isPublic) {      
+    if(!$inParty && !$isPublic && $arguments['uid'] != 'new') {      
       $this->flash->addMessage('error', "You can't view this relationship.");
       return $response->withRedirect($this->router->pathFor('participant.home'));
     }
-    
+            
+    if($arguments['uid'] == 'new') {
+      $inParty = true;
+      $relationship->characters()->attach($currentCharacter['data']->id);
+      $relationship->save();
+      $relationship = $relationship->fresh();
+    }
+
     $characters = [];
     if($inParty) {
       $characters = self::getCharacers($relationship);        
