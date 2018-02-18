@@ -37,5 +37,10 @@ class Character extends Model
   public function rel()
   {
     return $this->belongsToMany('App\Models\Relation', 'character_relation')->withTimeStamps(); 
-  }    
+  }
+
+  public function lists()
+  {
+      return $this->hasMany('App\Models\List');
+  }   
 }

@@ -49,4 +49,12 @@ class Attribute extends Model
   {
       return $this->belongsToMany('App\Models\Media', 'media_attribute')->withTimeStamps();
   }
+  public function lists()
+  {
+      return $this->belongsToMany('App\Models\List', 'list_attribute')->withTimeStamps();
+  }  
+  public function listItems()
+  {
+      return $this->belongsToMany('App\Models\ListItem', 'listItem_attribute')->withTimeStamps();
+  }  
 }

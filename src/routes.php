@@ -336,6 +336,35 @@ $app->group('/admin', function() use ($container) {
     $this->get('/{uid}/delete', 'AttributeActionController:delete')->setName('admin.attributes.delete');
   });  
   
+  //Lists
+  $this->group('/lists', function () {
+    $this->get('/all', 'ListActionController:index')->setName('admin.lists.list');
+
+    $this->get('/add', 'ListActionController:add')->setName('admin.lists.add');
+    $this->post('/add', 'ListActionController:post');
+
+    $this->get('/{uid}/edit', 'ListActionController:edit')->setName('admin.lists.edit');
+    $this->post('/{uid}/edit', 'ListActionController:save');
+
+    $this->get('/{uid}/delete', 'ListActionController:delete')->setName('admin.lists.delete');
+  });
+  
+  //Items
+  $this->group('/items', function () {
+    $this->get('/all', 'ListActionController:items')->setName('admin.items.list');
+
+    $this->get('/add', 'ListActionController:addItem')->setName('admin.items.add');
+    $this->post('/add', 'ListActionController:saveItem');
+
+    $this->get('/{uid}/edit', 'ListActionController:editItem')->setName('admin.items.edit');
+    $this->post('/{uid}/edit', 'ListActionController:saveItem');
+
+    $this->get('/{uid}/delete', 'ListActionController:deleteItem')->setName('admin.items.delete');
+    
+    $this->get('/taxon/{name}[/{parent}]', 'ListActionController:addUpdateTaxons')->setName('admin.items.taxon');
+    
+  });    
+  
 })->add(new AdminMiddleware($container));
 
 //Setup
@@ -551,9 +580,20 @@ $app->group('/participants', function () use ($container) {
                
   $this->group('/schedules', function() { scheduleRouring($this); });
   $this->group('/schedule', function() { scheduleRouring($this); });
+  
+  //Lists  
+  $this->group('/list', function () {
+    $this->get('/my', 'ListPageController:my')->setName('participant.list.my');
+    $this->post('/my', 'ListPageController:save');
+    
+    $this->get('/pnqs', 'ListPageController:pnqs')->setName('participant.list.pnqs');
+    $this->get('/ta', 'ListPageController:ta')->setName('participant.list.ta');
 
+    $this->get('/item/{uid}', 'ListPageController:item')->setName('participant.list.item');
+  });
+  
   $this->get('/{page}[/{uid}]', 'ParticipantPageController:page')
-    ->setName('participant.page');
+    ->setName('participant.page');  
                
 })->add(new ParticipantMiddleware($container));
 

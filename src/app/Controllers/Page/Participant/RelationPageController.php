@@ -302,10 +302,4 @@ class RelationPageController extends Controller
     
     return $pending_relationships;
   }
-  
-  private function getCurrentOrById($uid = false) {
-    $current = $this->container->auth->isWriter() && $uid ?
-          ["character" => self::getCharacter($uid)] : self::getCurrentUser();    
-    return $current["character"];
-  }
 }
