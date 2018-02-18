@@ -196,7 +196,7 @@ window.onload = function() {
     });
   });
   
-  var container_template = $('<div class="col-sm-6 col-md-6 col-lg-6 relationship_character"><div class="content-box"><div class="content-box-image"><a href="" alt=""><img src="" alt=""></a></div><a href=""><h3 class="content-box-title font-alt"></h3></a><div class="relationship_remove_from"><i class="fa fa-times" title="Remove Character From Relationship"></i></div></div></div>');
+  var container_template = $('<div class="col-sm-6 col-md-6 col-lg-6 relationship_character"><div class="content-box"><div class="content-box-image" style="opacity:.6;"><a href="" alt=""><img src="" alt=""></a></div><a href=""><h3 class="content-box-title font-alt"></h3></a><div class="relationship_remove_from"><i class="fa fa-times" title="Remove Character From Relationship"></i></div></div></div>');
   
   $('.add_character').on('click', function (e) {
     e.preventDefault();

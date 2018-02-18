@@ -336,6 +336,12 @@ class Controller
             'info' => 'My characters relationships',
             'image' => '/img/dashboard/' . 'my-relationships.jpg'
           ],
+         'pending' => [
+            'title' => 'Pending Relationships',
+            'target' => $this->router->pathFor('participant.relation.pending'),
+            'info' => 'Your pending relationships and public relationship requests',
+            'image' => '/img/dashboard/' . 'pending-relationships.jpg'
+          ],         
           'list' => [
             'title' => 'Outpost Relationships',
             'target' => $this->router->pathFor('participant.relation.list'),
