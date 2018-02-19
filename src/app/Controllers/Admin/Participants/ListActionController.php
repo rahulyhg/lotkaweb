@@ -81,6 +81,9 @@ class ListActionController extends Controller
   
   public function addUpdateTaxons($request, $response, $arguments)
   {
+    echo '
+<script src="//code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>';
+    
     if(!isset($arguments['name'])) return "No category supplied";
       
     $data = [ 
