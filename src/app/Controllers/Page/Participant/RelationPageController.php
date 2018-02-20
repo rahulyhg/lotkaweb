@@ -30,7 +30,7 @@ class RelationPageController extends Controller
   public function relation($request, $response, $arguments) {
     $relationship = $arguments['uid'] != 'new' ? 
       Relation::where('id', $arguments['uid'])->first() :
-      Relation::create(['name' => '']);
+      new Relation(['name' => '']);
     $current = self::getCurrentUser();
     
     $currentCharacter = $current["character"];
@@ -48,9 +48,9 @@ class RelationPageController extends Controller
             
     if($arguments['uid'] == 'new') {
       $inParty = true;
-      $relationship->characters()->attach($currentCharacter['data']->id);
-      $relationship->save();
-      $relationship = $relationship->fresh();
+//      $relationship->characters()->attach($currentCharacter['data']->id);
+//      $relationship->save();
+//      $relationship = $relationship->fresh();
     }
 
     $characters = [];
@@ -65,7 +65,8 @@ class RelationPageController extends Controller
         "canEdit" => $inParty,
         "types" => Attribute::where('name', 'relationship_type')->get(),
         "characters" => $characters,
-        "uid" => $relationship->id,
+        "uid" => $arguments['uid'],
+        "currentCharacter" => $currentCharacter["data"],
       ], 
       $response
     );
@@ -101,7 +102,9 @@ class RelationPageController extends Controller
   }
   
   public function edit($request, $response, $arguments){
-    $relationship = Relation::where('id', $arguments['uid'])->first();
+    $relationship = $arguments['uid'] != 'new' ? 
+      Relation::where('id', $arguments['uid'])->first() : 
+      Relation::create(['name' => '']);
     $currentCharacter = self::getCurrentUser()["character"];
     $inParty = self::partOfRelationship($relationship, $currentCharacter["data"]);
     
@@ -171,7 +174,7 @@ class RelationPageController extends Controller
     }
     
     return $response->withRedirect(
-      $this->router->pathFor('participant.relation', ['uid' => $arguments["uid"]])
+      $this->router->pathFor('participant.relation', ['uid' => $relationship->id])
     );
   }
   
@@ -275,9 +278,10 @@ class RelationPageController extends Controller
   
   private function getRalationsInfo($character_id = 0) {
     if($character_id > 0) {
-      $relationships = Character::where('id', $character_id)->first()->rel;
+      $relationships = Character::where('id', $character_id)
+        ->first()->rel; //->where('name', '<>', '')->all();
     } else {
-      $relationships = Relation::whereHas(
+      $relationships = Relation::whereHas( //where('name', '<>', '')
           'attr', function ($query) {
             $query->where([['name', 'public'], ['value', '1']])
               ->orWhere([['name', 'public'], ['value', 'true']]);        
