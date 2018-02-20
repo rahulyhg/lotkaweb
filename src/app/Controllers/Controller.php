@@ -321,7 +321,7 @@ class Controller
             'title' => 'Character Editor',
             'target' => $this->router->pathFor('participant.character.my'),
             'info' => 'My character Editor',
-            'image' => isset($participant["attributes"]["portrait"]) ? '/assets/portraits/scaled/' . $participant["attributes"]["portrait"] : '/images/logos/lotka-volterra-logo.svg',
+            'image' => isset($participant["attributes"]["portrait"]) ? '/assets/portraits/scaled/' . $participant["attributes"]["portrait"] : '/img/dashboard/' . 'thermo-white.jpg',
           ],
           'presentetaion' => [
             'title' => 'Character Presentation',
@@ -356,7 +356,7 @@ class Controller
           ],
         ]
       ];
-      
+      /*
       $menu["sections"]["lists"] = [
         'title' => 'Lists',
         'target' => $this->router->pathFor('participant.list.my'),
@@ -381,6 +381,7 @@ class Controller
           ],
         ]
       ];
+      */
     }
 
 /*        
