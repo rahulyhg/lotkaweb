@@ -1,7 +1,7 @@
 {% if not userData.notifications|length %}
-<li><a href="{{ path_for('participant.home') }}" title="Notifications"><i class="fa fa-bell-o"></i> {{ userData.notifications|length }}</a>
+<li><a href="{{ path_for('participant.home') }}" title="No New Notifications"><i class="fa fa-bell-o"></i> <span class="hidden-sm hidden-md hidden-lg">Notifications</span></a>
 {% else %}
-<li class="dropdown {{ userData.notifications ? 'callout' : '' }}"><a class="dropdown-toggle" href="{{ path_for('participant.home') }}" data-toggle="dropdown" title="Notifications"><i class="fa fa-bell{{ userData.notifications ? '' : '-o' }}"></i> {{ userData.notifications|length }}</a>
+<li class="dropdown {{ userData.notifications ? 'callout' : '' }}"><a class="dropdown-toggle" href="{{ path_for('participant.home') }}" data-toggle="dropdown" title="Notifications"><i class="fa fa-bell{{ userData.notifications ? '' : '-o' }}"></i> ({{ userData.notifications|length }}) <span class="hidden-sm hidden-md hidden-lg">Notifications</span></a>
   {% if userData.notifications %}
   <ul class="dropdown-menu" role="menu">
     {% for notification in userData.notifications %}

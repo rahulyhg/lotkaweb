@@ -325,7 +325,7 @@ class Controller
           ],
         ]
       ];
-      /*
+      
       $menu["sections"]["relationships"] = [
         'title' => 'Relationships',
         'target' => $this->router->pathFor('participant.relation.list'),
@@ -339,7 +339,7 @@ class Controller
          'pending' => [
             'title' => 'Pending Relationships',
             'target' => $this->router->pathFor('participant.relation.pending'),
-            'info' => 'Your pending relationships and public relationship requests',
+            'info' => 'Your pending relationships',
             'image' => '/img/dashboard/' . 'pending-relationships.jpg'
           ],         
           'list' => [
@@ -350,7 +350,6 @@ class Controller
           ],
         ]
       ];
-      */
     }
 
 /*        
