@@ -534,7 +534,7 @@ $app->group('/participants', function () use ($container) {
     $t->get('/{uid}/reject', 'RelationPageController:reject')
       ->setName('participant.relation.reject');
 
-    $t->get('/{uid}[/]', 'RelationPageController:relation')
+    $t->get('/{uid}', 'RelationPageController:relation')
       ->setName('participant.relation');
   }
                
