@@ -134,11 +134,22 @@ class RelationPageController extends Controller
     
     foreach($characters as $character_id) {
       if( $currentCharacter['data']->id != $character_id) {
-        $notification_data = [];
-
         $char = Character::where('id', $character_id)->first();
+        if(!$char->user) continue;
+        
+        $notification_present = false;
+        $char_user_notifications = $char->user->notifications()->where('seen_at', null)->get();
+        foreach($char_user_notifications as $existing_notification) {
+          if($existing_notification->relations()->where('id', $relationship->id)->get()) {
+            $notification_present = true;
+            break;          
+          }
+        }
+        if($notification_present) continue;
+        
+        $notification_data = [];
         if (
-            $relationship->characters->where('id', $character_id)->all() 
+            $relationship->characters()->where('character_id', $character_id)->get() 
 //            || self::partOfRelationship($relationship, $char) //Only check other character containers if not directly attached
           ) {
           $notification_data = [
