@@ -234,5 +234,11 @@ window.onload = function() {
   $(".list_items").on("click", ".remove_list_item", function (e) {
     e.preventDefault();
     $addDiv = $(this).parent().parent().remove();
-  });  
+  });
+  
+  $(".form.relation").on('submit', function (e) {
+    if(!$('[name="character_ids[]"]').val().length) {
+      if (!window.confirm("Are you sure? This will delete the realtionship")) e.preventDefault();
+    }
+  })
 };

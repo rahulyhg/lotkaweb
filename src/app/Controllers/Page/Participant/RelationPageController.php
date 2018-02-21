@@ -45,7 +45,7 @@ class RelationPageController extends Controller
     self::markNotificationsAsSeen($relationship, $currentUser);
     
     if(!$relationship || (!$inParty && !$isPublic && $relationship_id != 'new')) {      
-      $this->flash->addMessage('error', "You can't view this relationship.");
+      $this->flash->addMessage('error', "We can't find this relationship, either it's been removed or you can't access it any more.");
       return $response->withRedirect($this->router->pathFor('participant.home'));
     }
             
@@ -147,11 +147,21 @@ class RelationPageController extends Controller
     
     $relationship->name = $request->getParam('name');
     $relationship->description = $request->getParam('description');
-    
-    
+
     $characters = $request->getParam('character_ids');
     $characters = is_array($characters) ? $characters : [$characters];
     
+    if($characters == [null]) {
+      $relationship->characters()->sync([]);
+      $relationship->attr()->sync([]);
+      $relationship->groups()->sync([]);
+      $relationship->notifications()->sync([]);
+      $relationship->delete();
+      $this->flash->addMessage('error', "Relationship removed.");
+
+      return $response->withRedirect($this->router->pathFor('participant.home'));
+    }
+
     foreach($characters as $character_id) {
       if( $currentCharacter['data']->id != $character_id) {
         $char = Character::where('id', $character_id)->first();
