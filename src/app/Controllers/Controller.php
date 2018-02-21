@@ -354,6 +354,12 @@ class Controller
             'info' => 'Public relationships',
             'image' => '/img/dashboard/' . 'relationships.jpg'
           ],
+          'requests' => [
+            'title' => 'Requested Relationships',
+            'target' => $this->router->pathFor('participant.relation.requests'),
+            'info' => 'Publicly Requested Relationships',
+            'image' => '/img/dashboard/' . 'requested-relationships.jpg'
+          ],          
         ]
       ];
       /*
