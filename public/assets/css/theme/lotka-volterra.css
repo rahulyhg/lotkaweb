@@ -889,8 +889,17 @@ svg.loading path.lights {
 	padding: 0em .5em;
 	box-shadow: 0 0 .5em rgba(0,0,0,.25);
 	transition: all 0.125s ease-in-out 0s;
+	z-index: 2;
 }
 .relationship_remove_from:hover {
 	color: #000;	
 	box-shadow: 0 0 .125em rgba(0,0,0,.75);
+}
+.pending_ribbon {
+    background: red;
+    position: absolute;
+    top: .5em;
+    right: 4em;
+    z-index: 1;
+    padding: 0 1.85em;
 }
