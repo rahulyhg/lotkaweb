@@ -12,7 +12,7 @@ use App\Models\Ticket;
 use App\Models\User;
 use App\Models\Media;
 use App\Models\Notification;
-use App\Models\List;
+use App\Models\ItemList;
 use App\Models\ListItem;
 
 use App\Controllers\Controller;
