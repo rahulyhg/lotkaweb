@@ -32,7 +32,7 @@ class AttributeActionController extends Controller
       'users'         => User::orderBy('displayname')->get(),
       'media'         => Media::orderBy('name')->get(), 
       'notifications' => Notification::orderBy('name')->get(),
-      'lists'         => List::orderBy('name')->get(),
+      'lists'         => ItemList::orderBy('name')->get(),
       'listItems'     => ListItem::orderBy('name')->get(),
     ];
   }
