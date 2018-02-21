@@ -40,6 +40,7 @@ class RelationPageController extends Controller
     
     $inParty = self::partOfRelationship($relationship, $currentCharacter["data"]);
     $isPublic = !!$relationship->attr->where('name','public')->whereIn('value',['true','1'])->all();
+    $isRequest = false; $isPublic && $relationship->characters()->count() == 1;
     
     self::markNotificationsAsSeen($relationship, $currentUser);
     
@@ -50,6 +51,9 @@ class RelationPageController extends Controller
             
     if($relationship_id == 'new') {
       $inParty = true;
+    } else {
+      $isRequest = $isPublic && $relationship->characters()->count() == 1;
+      $inParty = $inParty ? $inParty : $isRequest;
     }
 
     $characters = [];
@@ -259,7 +263,7 @@ class RelationPageController extends Controller
   
   private function partOfRelationship($relationship, $character = false) {
     if($this->container->auth->isWriter()) return true;
-    
+        
     foreach($relationship->characters as $rel_char) {
       if($rel_char->id == $character->id) return true;
     }
