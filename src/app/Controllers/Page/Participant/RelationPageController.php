@@ -21,7 +21,7 @@ class RelationPageController extends Controller
     return self::render(
       "relations-list", 
       [
-        "relations" => self::getRalationsInfo()
+        "relations" => self::getRelationsInfo()
       ], 
       $response
     );
@@ -77,7 +77,7 @@ class RelationPageController extends Controller
     return self::render(
       "relations-list", 
       [
-        "relations" => self::getRalationsInfo($currentCharacter["data"]->id),
+        "relations" => self::getRelationsInfo($currentCharacter["data"]->id),
       ], 
       $response
     );
@@ -95,6 +95,17 @@ class RelationPageController extends Controller
       $response
     );
   }
+  
+  public function publicRequests($request, $response, $arguments){
+    return self::render(
+      "relations-list", 
+      [
+        "title" => "Publicly Requested Relationships",
+        "relations" => self::getRelationsRequests(),
+      ], 
+      $response
+    );
+  }  
   
   public function add($request, $response, $arguments){
     return "TODO : add";
@@ -286,7 +297,7 @@ class RelationPageController extends Controller
     return $character_list;
   }
   
-  private function getRalationsInfo($character_id = 0) {
+  private function getRelationsInfo($character_id = 0) {
     if($character_id > 0) {
       $relationships = Character::where('id', $character_id)
         ->first()->rel; //->where('name', '<>', '')->all();
@@ -302,6 +313,24 @@ class RelationPageController extends Controller
           }
         )->with('attr')->get();
     }
+    
+    return $relationships;
+  }
+
+  private function getRelationsRequests() {
+    $relationships = Relation::whereHas( //where('name', '<>', '')
+        'attr', function ($query) {
+          $query->where([['name', 'public'], ['value', '1']])
+            ->orWhere([['name', 'public'], ['value', 'true']]);        
+        }
+      )->whereDoesntHave(
+        'attr', function ($query) {
+          $query->where('name', 'pending');
+        }
+      )->with('attr')  
+      ->withCount('characters')
+      ->having('characters_count', '=', 1)
+      ->get();
     
     return $relationships;
   }
