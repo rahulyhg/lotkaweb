@@ -6,24 +6,24 @@ use Illuminate\Database\Eloquent\Model as Model;
 
 class ListItem extends Model
 {
-  protected $table = 'list_item';
+  protected $table = 'list_items';
   
   protected $fillable = [
     "name",
     "type",
     "description",
-    "list_id",
+    "item_lists_id",
     "taxon_id",
   ];
 
   public function attr()
   {
-    return $this->belongsToMany('App\Models\Attribute', 'list_attribute')->withTimeStamps(); 
+    return $this->belongsToMany('App\Models\Attribute', 'list_items_attribute')->withTimeStamps(); 
   }
   
   public function parentList()
   {
-    return $this->belongsTo('App\Models\List'); 
+    return $this->belongsTo('App\Models\ItemList'); 
   }
   
   public function taxon()
