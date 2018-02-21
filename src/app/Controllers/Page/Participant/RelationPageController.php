@@ -28,9 +28,11 @@ class RelationPageController extends Controller
   }
   
   public function relation($request, $response, $arguments) {
-    $relationship = $arguments['uid'] != 'new' ? 
-      Relation::where('id', $arguments['uid'])->first() :
+    $relationship_id = preg_replace("/[^(new|\d*)]/", "", $arguments['uid']);
+    $relationship = $relationship_id != 'new' ? 
+      Relation::where('id', $relationship_id)->first() :
       new Relation(['name' => '']);
+    
     $current = self::getCurrentUser();
     
     $currentCharacter = $current["character"];
@@ -41,16 +43,13 @@ class RelationPageController extends Controller
     
     self::markNotificationsAsSeen($relationship, $currentUser);
     
-    if(!$inParty && !$isPublic && $arguments['uid'] != 'new') {      
+    if(!$relationship || (!$inParty && !$isPublic && $relationship_id != 'new')) {      
       $this->flash->addMessage('error', "You can't view this relationship.");
       return $response->withRedirect($this->router->pathFor('participant.home'));
     }
             
-    if($arguments['uid'] == 'new') {
+    if($relationship_id == 'new') {
       $inParty = true;
-//      $relationship->characters()->attach($currentCharacter['data']->id);
-//      $relationship->save();
-//      $relationship = $relationship->fresh();
     }
 
     $characters = [];
@@ -65,7 +64,7 @@ class RelationPageController extends Controller
         "canEdit" => $inParty,
         "types" => Attribute::where('name', 'relationship_type')->get(),
         "characters" => $characters,
-        "uid" => $arguments['uid'],
+        "uid" => $relationship_id,
         "currentCharacter" => $currentCharacter["data"],
       ], 
       $response
@@ -108,8 +107,8 @@ class RelationPageController extends Controller
     $currentCharacter = self::getCurrentUser()["character"];
     $inParty = self::partOfRelationship($relationship, $currentCharacter["data"]);
     
-    if(!$inParty) {
-      $this->flash->addMessage('error', "You can't edit this relationship.");
+    if(!$inParty && count($relationship->characters) > 0) {
+      $this->flash->addMessage('error', "You can't edit this relationship. ($relationship->id)");
       return $response->withRedirect($this->router->pathFor('participant.home'));
     }
     
