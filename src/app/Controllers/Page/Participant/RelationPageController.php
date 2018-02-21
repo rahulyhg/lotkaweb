@@ -133,7 +133,7 @@ class RelationPageController extends Controller
     }
     
     $relation_attributes = [
-      'public' =>                   $isRequest ? true : !!$request->getParam('public'),
+      'public' =>                 !!$request->getParam('public'),
       'relationship_type' =>        $request->getParam('relationship_type'),
       'source' =>                   $request->getParam('source'),
       'target' =>                   $request->getParam('target'),
