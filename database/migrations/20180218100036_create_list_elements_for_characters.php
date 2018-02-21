@@ -28,7 +28,7 @@ class CreateListElementsForCharacters extends AbstractMigration
      */
     public function change()
     {
-        $table = $this->table('list');
+        $table = $this->table('item_lists');
         $table
           ->addColumn('name', 'string', array('limit' => 255))
           ->addColumn('description', 'text')
@@ -37,28 +37,28 @@ class CreateListElementsForCharacters extends AbstractMigration
           ->addColumn('updated_at', 'datetime', array('default' => '0000-00-00 00:00:00'))
           ->create();
       
-        $table = $this->table('list_item');
+        $table = $this->table('list_items');
         $table
           ->addColumn('name', 'string', array('limit' => 255))
           ->addColumn('type', 'string', array('limit' => 255, 'null' => true))
           ->addColumn('description', 'text')
-          ->addColumn('list_id', 'integer', array('limit' => 10))
+          ->addColumn('item_lists_id', 'integer', array('limit' => 10))
           ->addColumn('created_at', 'datetime', array('default' => '0000-00-00 00:00:00'))
           ->addColumn('updated_at', 'datetime', array('default' => '0000-00-00 00:00:00'))
           ->create();
 
-        $table = $this->table('list_attribute');
+        $table = $this->table('item_list_attribute');
         $table
-          ->addColumn('list_id', 'integer', array('limit' => 10))
+          ->addColumn('item_list_id', 'integer', array('limit' => 10))
           ->addColumn('taxon_id', 'integer', array('limit' => 10))
           ->addColumn('attribute_id', 'integer', array('limit' => 10))
           ->addColumn('created_at', 'datetime', array('default' => '0000-00-00 00:00:00'))
           ->addColumn('updated_at', 'datetime', array('default' => '0000-00-00 00:00:00'))
           ->create();
       
-        $table = $this->table('item_attribute');
+        $table = $this->table('list_item_attribute');
         $table
-          ->addColumn('item_id', 'integer', array('limit' => 10))
+          ->addColumn('list_item_id', 'integer', array('limit' => 10))
           ->addColumn('attribute_id', 'integer', array('limit' => 10))
           ->addColumn('created_at', 'datetime', array('default' => '0000-00-00 00:00:00'))
           ->addColumn('updated_at', 'datetime', array('default' => '0000-00-00 00:00:00'))

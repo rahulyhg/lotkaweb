@@ -12,8 +12,8 @@ use App\Models\Ticket;
 use App\Models\User;
 use App\Models\Media;
 use App\Models\Notification;
-use App\Models\ItemList;
-use App\Models\ListItem;
+//use App\Models\ItemList;
+//use App\Models\ListItem;
 
 use App\Controllers\Controller;
 use Respect\Validation\Validator as v;
@@ -31,9 +31,9 @@ class AttributeActionController extends Controller
       'tickets'       => Ticket::orderBy('sku')->get(),
       'users'         => User::orderBy('displayname')->get(),
       'media'         => Media::orderBy('name')->get(), 
-      'notifications' => Notification::orderBy('name')->get(),
-      'lists'         => ItemList::orderBy('name')->get(),
-      'listItems'     => ListItem::orderBy('name')->get(),
+      'notifications' => Notification::orderBy('title')->get(),
+//      'lists'         => ItemList::orderBy('name')->get(),
+//      'listItems'     => ListItem::orderBy('name')->get(),
     ];
   }
   
@@ -52,8 +52,8 @@ class AttributeActionController extends Controller
       'users'         => is_null($request->getParam('user_ids')) ? [] : $request->getParam('user_ids'),
       'media'         => is_null($request->getParam('media_ids')) ? [] : $request->getParam('media_ids'), 
       'notifications' => is_null($request->getParam('notification_ids')) ? [] : $request->getParam('notification_ids'), 
-      'lists'         => is_null($request->getParam('list_ids')) ? [] : $request->getParam('list_ids'),
-      'listItems'     => is_null($request->getParam('listItem_ids')) ? [] : $request->getParam('listItem_ids'),
+//      'lists'         => is_null($request->getParam('list_ids')) ? [] : $request->getParam('list_ids'),
+//      'listItems'     => is_null($request->getParam('listItem_ids')) ? [] : $request->getParam('listItem_ids'),
     ];
   }
   
@@ -71,8 +71,8 @@ class AttributeActionController extends Controller
     $item->users()->sync($requestData['users']);
     $item->media()->sync($requestData['media']);
     $item->notifications()->sync($requestData['notifications']);
-    $item->lists()->sync($requestData['notifications']);
-    $item->listItems()->sync($requestData['notifications']);
+//    $item->lists()->sync($requestData['notifications']);
+//    $item->listItems()->sync($requestData['notifications']);
 
     if($item->id) {
       $this->flash->addMessage('success', "Details have been saved.");
@@ -123,8 +123,8 @@ class AttributeActionController extends Controller
       'users'         => $item->users()->get(),
       'media'         => $item->media()->get(),
       'notifications' => $item->notifications()->get(),
-      'list'          => $item->lists()->get(),
-      'listItem'      => $item->listItems()->get(),
+//      'list'          => $item->lists()->get(),
+//      'listItem'      => $item->listItems()->get(),
     ]);
     
     if(is_null($item->value)) $item->value = '';
@@ -144,8 +144,8 @@ class AttributeActionController extends Controller
     $item->users()->sync([]);
     $item->media()->sync([]);
     $item->notifications()->sync([]);
-    $item->lists()->sync([]);
-    $item->listItems()->sync([]);
+//    $item->lists()->sync([]);
+//    $item->listItems()->sync([]);
 
     if($item->delete()) {
       $this->flash->addMessage('success', "Attribute has been removed from all entities and deleted.");

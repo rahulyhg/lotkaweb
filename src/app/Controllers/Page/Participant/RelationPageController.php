@@ -66,7 +66,7 @@ class RelationPageController extends Controller
       [
         "relation" => $relationship,
         "canEdit" => $inParty,
-        "types" => Attribute::where('name', 'relationship_type')->get(),
+        "types" => Attribute::where('name', 'relationship_type')->orderBy('value')->get(),
         "characters" => $characters,
         "uid" => $relationship_id,
         "isRequest" => $isRequest,

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model as Model;
 
 class ItemList extends Model
 {
-  protected $table = 'lists';
+  protected $table = 'item_lists';
   
   protected $fillable = [
     "name",
@@ -16,7 +16,7 @@ class ItemList extends Model
   
   public function attr()
   {
-    return $this->belongsToMany('App\Models\Attribute', 'list_attribute')->withTimeStamps(); 
+    return $this->belongsToMany('App\Models\Attribute', 'item_lists_attribute')->withTimeStamps(); 
   }
   
   public function character()

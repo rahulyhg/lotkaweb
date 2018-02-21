@@ -51,10 +51,10 @@ class Attribute extends Model
   }
   public function lists()
   {
-      return $this->belongsToMany('App\Models\List', 'list_attribute')->withTimeStamps();
+      return $this->belongsToMany('App\Models\ItemList', 'item_list_attribute')->withTimeStamps();
   }  
   public function listItems()
   {
-      return $this->belongsToMany('App\Models\ListItem', 'listItem_attribute')->withTimeStamps();
+      return $this->belongsToMany('App\Models\ListItem', 'list_item_attribute')->withTimeStamps();
   }  
 }

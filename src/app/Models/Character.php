@@ -41,6 +41,6 @@ class Character extends Model
 
   public function lists()
   {
-      return $this->hasMany('App\Models\List');
+      return $this->hasMany('App\Models\ItemList');
   }   
 }
