@@ -40,7 +40,7 @@ class RelationPageController extends Controller
     
     $inParty = self::partOfRelationship($relationship, $currentCharacter["data"]);
     $isPublic = !!$relationship->attr->where('name','public')->whereIn('value',['true','1'])->all();
-    $isRequest = false; $isPublic && $relationship->characters()->count() == 1;
+    $isRequest = false;
     
     self::markNotificationsAsSeen($relationship, $currentUser);
     
@@ -58,7 +58,7 @@ class RelationPageController extends Controller
 
     $characters = [];
     if($inParty) {
-      $characters = self::getCharacers($relationship);        
+      $characters = self::getCharacers($relationship, $isRequest);        
     }
     
     return self::render(
@@ -69,6 +69,7 @@ class RelationPageController extends Controller
         "types" => Attribute::where('name', 'relationship_type')->get(),
         "characters" => $characters,
         "uid" => $relationship_id,
+        "isRequest" => $isRequest,
         "currentCharacter" => $currentCharacter["data"],
       ], 
       $response
@@ -120,7 +121,11 @@ class RelationPageController extends Controller
       Relation::where('id', $arguments['uid'])->first() : 
       Relation::create(['name' => '']);
     $currentCharacter = self::getCurrentUser()["character"];
+    
     $inParty = self::partOfRelationship($relationship, $currentCharacter["data"]);
+    $isPublic = !!$relationship->attr->where('name','public')->whereIn('value',['true','1'])->all();    
+    $isRequest = $isPublic && $relationship->characters()->count() == 1;
+    $inParty = $inParty ? $inParty : $isRequest;
     
     if(!$inParty && count($relationship->characters) > 0) {
       $this->flash->addMessage('error', "You can't edit this relationship. ($relationship->id)");
@@ -128,7 +133,7 @@ class RelationPageController extends Controller
     }
     
     $relation_attributes = [
-      'public' =>                 !!$request->getParam('public'),
+      'public' =>                   $isRequest ? true : !!$request->getParam('public'),
       'relationship_type' =>        $request->getParam('relationship_type'),
       'source' =>                   $request->getParam('source'),
       'target' =>                   $request->getParam('target'),
@@ -285,7 +290,7 @@ class RelationPageController extends Controller
     return false;
   }
   
-  private function getCharacers($relationship) {
+  private function getCharacers($relationship, $includeCurrent) {
     $characters = Character::where('name', '<>', '')->orderBy('name')->get();
     
     $character_list = [];
