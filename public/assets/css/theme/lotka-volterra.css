@@ -903,3 +903,62 @@ svg.loading path.lights {
     z-index: 1;
     padding: 0 1.85em;
 }
+.printout {
+  text-align: left;
+  padding: 3em 7em;
+  background: -moz-linear-gradient(top, 
+  rgba(0, 255, 0, 0.125) 0%, 
+  rgba(0, 255, 0, 0.125) 50%, 
+  rgba(0, 0, 0, 0) 50%, 
+  rgba(0, 0, 0, 0) 100%
+  ), -moz-radial-gradient(center, ellipse cover, 
+  #1d1d1d 0%,
+  #1d1d1d 20%,
+  rgba(0,0,0,0) 20%,
+  rgba(0,0,0,0) 100%
+  ), -moz-radial-gradient(center, ellipse cover, 
+  #1d1d1d 0%,
+  #1d1d1d 20%,
+  rgba(0,0,0,0) 20%,
+  rgba(0,0,0,0) 100%
+  );
+  background-image: -webkit-linear-gradient(top, 
+  rgba(0, 255, 0, 0.125) 0%, 
+  rgba(0, 255, 0, 0.125) 50%, 
+  rgba(0, 0, 0, 0) 50%, 
+  rgba(0, 0, 0, 0) 100%
+  ), -webkit-radial-gradient(center, ellipse cover, 
+  #1d1d1d 0%,
+  #1d1d1d 20%,
+  rgba(0,0,0,0) 20%,
+  rgba(0,0,0,0) 100%
+  ), -webkit-radial-gradient(center, ellipse cover, 
+  #1d1d1d 0%,
+  #1d1d1d 20%,
+  rgba(0,0,0,0) 20%,
+  rgba(0,0,0,0) 100%
+  );
+  background-image: linear-gradient(to bottom, 
+  rgba(0, 255, 0, 0.125) 0%, 
+  rgba(0, 255, 0, 0.125) 50%, 
+  rgba(0, 0, 0, 0) 50%, 
+  rgba(0, 0, 0, 0) 100%
+  ), radial-gradient(ellipse at center, 
+  #1d1d1d 0%,
+  #1d1d1d 20%,
+  rgba(0,0,0,0) 20%,
+  rgba(0,0,0,0) 100%
+  ), radial-gradient(ellipse at center, 
+  #1d1d1d 0%,
+  #1d1d1d 20%,
+  rgba(0,0,0,0) 20%,
+  rgba(0,0,0,0) 100%
+  );
+  background-size: calc(100% - 8em) 4em, 5em 5em, 5em 5em;
+  background-position: 50% 1em, -.5em .25em, calc(100% + .5em) .25em;
+  background-repeat: repeat-y;
+  border: none;
+  border-top: .15em dashed #1d1d1d;
+  border-bottom: .15em dashed #1d1d1d;
+  border-radius: 0;
+}
