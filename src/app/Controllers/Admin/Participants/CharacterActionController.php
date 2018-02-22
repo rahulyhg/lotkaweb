@@ -134,7 +134,7 @@ class CharacterActionController extends Controller
         $user->character_id = 0;
         $user->save();
       }
-    } else {
+    } elseif($requestData['values']['user_id'] != $item->user_id) {
       self::removeCharacterFromUsers($item);
       
       $user = User::where('id', $requestData['values']['user_id'])->first();
@@ -167,6 +167,11 @@ class CharacterActionController extends Controller
     
     // update data
     if($item->id) {
+      $singular_attributes = ['role', 'org', 'shift'];
+      foreach($singular_attributes as $attribute_name) {
+        self::removeAttribute($item, $attribute_name);
+      }
+      
       $item->attr()->sync($requestData['attributes']);
       $item->groups()->sync($requestData['groups']);
       $item->rel()->sync($requestData['relations']);
