@@ -903,7 +903,14 @@ svg.loading path.lights {
     z-index: 1;
     padding: 0 1.85em;
 }
+.printout a {
+	color: #1d1d1d;
+	font-weight: bold;
+	text-decoration: underline;
+}
 .printout {
+	font-family: monospace;
+	background-color: #f5f5f5;
   text-align: left;
   padding: 3em 7em;
   background: -moz-linear-gradient(top, 
