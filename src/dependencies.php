@@ -2,6 +2,16 @@
 // DIC configuration
 use \Symfony\Component\HttpFoundation\Request;
 
+//Rollbar
+use \Rollbar\Rollbar;
+use \Rollbar\Payload\Level;
+Rollbar::init(
+	array(
+		'access_token' => $container->get('settings')['rollbar']['access_token'],
+		'environment' => $container->get('settings')['env']
+	)
+);
+
 //Stripe Setup
 $stripe_settings = $container['settings']['stripe_live'];
 \Stripe\Stripe::setApiKey($stripe_settings['SECRET_KEY']);
