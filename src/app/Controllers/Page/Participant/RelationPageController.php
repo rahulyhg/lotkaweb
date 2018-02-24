@@ -77,7 +77,8 @@ class RelationPageController extends Controller
   }
   
   public function my($request, $response, $arguments){
-    $currentCharacter = self::getCurrentOrById($arguments["uid"]);
+    $uid = isset($arguments["uid"]) ? $arguments["uid"] : false;
+    $currentCharacter = self::getCurrentOrById($uid);
     
     return self::render(
       "relations-list", 
@@ -89,7 +90,8 @@ class RelationPageController extends Controller
   }
   
   public function pending($request, $response, $arguments){
-    $currentCharacter = self::getCurrentOrById($arguments["uid"]);
+    $uid = isset($arguments["uid"]) ? $arguments["uid"] : false;
+    $currentCharacter = self::getCurrentOrById($uid);
     
     return self::render(
       "relations-list", 
@@ -228,7 +230,12 @@ class RelationPageController extends Controller
     }
         
     $attr_pending = $relationship->attr()->where([['name', 'pending'], ['value',$currentCharacter["data"]->id]])->first();
-    if($attr_pending) $relationship->attr()->detach($attr_pending->id);
+    if($attr_pending) {
+      $relationship->attr()->detach($attr_pending->id);
+    } else {
+      $this->flash->addMessage('error', "This relationship is no longer pending.");
+      return $this->router->pathFor('participant.relation.pending');      
+    }
         
     if($acceptRejct == 'accept') {      
       $this->flash->addMessage('success', "Relationship accepted.");
@@ -249,7 +256,7 @@ class RelationPageController extends Controller
       return $this->router->pathFor('participant.relation.pending');
     }
     
-    return $this->router->pathFor('participant.relation', ['uid' => $uid]);
+    return $this->router->pathFor('participant.relation.pending'); //, ['uid' => $uid]);
   }
   
   public function accept($request, $response, $arguments){
@@ -357,7 +364,7 @@ class RelationPageController extends Controller
   private function pendingRelationships($character) {
     $pending_relationships = [];
     foreach($character->rel as $relation) {
-      if($relation->attr->where([['name', 'pending'],['value',$character->id]])->all()) {
+      if($relation->attr()->where([['name', 'pending'], ['value',$character->id]])->first()) {
         $pending_relationships[] = $relation;
       }
     }
