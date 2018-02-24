@@ -1,6 +1,7 @@
 <?php
 return [
   'settings' => [
+    'env' => 'development',
     'displayErrorDetails' => true, // set to false in production
     'addContentLengthHeader' => false, // Allow the web server to send the content-length header
     'default_salt' => '<OUR_DEFALT_PASSWORD_SALT>', //Used to create default passwords to generated users
@@ -61,6 +62,10 @@ return [
         ],
         'shop_id' => '<OUR_TEXTTALK_SHIP_ID_HERE>',
       ],
+    ],
+    
+    'rollbar' => [
+      'access_token' => '<OUR_ROLLBAR_ACCESS_TOKEN_HERE>',
     ],
     
     'event' => [
