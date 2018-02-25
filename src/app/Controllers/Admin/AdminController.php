@@ -99,11 +99,13 @@ class AdminController extends Controller
     
     $characters = Character::all();
     $review_status = [];
-    
+
     foreach ($characters as $character) {
-      $sent_to_review = $character->attr->where('name', 'submitted_for_review')->first();      
+      $sent_to_review = $character->attr()->where(
+        'name', 'submitted_for_review'
+      )->whereIn('value', ['1', 'true', 'on'])->count();      
       if($sent_to_review) {
-        if($character->attr->where([['name', 'reviewed'], [['value', '1'], ['value', 'true']]])->first()) {
+        if($character->attr()->where('name', 'reviewed')->whereIn('value', ['1', 'true', 'on'])->count()) {
           $review_status['reviewed'] = isset($review_status['reviewed']) ? 
             $review_status['reviewed'] + 1 : 1;
         } else {
