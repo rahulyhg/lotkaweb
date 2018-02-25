@@ -337,7 +337,10 @@ class RelationPageController extends Controller
           'attr', function ($query) {
             $query->where('name', 'pending');
           }
-        )->with('attr')->get();
+        )->with('attr')
+        ->withCount('characters')
+        ->having('characters_count', '>', 1)
+        ->get();        
     }
     
     return $relationships;
