@@ -43,7 +43,7 @@
                   <td>{{ getUsersRole[loop.index0].slug }}</td>
                   <td>{{ user.last_login }}</td>
                   <td class="center">
-                    <a href="{{ path_for('admin.user.edit', { 'uid': user.username }) }}" class="btn btn-default btn-xs" title="Edit User"><i class="icon-edit"></i></a>
+                    <a href="{{ path_for('admin.user.edit', { 'uid': user.id }) }}" class="btn btn-default btn-xs" title="Edit User"><i class="icon-edit"></i></a>
                       <a href="{{ path_for('admin.user.delete', { 'uid': user.username }) }}" class="btn btn-danger btn-xs" title="Delete User"><i class="icon-remove"></i></a>
                     <a href="" class="btn btn-primary btn-xs" title="Kill Session"><i class="icon-signout"></i></a>
                   </td>
