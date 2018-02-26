@@ -170,7 +170,7 @@ class UserActionController extends Controller
   
   public function editUser($request, $response, $arguments)
   {
-    $getCurrentUserData = User::where('username', $arguments['uid'])->first();
+    $getCurrentUserData = User::where('id', $arguments['uid'])->first();
     
     if(!$getCurrentUserData) {
       $this->flash->addMessage('error', "No user with user name '{$arguments['uid']}' found.");
@@ -204,7 +204,7 @@ class UserActionController extends Controller
   
   public function postEditUser($request, $response, $arguments)
   {
-    $getCurrentUserData = User::where('username', $arguments['uid'])->first();
+    $getCurrentUserData = User::where('id', $arguments['uid'])->first();
     
     $getCurrentUserRole = $this->container->sentinel->findById($getCurrentUserData->id);
     
