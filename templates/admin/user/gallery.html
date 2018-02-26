@@ -26,8 +26,8 @@
           <div class="widget-content gallery">
             {% for user in users %}
               <figure>
-                <a href="{{ path_for('admin.user.edit', { 'uid': user.data.username }) }}">
-                  <img src="/assets/{{ user.attr.portrait ? 'portraits/scaled/' ~ user.attr.portrait : 'images/logos/lotka-volterra-logo.svg'}}" class="{{user.attr.portrait ? '' : 'unloaded' }}">
+                <a href="{{ path_for('admin.user.edit', { 'uid': user.data.id }) }}">
+                  <img src="/assets/'portraits/scaled/{{ user.attr.portrait|default('portrait-black.png')}}" class="{{user.attr.portrait ? '' : 'unloaded' }}">
                 </a>
                 <figcaption class="font-alt">
                   <a href="{{ path_for('admin.user.edit', { 'uid': user.data.username }) }}">{{ user.data.displayname }}</a>
