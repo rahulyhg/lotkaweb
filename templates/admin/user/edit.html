@@ -24,7 +24,7 @@
           <h5>Edit User</h5>
         </div>
         <div class="widget-content nopadding">
-          <form action="{{ current.new ? path_for('admin.user.add') : path_for('admin.user.edit', { 'uid': current.data.username }) }}" method="post" autocomplete="off" class="form-horizontal">
+          <form action="{{ current.new ? path_for('admin.user.add') : path_for('admin.user.edit', { 'uid': current.data.id }) }}" method="post" autocomplete="off" class="form-horizontal">
             {{ csrf.field | raw }}
             
             <div class="control-group">
