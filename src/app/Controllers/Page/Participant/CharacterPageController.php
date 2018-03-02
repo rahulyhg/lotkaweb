@@ -92,6 +92,8 @@ class CharacterPageController extends Controller
       'haven_id' =>                 $request->getParam('haven_id'),
       'how_survived' =>             $request->getParam('how_survived'),
       'submitted_for_review' =>     $request->getParam('submitted_for_review'),
+      'haven_history' =>            $request->getParam('haven_history'),
+      'notes' =>                    $request->getParam('notes'),
     ];
       
     #$user
