@@ -128,8 +128,6 @@ class RelationPageController extends Controller
     $inParty = self::partOfRelationship($relationship, $currentCharacter["data"]);
     $isOpen = !!$relationship->attr->where('name','open')->whereIn('value',['true','1'])->all()->count();
     
-    die(var_dump($isOpen));
-    
     $isPublic = false; #($isOpen || $relationship->attr->where('name','public')->whereIn('value',['true','1'])->all()->count()) ? true : false;    
     $isRequest = $isPublic && $relationship->characters()->count() == 1;
     $inParty = $inParty ? $inParty : $isRequest;
