@@ -39,7 +39,8 @@ class RelationPageController extends Controller
     $currentUser = $current["user"];
     
     $inParty = self::partOfRelationship($relationship, $currentCharacter["data"]);
-    $isPublic = !!$relationship->attr->where('name','public')->whereIn('value',['true','1'])->all();
+    $isOpen = !!$relationship->attr->where('name','open')->whereIn('value',['true','1'])->all();
+    $isPublic = ($isOpen || !!$relationship->attr->where('name','public')->whereIn('value',['true','1'])->all()) ? true : false;
     $isRequest = false;
     
     self::markNotificationsAsSeen($relationship, $currentUser);
@@ -125,7 +126,11 @@ class RelationPageController extends Controller
     $currentCharacter = self::getCurrentUser()["character"];
     
     $inParty = self::partOfRelationship($relationship, $currentCharacter["data"]);
-    $isPublic = !!$relationship->attr->where('name','public')->whereIn('value',['true','1'])->all();    
+    $isOpen = !!$relationship->attr->where('name','open')->whereIn('value',['true','1'])->all()->count();
+    
+    die(var_dump($isOpen));
+    
+    $isPublic = false; #($isOpen || $relationship->attr->where('name','public')->whereIn('value',['true','1'])->all()->count()) ? true : false;    
     $isRequest = $isPublic && $relationship->characters()->count() == 1;
     $inParty = $inParty ? $inParty : $isRequest;
     
@@ -135,6 +140,7 @@ class RelationPageController extends Controller
     }
     
     $relation_attributes = [
+      'open' =>                   !!$request->getParam('open'),
       'public' =>                 !!$request->getParam('public'),
       'relationship_type' =>        $request->getParam('relationship_type'),
       'source' =>                   $request->getParam('source'),
@@ -283,27 +289,20 @@ class RelationPageController extends Controller
     return "TODO : save";
   }
   
-  private function partOfRelationship($relationship, $character = false) {
-    if($this->container->auth->isWriter()) return true;
-        
-    foreach($relationship->characters as $rel_char) {
-      if($rel_char->id == $character->id) return true;
+  private function partOfRelationship($model, $character = false) {
+    return (
+      $this->container->auth->isWriter() || ($character && (
+        $model->attr()->whereIn('name', ['source', 'target'])->where('value', $character->id)->get()->count() ||
+        $model->characters()->where('character_id', $character->id)->get()->count() ||
+        self::partOfGroups($model->groups(), $character->id) )
+      )
+    ) ? true : false;
+  }
+  
+  private function partOfGroups($groups, $character_id) {
+    foreach($groups as $group) {
+      if($group->characters()->where('character.id', $character_id)->get()->count()) return true;
     }
-
-    foreach($relationship->attr->where('name', 'source')->all() as $rel_char) {
-      if($rel_char->value == $character->id) return true;
-    }
-
-    foreach($relationship->attr->where('name', 'target')->all() as $rel_char) {
-      if($rel_char->value == $character->id) return true;
-    }
-    
-    foreach($relationship->groups() as $rel_group) {
-      foreach($rel_group->characters as $rel_char) {
-        if($rel_char->id == $character->id) return true;
-      }
-    }
-    
     return false;
   }
   
@@ -350,15 +349,16 @@ class RelationPageController extends Controller
     $relationships = Relation::whereHas( //where('name', '<>', '')
         'attr', function ($query) {
           $query->where([['name', 'public'], ['value', '1']])
-            ->orWhere([['name', 'public'], ['value', 'true']]);        
+            ->orWhere([['name', 'public'], ['value', 'true']])
+            ->orWhere(['name', 'open'], [['value', 'true'], ['value', '1']]);
         }
       )->whereDoesntHave(
         'attr', function ($query) {
           $query->where('name', 'pending');
         }
-      )->with('attr')  
-      ->withCount('characters')
-      ->having('characters_count', '=', 1)
+      )->with('attr')
+#      ->withCount('characters')
+#      ->having('characters_count', '>', 0)
       ->get();
     
     return $relationships;
