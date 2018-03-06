@@ -62,8 +62,9 @@ class PlotPageController extends Controller
       Plot::where('id', $plot_id)->first() :
       new Plot(['name' => '']);
 
-    if(!$plot) {      
+    if(!$plot) {
       $this->flash->addMessage('error', "This plot does not exist any more.");
+      self::markNotificationsAsSeen($plot, $currentUser);
       return $response->withRedirect($this->router->pathFor('participant.home'));
     }    
     

@@ -305,7 +305,7 @@ class RelationPageController extends Controller
   private function partOfRelationship($model, $character = false) {
     return (
       $this->container->auth->isWriter() || ($character && (
-        $model->characters->where('character_id', $character->id)->get()->count() ||
+        $model->characters()->where('character_id', $character->id)->get()->count() ||
         self::partOfGroups($model->groups(), $character->id) )
       )
     ) ? true : false;
