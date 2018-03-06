@@ -57,12 +57,14 @@ class CharacterPageController extends Controller
   }  
   
   public function character($request, $response, $arguments){
+    $character_info = self::getCharacterInfo($arguments["uid"], true);
     return self::render(
       "character", 
       [
-        "character" => self::getCharacterInfo($arguments["uid"], true),
+        "character" => $character_info,
         "postClass" => "mt-10",
-        "mainClass" => "mt-0 pt-10"
+        "mainClass" => "mt-0 pt-10",
+        "page_title" => $character_info["data"]->name,
       ], 
       $response
     );

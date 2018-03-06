@@ -1,6 +1,6 @@
 {% extends "/new/layout.html" %}
 
-{% block title %} {{ post.title }} {{ parent() }} {% endblock %}
+{% block title %} {{ page_title|default(post.title)|title }} {{ parent() }} {% endblock %}
 
 {% block headCover %}
 {{ include('/new/partials/fragments/flash.html') }}
