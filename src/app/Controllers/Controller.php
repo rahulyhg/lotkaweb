@@ -366,7 +366,7 @@ class Controller
           ],
         ]
       ];
-     /* 
+     / 
       $menu["sections"]["plots"] = [
         'title' => 'Plots',
         'target' => $this->router->pathFor('participant.plot.list'),
@@ -391,7 +391,7 @@ class Controller
           ],
         ]
       ];
-    */  
+    
       /*
       $menu["sections"]["lists"] = [
         'title' => 'Lists',
