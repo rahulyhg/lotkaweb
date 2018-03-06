@@ -21,7 +21,8 @@ class RelationPageController extends Controller
     return self::render(
       "relations-list", 
       [
-        "relations" => self::getRelationsInfo()
+        "relations" => self::getRelationsInfo(),
+        "page_title" => "Public Relationships",
       ], 
       $response
     );
@@ -32,6 +33,11 @@ class RelationPageController extends Controller
     $relationship = $relationship_id != 'new' ? 
       Relation::where('id', $relationship_id)->first() :
       new Relation(['name' => '']);
+    
+    if(!$relationship) {
+      $this->flash->addMessage('error', "This relationship does not exist any more.");
+      return $response->withRedirect($this->router->pathFor('participant.home'));
+    }    
     
     $current = self::getCurrentUser();
     
@@ -46,7 +52,7 @@ class RelationPageController extends Controller
     
     self::markNotificationsAsSeen($relationship, $currentUser);
     
-    if(!$relationship || (!$inParty && (!$isOpen && !$isPublic))) {      
+    if(!$inParty && (!$isOpen && !$isPublic)) {      
       $this->flash->addMessage('error', "We can't find this relationship, either it's been removed or you can't access it any more.");
       return $response->withRedirect($this->router->pathFor('participant.home'));
     }
@@ -67,6 +73,7 @@ class RelationPageController extends Controller
         "isRequest" => $isRequest,
         "isOpen" => $isOpen, 
         "currentCharacter" => $currentCharacter["data"],
+        "page_title" => "Relation: " . $relationship->name,
       ], 
       $response
     );
@@ -80,6 +87,7 @@ class RelationPageController extends Controller
       "relations-list", 
       [
         "relations" => self::getRelationsInfo($currentCharacter["data"]->id),
+        "page_title" => "My Relationships",
       ], 
       $response
     );
@@ -94,6 +102,7 @@ class RelationPageController extends Controller
       [
         "tools" => ["pending" => true], 
         "relations" => self::pendingRelationships($currentCharacter["data"]),
+        "page_title" => "Pending Relationships",
       ], 
       $response
     );
@@ -105,6 +114,7 @@ class RelationPageController extends Controller
       [
         "title" => "Publicly Requested Relationships",
         "relations" => self::getRelationsRequests(),
+        "page_title" => "Requested Relationships",
       ], 
       $response
     );
@@ -115,17 +125,24 @@ class RelationPageController extends Controller
   }
   
   public function edit($request, $response, $arguments){
-    $relationship = $arguments['uid'] != 'new' ? 
-      Relation::where('id', $arguments['uid'])->first() : 
+    $relationship_id = preg_replace("/[^(new|\d*)]/", "", $arguments['uid']);
+    $relationship = $relationship_id != 'new' ? 
+      Relation::where('id', $relationship_id)->first() : 
       Relation::create(['name' => '']);
+    
+    if(!$relationship) {
+      $this->flash->addMessage('error', "This relationship does not exist any more.");
+      return $response->withRedirect($this->router->pathFor('participant.home'));
+    }   
+    
     $currentCharacter = self::getCurrentUser()["character"];
     
-    $inParty = self::partOfRelationship($relationship, $currentCharacter["data"]) || $arguments['uid'] == 'new';    
+    $inParty = self::partOfRelationship($relationship, $currentCharacter["data"]) || $relationship_id == 'new';    
     $isOpen = self::is($relationship, 'open');
     $isPublic = self::is($relationship, 'public');
     $isRequest = $isPublic && $isOpen && !$inParty;
 
-    if(!$relationship || (!$inParty && !$isOpen)) {
+    if(!$inParty && !$isOpen) {
       $this->flash->addMessage('error', "You can't edit this relationship. ($relationship->id)");
       return $response->withRedirect($this->router->pathFor('participant.home'));
     }
@@ -164,14 +181,17 @@ class RelationPageController extends Controller
 
       return $response->withRedirect($this->router->pathFor('participant.home'));
     }
+    
+    $existingCharacters = $relationship->characters()->get();
+    $relationship->characters()->sync($characters, $inParty);   
 
-    foreach($characters as $character_id) {
+    foreach($relationship->characters as $relationship_character) {
+      $character_id = $relationship_character;
       if( $currentCharacter['data']->id != $character_id) {
-        $char = Character::where('id', $character_id)->first();
-        if(!$char->user) continue;
+        if(!$relationship_character->user) continue;
         
         $notification_present = false;
-        $char_user_notifications = $char->user->notifications()->where('seen_at', null)->get();
+        $char_user_notifications = $relationship_character->user->notifications()->where('seen_at', null)->get();
         foreach($char_user_notifications as $existing_notification) {
           if($existing_notification->relations()->where('id', $relationship->id)->get()) {
             $notification_present = true;
@@ -182,7 +202,7 @@ class RelationPageController extends Controller
         
         $notification_data = [];
         if (
-            $relationship->characters()->where('character_id', $character_id)->get() 
+            $existingCharacters->where('id', $character_id)->first()
 //            || self::partOfRelationship($relationship, $char) //Only check other character containers if not directly attached
           ) {
           $notification_data = [
@@ -200,16 +220,13 @@ class RelationPageController extends Controller
           
           $relationship->attr()->attach(Attribute::firstOrCreate([
             'name' => 'pending',
-            'value' => $char->id,
+            'value' => $relationship_character->id,
           ])->id);
         }
         
-        self::notify($char->user, $relationship, $notification_data);
+        self::notify($relationship_character->user, $relationship, $notification_data);
       }
-    }
-    
-    
-    $relationship->characters()->sync($characters, $inParty);    
+    } 
     
     if($relationship->save()) {
       $this->flash->addMessage('success', "Relationship updated."); 
@@ -223,15 +240,15 @@ class RelationPageController extends Controller
   }
   
   private function handleRelation($uid, $acceptRejct) {
-    $currentCharacter = self::getCurrentUser()["character"];
-    $relationship = $currentCharacter["data"]->rel()->where('relation_id', $uid)->first();
+    $currentCharacter = self::getCurrentUser()["character"]["data"];
+    $relationship = $currentCharacter->rel()->where('relation_id', $uid)->first();
     
     if(!$relationship) {
       $this->flash->addMessage('error', "You don't seem to be part of this relationship any more.");
       return $this->router->pathFor('participant.relation.pending');
     }
         
-    $attr_pending = $relationship->attr()->where([['name', 'pending'], ['value',$currentCharacter["data"]->id]])->first();
+    $attr_pending = $relationship->attr()->where([['name', 'pending'], ['value',$currentCharacter->id]])->first();
     if($attr_pending) {
       $relationship->attr()->detach($attr_pending->id);
     } else {
@@ -245,7 +262,7 @@ class RelationPageController extends Controller
       foreach($relationship->characters as $character) {
         if( $currentCharacter->id != $character->id) {
           $notification_data = [
-            'title' => $character->name . ' accepted ' . $relation_attributes['relationship_type'] . '!',
+            'title' => $currentCharacter->name . ' accepted ' . $relation_attributes['relationship_type'] . '!',
             'icon' => 'chain',
           ];
           self::notify($character->user, $relationship, $notification_data);
@@ -253,7 +270,7 @@ class RelationPageController extends Controller
       }
     }
     if($acceptRejct == 'reject') {
-      $relationship->characters()->detach($currentCharacter["data"]->id);      
+      $relationship->characters()->detach($currentCharacter->id);      
       $this->flash->addMessage('error', "Relationship rejected.");
       return $this->router->pathFor('participant.relation.pending');
     }
@@ -288,8 +305,7 @@ class RelationPageController extends Controller
   private function partOfRelationship($model, $character = false) {
     return (
       $this->container->auth->isWriter() || ($character && (
-        $model->attr()->whereIn('name', ['source', 'target'])->where('value', $character->id)->get()->count() ||
-        $model->characters()->where('character_id', $character->id)->get()->count() ||
+        $model->characters->where('character_id', $character->id)->get()->count() ||
         self::partOfGroups($model->groups(), $character->id) )
       )
     ) ? true : false;

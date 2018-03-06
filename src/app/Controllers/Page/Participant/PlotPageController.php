@@ -21,6 +21,7 @@ class PlotPageController extends Controller
       "plot-list", 
       [
         "plots" => self::getPlotsInfo(),
+        "page_title" => "Public Plots",
       ], 
       $response
     );
@@ -34,6 +35,7 @@ class PlotPageController extends Controller
       "plot-list", 
       [
         "plots" => self::getPlotsInfo($currentCharacter["data"]->id),
+        "page_title" => "My Plots",
       ], 
       $response
     );
@@ -47,7 +49,8 @@ class PlotPageController extends Controller
       "plot-list", 
       [
         "tools" => ["pending" => true], 
-        "relations" => self::pendingPlots($currentCharacter["data"]),
+        "plots" => self::pendingPlots($currentCharacter["data"]),
+        "page_title" => "Pending Plots",
       ], 
       $response
     );
@@ -58,15 +61,20 @@ class PlotPageController extends Controller
     $plot = $plot_id != 'new' ? 
       Plot::where('id', $plot_id)->first() :
       new Plot(['name' => '']);
+
+    if(!$plot) {      
+      $this->flash->addMessage('error', "This plot does not exist any more.");
+      return $response->withRedirect($this->router->pathFor('participant.home'));
+    }    
     
     $current = self::getCurrentUser();
     
     $currentCharacter = $current["character"];
     $currentUser = $current["user"];
     
-    $inPlot = self::partOfPlot($plot, $currentCharacter["data"]);
-    $isPublic = !!$plot->attr->where('name','public')->whereIn('value',['true','1'])->all();
-    $isLocked = !!$plot->attr->where('name','reviewed')->whereIn('value',['true','1'])->all();    
+    $inPlot = self::partOfPlot($plot, $currentCharacter["data"]) || $plot_id == 'new';
+    $isLocked = self::is($plot, 'reviewed');
+    $isPublic = self::is($plot, 'public');    
     $isRequest = !$isLocked && $isPublic;
     
     self::markNotificationsAsSeen($plot, $currentUser);
@@ -81,9 +89,6 @@ class PlotPageController extends Controller
     if(!$isLocked) {
       if($plot_id == 'new') {
         $inPlot = true;
-      } else {
-        $isRequest = $isPublic;
-        $inPlot = $inPlot ? $inPlot : $isRequest;
       }
       
       if($inPlot) {
@@ -105,7 +110,8 @@ class PlotPageController extends Controller
         "uid" => $plot_id,
         "isRequest" => $isLocked ? false : $isRequest,
         "currentCharacter" => $currentCharacter["data"],
-        "parents" => $parents
+        "parents" => $parents,
+        "page_title" => "Plot: " . $plot->name,
       ], 
       $response
     );
@@ -116,56 +122,73 @@ class PlotPageController extends Controller
   }
   
   public function save($request, $response, $arguments){
-    $plot = $arguments['uid'] != 'new' ? 
+    $plot_id = preg_replace("/[^(new|\d*)]/", "", $arguments['uid']);
+    $plot = $plot_id != 'new' ? 
       Plot::where('id', $arguments['uid'])->first() : 
       Plot::create(['name' => '']);
+    
+    if(!$plot) {      
+      $this->flash->addMessage('error', "This plot does not exist any more.");
+      return $response->withRedirect($this->router->pathFor('participant.home'));
+    }  
+    
     $currentCharacter = self::getCurrentUser()["character"];
     
-    $inParty = self::partOfPlot($plot, $currentCharacter["data"]);
-    $isPublic = !!$plot->attr->where('name','public')->whereIn('value',['true','1'])->all();    
-    $isRequest = $isPublic && $plot->characters()->count() == 1;
-    $inParty = $inParty ? $inParty : $isRequest;
-    $isLocked = !!$plot->attr->where('name','reviewed')->whereIn('value',['true','1'])->all();
+    $inPlot = self::partOfPlot($plot, $currentCharacter["data"]) || $plot_id == 'new';
+    $isLocked = self::is($plot, 'reviewed');
+    $isPublic = self::is($plot, 'public');
+    $isRequest = !$isLocked && $isPublic;
 
-    if($isLocked || (!$inParty && count($plot->characters) > 0)) {
+    if(!$plot || (!$inPlot && !$isRequest)) {
       $this->flash->addMessage('error', "You can't edit this plot. ($plot->id)");
       return $response->withRedirect($this->router->pathFor('participant.home'));
     }
     
-    $plot_attributes = [
-      'public' =>                 !!$request->getParam('public'),
-      'synopsis' =>                 $request->getParam('synopsis'),
-      'submitted_for_review' =>     $request->getParam('submitted_for_review'),
-    ];
-    
-    foreach($plot_attributes as $key => $value) {
-      $value = is_null($value) ? false : $value;
-      $debug[] = self::setAttribute($plot, $key, $value);
+    if($inPlot) {
+      $plot_attributes = [
+        'public' =>                 !!$request->getParam('public'),
+        'synopsis' =>                 $request->getParam('synopsis'),
+        'submitted_for_review' =>     $request->getParam('submitted_for_review'),
+      ];
+
+      foreach($plot_attributes as $key => $value) {
+        $value = is_null($value) ? false : $value;
+        $debug[] = self::setAttribute($plot, $key, $value);
+      }
+
+      $plot->name = $request->getParam('name');
+      $plot->description = $request->getParam('description');
+
+      $characters = $request->getParam('character_ids');
+      $characters = is_array($characters) ? $characters : [$characters];
+
+      $groups = $request->getParam('group_ids');
+      $groups = is_array($groups) ? $groups : [$groups];
+
+      $parents = $request->getParam('parent_ids');
+      $parents = is_array($parents) ? $parents : [$parents];
+      
+      if(count($parents)) {
+        $debug = self::setAttribute($plot, array_fill(0, count($parents), 'parent_plot_id'), $parents);
+      }
+      
+      $plot->groups()->sync($groups);
+      $plot->plots()->sync($parents);
+      
+    } else if($isRequest) {
+      $characters = [ $currentCharacter["data"]->id ];
     }
-        
-    $plot->name = $request->getParam('name');
-    $plot->description = $request->getParam('description');
     
-    $characters = $request->getParam('character_ids');
-    $characters = is_array($characters) ? $characters : [$characters];
-
-    $groups = $request->getParam('group_ids');
-    $groups = is_array($groups) ? $groups : [$groups];
-
-    $parents = $request->getParam('parent_ids');
-    $parents = is_array($parents) ? $parents : [$parents];
+    $existingCharacters = $plot->characters()->get();
+    $plot->characters()->sync($characters, $inPlot);
     
-    if(count($parents)) {
-      self::setAttribute($plot, array_fill(0, count($parents), 'parent_plot_id'), $parents);
-    }
-
-    foreach($characters as $character_id) {
+    foreach($plot->characters as $plot_character) {
+      $character_id = $plot_character->id;
       if( $currentCharacter['data']->id != $character_id) {
-        $char = Character::where('id', $character_id)->first();
-        if(!$char->user) continue;
+        if(!$plot_character->user) continue;
         
         $notification_present = false;
-        $char_user_notifications = $char->user->notifications()->where('seen_at', null)->get();
+        $char_user_notifications = $plot_character->user->notifications()->where('seen_at', null)->get();
         foreach($char_user_notifications as $existing_notification) {
           if($existing_notification->plots()->where('id', $plot->id)->get()) {
             $notification_present = true;
@@ -176,9 +199,9 @@ class PlotPageController extends Controller
         
         $notification_data = [];
         if (
-            $plot->characters()->where('character_id', $character_id)->get() 
+            $existingCharacters->where('id', $character_id)->first()
 //            || self::partOfRelationship($relationship, $char) //Only check other character containers if not directly attached
-          ) {
+        ) {
           $notification_data = [
             'title' => $plot->name . ' updated!',
             'description' => $currentCharacter['data']->name . ' updated plot.',
@@ -187,24 +210,20 @@ class PlotPageController extends Controller
         } else {
           $notification_data = [
             'title' => 'New plot!',
-            'description' => "You have been added to \"${$plot->name}\".", 
+            'description' => 'You have been added to "' . $plot->name . '".', 
             'icon' => 'exclamation-circle',
             'target' => $this->router->pathFor('participant.plot.pending') . '#' . $plot->id,
           ];
           
           $plot->attr()->attach(Attribute::firstOrCreate([
             'name' => 'pending',
-            'value' => $char->id,
+            'value' => $plot_character->id,
           ])->id);
         }
         
-        self::notify($char->user, $plot, $notification_data);
+        self::notify($plot_character->user, $plot, $notification_data);
       }
     }
-    
-    $plot->characters()->sync($characters);    
-    $plot->groups()->sync($groups);
-    $plot->plots()->sync($parents);
     
     if($plot->save()) {
       $this->flash->addMessage('success', "Plot updated."); 
@@ -218,15 +237,15 @@ class PlotPageController extends Controller
   }
   
   private function handlePlot($uid, $acceptRejct) {
-    $currentCharacter = self::getCurrentUser()["character"];
-    $plot = $currentCharacter["data"]->plot()->where('plot_id', $uid)->first();
+    $currentCharacter = self::getCurrentUser()["character"]["data"];
+    $plot = $currentCharacter->plots()->where('plot_id', $uid)->first();
     
     if(!$plot) {
       $this->flash->addMessage('error', "You don't seem to be part of this plot any more.");
       return $this->router->pathFor('participant.plot.pending');
     }
         
-    $attr_pending = $plot->attr()->where([['name', 'pending'], ['value', $currentCharacter["data"]->id]])->first();
+    $attr_pending = $plot->attr()->where([['name', 'pending'], ['value', $currentCharacter->id]])->first();
     if($attr_pending) {
       $plot->attr()->detach($attr_pending->id);
     } else {
@@ -240,7 +259,7 @@ class PlotPageController extends Controller
       foreach($plot->characters as $character) {
         if( $currentCharacter->id != $character->id) {
           $notification_data = [
-            'title' => $character->name . ' accepted ' . $plot->attr->where('name', 'relationship_type')->get()->value . '!',
+            'title' => $currentCharacter->name . ' accepted ' . $plot->name . '!',
             'icon' => 'exclamation-circle',
           ];
           self::notify($character->user, $plot, $notification_data);
@@ -249,7 +268,7 @@ class PlotPageController extends Controller
     }
     
     if($acceptRejct == 'reject') {
-      $plot->characters()->detach($currentCharacter["data"]->id);      
+      $plot->characters()->detach($currentCharacter->id);      
       $this->flash->addMessage('error', "Plot rejected.");
       return $this->router->pathFor('participant.plot.pending');
     }
@@ -284,13 +303,14 @@ class PlotPageController extends Controller
     return $character_list;
   }
   
-  private function partOfPlot($model, $character = false) {    
+  private function partOfPlot($model, $character = false) {
     return (
-      $this->container->auth->isWriter() ||
-      $model->attr()->whereIn('name', ['source', 'target'])->where('value', $character->id)->get()->count() ||
-      $model->characters()->where('character_id', $character->id)->get()->count() ||
-      self::partOfGroups($model->groups(), $character->id)
-    ) ? true : false;
+      $this->container->auth->isWriter() || ($character && (
+        $model->attr()->whereIn('name', ['source', 'target'])->where('value', $character->id)->get()->count() ||
+        $model->characters()->where('character_id', $character->id)->get()->count() ||
+        self::partOfGroups($model->groups(), $character->id) )
+      )
+    ) ? true : false;    
   }
   
   private function partOfGroups($groups, $character_id) {
@@ -301,32 +321,30 @@ class PlotPageController extends Controller
   }
   
   private function getPlotsInfo($character_id = 0) {
-    if($character_id != 0) {      
+    if($character_id > 0) {
       $plots = Character::where('id', $character_id)
-        ->first()->plots;
+        ->first()->plots; //->where('name', '<>', '')->all();
     } else {
       $plots = Plot::whereHas(
-          'attr', function ($query) {
-            $query->where([['name', 'public'], ['value', '1']])
-              ->orWhere([['name', 'public'], ['value', 'true']]);        
-          }
-        )->whereDoesntHave(
-          'attr', function ($query) {
-            $query->where('name', 'pending');
-          }
-        )->with('attr')
-        ->get();
+        'attr', function ($query) {
+          $query->where('name', 'public')->whereIn('value', ['true','1','on']);
+        }
+      )->whereDoesntHave(
+          'attr', function ($query) { $query->where('name', 'pending'); }
+      )->with('attr')
+      ->get();
     }
+    
     return $plots;
   }
   
   private function pendingPlots($character) {
-    $pending_plots = [];
-    foreach($character->plots as $plot) {
-      if($plot->attr()->where([['name', 'pending'], ['value', $character->id]])->first()) {
-        $pending_plots[] = $plot;
+    $pending = [];
+    foreach($character->plots as $item) {
+      if($item->attr()->where([['name', 'pending'], ['value',$character->id]])->first()) {
+        $pending[] = $item;
       }
     }
-    return $pending_plots;
+    return $pending;
   }
 }
