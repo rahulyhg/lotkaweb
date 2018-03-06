@@ -68,10 +68,19 @@
             <div class="control-group">
               <label class="control-label">Public :</label>
               <div class="controls">
-                <input type="checkbox" class="span11" name="public" {% if current.attr.public %}checked{% endif %}>
+                <input type="checkbox" class="span11" name="public" 
+                       {% if current.attr.open %}disabled{% endif %} 
+                       {% if current.attr.public or current.attr.open %}checked{% endif %}>
               </div>
-            </div>  
-            
+            </div>
+
+            <div class="control-group">
+              <label class="control-label">Open group relation :</label>
+              <div class="controls">
+                <input type="checkbox" class="span11" name="open" {% if current.attr.open %}checked{% endif %}>
+              </div>
+            </div>
+
             <div class="control-group">
               <label class="control-label">Description :</label>
               <div class="controls">

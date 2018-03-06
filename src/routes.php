@@ -505,26 +505,21 @@ $app->group('/participants', function () use ($container) {
     $t->get('[/]', 'PlotPageController:index')
       ->setName('participant.plot.list');
 
-    $t->get('/my[/{uid}]', 'PlotPageController:my')
+    $t->get('/my', 'PlotPageController:my')
       ->setName('participant.plot.my');
-
-    $t->get('/add', 'PlotPageController:add')
-      ->setName('participant.plot.add');
-    $t->post('/add', 'PlotPageController:post');
-
-    $t->get('/{uid}/edit', 'PlotPageController:edit')
-      ->setName('participant.plot.edit');
-    $t->post('/{uid}/edit', 'PlotPageController:post');
-
-    $t->get('/{uid}/delete', 'PlotPageController:delete')
-      ->setName('participant.plot.delete');
-
-    $t->get('/{uid}/join', 'PlotPageController:join')
-      ->setName('participant.plot.request');
-    $t->post('/{uid}/join', 'PlotPageController:postJoin');
-
-    $t->get('/{uid}[/]', 'PlotPageController:plot')
-      ->setName('participant.plot');    
+    
+    $t->get('/threads', 'PlotPageController:pending')
+      ->setName('participant.plot.pending');    
+    
+    $t->get('/{uid}/accept', 'PlotPageController:accept')
+      ->setName('participant.plot.accept');
+    $t->get('/{uid}/reject', 'PlotPageController:reject')
+      ->setName('participant.plot.reject');
+    
+    $t->get('/{uid}', 'PlotPageController:plot')
+      ->setName('participant.plot');
+    $t->post('/{uid}', 'PlotPageController:save');
+    
   }
                
   $this->group('/plots', function() { plotRouting($this); });
