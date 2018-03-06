@@ -17,7 +17,7 @@ class PlotActionController extends Controller
   
   private function attributes() {
     return [
-      'visible', 'synopsis',
+      'public', 'synopsis', 'locked', ''submitted_for_review,
     ];
   }
   

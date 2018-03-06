@@ -48,6 +48,13 @@ class Controller
   // Helpers
   //===========================================================================  
   
+  public function is($model, $name, $value = ['true','1','on']) {
+    return $model
+      ->attr()
+      ->where('name',$name)
+      ->whereIn('value',$value)
+      ->get()->count() ? true : false;
+  }  
   
   public function getAttributeIds($attributes = [ 'keys' => [], 'values' => [] ]) {
     $attribute_ids = [];
@@ -66,15 +73,12 @@ class Controller
     if (!is_object($model)) return false;
     self::removeAttribute($model, $name);
     $attribute_id = self::getAttributeIds([
-      'keys' => [$name], 'values' => [$value]
+      'keys'   => is_array($name)  ? $name  : [$name], 
+      'values' => is_array($value) ? $value : [$value],
     ]);
     
-    //var_dump($attribute_id, $name, $value);
-    
-    //echo "<br>";
-    
     return $model->attr()->sync($attribute_id, false);
-  }  
+  }
   
   # Removes all Attributes of Name to supplied Model instance
   # Use in controller like: self::removeAttribute($user, 'npc');
@@ -345,23 +349,49 @@ class Controller
          'pending' => [
             'title' => 'Pending Relationships',
             'target' => $this->router->pathFor('participant.relation.pending'),
-            'info' => 'Your pending relationships',
+            'info' => 'My pending relationships',
             'image' => '/img/dashboard/' . 'pending-relationships.jpg'
           ],         
-          'list' => [
-            'title' => 'Outpost Relationships',
-            'target' => $this->router->pathFor('participant.relation.list'),
-            'info' => 'Public relationships',
-            'image' => '/img/dashboard/' . 'relationships.jpg'
-          ],
           'requests' => [
             'title' => 'Requested Relationships',
             'target' => $this->router->pathFor('participant.relation.requests'),
             'info' => 'Publicly Requested Relationships',
             'image' => '/img/dashboard/' . 'requested-relationships.jpg'
           ],          
+          'list' => [
+            'title' => 'Outpost Relationships',
+            'target' => $this->router->pathFor('participant.relation.list'),
+            'info' => 'Public relationships',
+            'image' => '/img/dashboard/' . 'relationships.jpg'
+          ],
         ]
       ];
+      
+      $menu["sections"]["plots"] = [
+        'title' => 'Plots',
+        'target' => $this->router->pathFor('participant.plot.list'),
+        'pages' => [
+          'plots' => [
+            'title' => 'My Plots',
+            'target' => $this->router->pathFor('participant.plot.my'),
+            'info' => 'My plot list',
+            'image' => '/img/dashboard/' . 'my-plots.jpg'
+          ],          
+          'pending' => [
+            'title' => 'Pending plots',
+            'target' => $this->router->pathFor('participant.plot.pending'),
+            'info' => 'My pending plot threads',
+            'image' => '/img/dashboard/' . 'plots-pending.jpg'
+          ],          
+          'list' => [
+            'title' => 'Outpost Plots',
+            'target' => $this->router->pathFor('participant.plot.list'),
+            'info' => 'Public plots list',
+            'image' => '/img/dashboard/' . 'plots.jpg'
+          ],
+        ]
+      ];
+
       /*
       $menu["sections"]["lists"] = [
         'title' => 'Lists',
