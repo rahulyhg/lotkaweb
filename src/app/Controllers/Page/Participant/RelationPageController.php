@@ -323,19 +323,16 @@ class RelationPageController extends Controller
       $relationships = Character::where('id', $character_id)
         ->first()->rel; //->where('name', '<>', '')->all();
     } else {
-      $relationships = Relation::whereHas( //where('name', '<>', '')
-          'attr', function ($query) {
-            $query->where([['name', 'public'], ['value', '1']])
-              ->orWhere([['name', 'public'], ['value', 'true']]);        
-          }
-        )->whereDoesntHave(
-          'attr', function ($query) {
-            $query->where('name', 'pending');
-          }
-        )->with('attr')
-        ->withCount('characters')
-        ->having('characters_count', '>', 1)
-        ->get();        
+      $relationships = Relation::whereHas(
+        'attr', function ($query) {
+          $query->where('name', 'public')->whereIn('value', ['true','1','on']);
+        }
+      )->whereDoesntHave(
+          'attr', function ($query) { $query->where('name', 'pending'); }
+      )->with('attr')
+      ->withCount('characters')
+      ->having('characters_count', '>', 1)
+      ->get();
     }
     
     return $relationships;
