@@ -15,7 +15,7 @@ class Plot extends Model
   
   public function notifications()
   {
-      return $this->belongsToMany('App\Models\Notification', 'notification_group')->withTimeStamps();
+      return $this->belongsToMany('App\Models\Notification', 'notification_plot')->withTimeStamps();
   }
   public function attr()
   {

@@ -38,23 +38,17 @@ class RelationPageController extends Controller
     $currentCharacter = $current["character"];
     $currentUser = $current["user"];
     
-    $inParty = self::partOfRelationship($relationship, $currentCharacter["data"]);
-    $isOpen = !!$relationship->attr->where('name','open')->whereIn('value',['true','1'])->all();
-    $isPublic = ($isOpen || !!$relationship->attr->where('name','public')->whereIn('value',['true','1'])->all()) ? true : false;
-    $isRequest = false;
+    $inParty = self::partOfRelationship($relationship, $currentCharacter["data"]) || $relationship_id == 'new';
+    $isOpen = self::is($relationship, 'open');
+    
+    $isPublic = self::is($relationship, 'public');
+    $isRequest = $isPublic && $isOpen;
     
     self::markNotificationsAsSeen($relationship, $currentUser);
     
-    if(!$relationship || (!$inParty && !$isPublic && $relationship_id != 'new')) {      
+    if(!$relationship || (!$inParty && (!$isOpen && !$isPublic))) {      
       $this->flash->addMessage('error', "We can't find this relationship, either it's been removed or you can't access it any more.");
       return $response->withRedirect($this->router->pathFor('participant.home'));
-    }
-            
-    if($relationship_id == 'new') {
-      $inParty = true;
-    } else {
-      $isRequest = $isPublic && $relationship->characters()->count() == 1;
-      $inParty = $inParty ? $inParty : $isRequest;
     }
 
     $characters = [];
@@ -71,6 +65,7 @@ class RelationPageController extends Controller
         "characters" => $characters,
         "uid" => $relationship_id,
         "isRequest" => $isRequest,
+        "isOpen" => $isOpen, 
         "currentCharacter" => $currentCharacter["data"],
       ], 
       $response
@@ -125,38 +120,40 @@ class RelationPageController extends Controller
       Relation::create(['name' => '']);
     $currentCharacter = self::getCurrentUser()["character"];
     
-    $inParty = self::partOfRelationship($relationship, $currentCharacter["data"]);
-    $isOpen = !!$relationship->attr->where('name','open')->whereIn('value',['true','1'])->all()->count();
-    
-    $isPublic = false; #($isOpen || $relationship->attr->where('name','public')->whereIn('value',['true','1'])->all()->count()) ? true : false;    
-    $isRequest = $isPublic && $relationship->characters()->count() == 1;
-    $inParty = $inParty ? $inParty : $isRequest;
-    
-    if(!$inParty && count($relationship->characters) > 0) {
+    $inParty = self::partOfRelationship($relationship, $currentCharacter["data"]) || $arguments['uid'] == 'new';    
+    $isOpen = self::is($relationship, 'open');
+    $isPublic = self::is($relationship, 'public');
+    $isRequest = $isPublic && $isOpen && !$inParty;
+
+    if(!$relationship || (!$inParty && !$isOpen)) {
       $this->flash->addMessage('error', "You can't edit this relationship. ($relationship->id)");
       return $response->withRedirect($this->router->pathFor('participant.home'));
     }
     
-    $relation_attributes = [
-      'open' =>                   !!$request->getParam('open'),
-      'public' =>                 !!$request->getParam('public'),
-      'relationship_type' =>        $request->getParam('relationship_type'),
-      'source' =>                   $request->getParam('source'),
-      'target' =>                   $request->getParam('target'),
-      'relationship_icon' =>        $request->getParam('relationship_icon'),
-    ];
-    
-    foreach($relation_attributes as $key => $value) {
-      $value = is_null($value) ? false : $value;
-      $debug[] = self::setAttribute($relationship, $key, $value);
-    }
-    
-    $relationship->name = $request->getParam('name');
-    $relationship->description = $request->getParam('description');
-
     $characters = $request->getParam('character_ids');
     $characters = is_array($characters) ? $characters : [$characters];
     
+    if($inParty) {
+      $relation_attributes = [
+        'open' =>                   !!$request->getParam('open'),
+        'public' =>                 !!$request->getParam('public'),
+        'relationship_type' =>        $request->getParam('relationship_type'),
+        'source' =>                   $request->getParam('source'),
+        'target' =>                   $request->getParam('target'),
+        'relationship_icon' =>        $request->getParam('relationship_icon'),
+      ];
+
+      foreach($relation_attributes as $key => $value) {
+        $value = is_null($value) ? false : $value;
+        $debug[] = self::setAttribute($relationship, $key, $value);
+      }
+
+      $relationship->name = $request->getParam('name');
+      $relationship->description = $request->getParam('description');      
+    } else if($isRequest) {
+      $characters = [ $currentCharacter["data"]->id];
+    }
+
     if($characters == [null]) {
       $relationship->characters()->sync([]);
       $relationship->attr()->sync([]);
@@ -211,7 +208,8 @@ class RelationPageController extends Controller
       }
     }
     
-    $relationship->characters()->sync($characters);    
+    
+    $relationship->characters()->sync($characters, $inParty);    
     
     if($relationship->save()) {
       $this->flash->addMessage('success', "Relationship updated."); 
@@ -344,22 +342,17 @@ class RelationPageController extends Controller
   }
 
   private function getRelationsRequests() {
-    $relationships = Relation::whereHas( //where('name', '<>', '')
+    $relationships = Relation::whereHas(
         'attr', function ($query) {
-          $query->where([['name', 'public'], ['value', '1']])
-            ->orWhere([['name', 'public'], ['value', 'true']])
-            ->orWhere(['name', 'open'], [['value', 'true'], ['value', '1']]);
+          $query->where('name', 'open')->whereIn('value', ['true','1','on']);
         }
-      )->whereDoesntHave(
+      )->whereHas(
         'attr', function ($query) {
-          $query->where('name', 'pending');
+          $query->where('name', 'public')->whereIn('value', ['true','1','on']);
         }
-      )->with('attr')
-#      ->withCount('characters')
-#      ->having('characters_count', '>', 0)
-      ->get();
-    
-    return $relationships;
+      )->with('attr');
+
+    return $relationships->get();
   }
 
   private function pendingRelationships($character) {

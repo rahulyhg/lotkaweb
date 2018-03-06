@@ -17,7 +17,7 @@ class RelationActionController extends Controller
   
   private function relationship_attributes() {
     return [
-      'relationship_icon', 'relationship_type', 'source', 'target', 'public',
+      'relationship_icon', 'relationship_type', 'source', 'target', 'public', 'open'
     ];
   }
 
