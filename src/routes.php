@@ -587,6 +587,15 @@ $app->group('/participants', function () use ($container) {
 
     $this->get('/item/{uid}', 'ListPageController:item')->setName('participant.list.item');
   });
+
+  //Packing
+  $this->group('/packing', function () {  
+    $this->get('[/]', 'ParticipantPageController:packing')->setName('participant.packing');
+    $this->post('[/{uid}]', 'ParticipantPageController:save_packing')->setName('participant.packing.save');
+
+    $this->get('/{uid}', 'ParticipantPageController:packing')
+      ->setName('participant.packing.admin');    
+  });
   
   $this->get('/{page}[/{uid}]', 'ParticipantPageController:page')
     ->setName('participant.page');  
