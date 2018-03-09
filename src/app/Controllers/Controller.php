@@ -392,17 +392,17 @@ class Controller
         ]
       ];
     
-      /*
       $menu["sections"]["lists"] = [
-        'title' => 'Lists',
-        'target' => $this->router->pathFor('participant.list.my'),
+        'title' => 'Packing List',
+        'target' => $this->router->pathFor('participant.packing'),
         'pages' => [
           'lists' => [
-            'title' => 'Personal Lists',
-            'target' => $this->router->pathFor('participant.list.my'),
-            'info' => 'My PNQs and TA Items',
+            'title' => 'Personal Packing Lists',
+            'target' => $this->router->pathFor('participant.packing'),
+            'info' => 'My Checklist, PNQs and TA Items',
             'image' => '/img/dashboard/' . 'my-lists.jpg'
           ],
+          /*
          'pnqs' => [
             'title' => 'PNQs Items',
             'target' => $this->router->pathFor('participant.list.pnqs'),
@@ -415,9 +415,9 @@ class Controller
             'info' => 'Outpost Temporarily Assigned Items',
             'image' => '/img/dashboard/' . 'ta-lists.jpg'
           ],
+          */
         ]
       ];
-      */
     }
 
 /*        
