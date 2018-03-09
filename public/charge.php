@@ -1,7 +1,6 @@
 <?php
 ini_set("error_reporting", ~E_NOTICE);
-$key = "pk_live_bFyHyNCmfTkoB4c93QG2gODI";
-$skey = "sk_live_86sBfPK3nGGILycPU1XsgBRu";
+require("../stripe_keys.php");
 
 if ($_POST) {
   $items = explode(" ", $_GET["items"]);
