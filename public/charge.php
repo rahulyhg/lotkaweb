@@ -9,8 +9,9 @@ if ($_POST) {
     if ($item == "AB") $cost +=200;
     if ($item == "BC") $cost +=200;
     if ($item == "M") $cost +=100;
-    if ($item[0] == "G") $cost +=200;
-    if ($item[0] == "L") $cost +=200;
+    if ($item == "C") $cost +=150;
+    if ($item[0] == "G") $cost +=250;
+    if ($item[0] == "L") $cost +=250;
   }
   if ($cost > 0) {
     require("../vendor/stripe/stripe-php/init.php");
@@ -43,14 +44,16 @@ $cost = 0;
 if ($_GET["bus_airport"]) $cost +=200;
 if ($_GET["bus_central"]) $cost +=200;
 if ($_GET["gents_tshirt"]) {
-  $cost +=200;
+  $cost +=250;
   $reg_size = $_GET["gents_tshirt_size"];
 }
 if ($_GET["ladies_tshirt"]) {
-  $cost +=200;
+  $cost +=250;
   $slim_size = $_GET["ladies_tshirt_size"];
 }
 if ($_GET["roll_mat"]) $cost +=100;
+
+if ($_GET["cot"]) $cost +=150;
 
 if ($cost < 1) {
   header("Location: shop.php?uid=".$_GET["uid"]);
@@ -122,16 +125,20 @@ if ($_GET["bus_central"]==1) {
   $pstring[] = "BC";
 }
 if ($_GET["gents_tshirt"]==1) {
-  echo "<li>Gents T-shirt (size ". $reg_size.") - 200 SEK</li>\n";
+  echo "<li>Gents T-shirt (size ". $reg_size.") - 250 SEK</li>\n";
   $pstring[] = "G" . $reg_size;
 }
 if ($_GET["ladies_tshirt"]==1) {
-  echo "<li>Ladies T-shirt (size ". $slim_size.") - 200 SEK</li>\n";
+  echo "<li>Ladies T-shirt (size ". $slim_size.") - 250 SEK</li>\n";
   $pstring[] = "L" . $reg_size;
 }
 if ($_GET["roll_mat"]==1) {
   echo "<li>Roll mat - 100 SEK</li>\n";
   $pstring[] = "M";
+}
+if ($_GET["cot"]==1) {
+  echo "<li>Cot - 150 SEK</li>\n";
+  $pstring[] = "C";
 }
 ?>
 </ul>
@@ -142,7 +149,7 @@ if ($_GET["roll_mat"]==1) {
   <script
     src="https://checkout.stripe.com/checkout.js" class="stripe-button"
     data-key="<?=$key;?>"
-    data-amount="100"
+    data-amount="<?=$cost*100;?>"
     data-name="Lotka-Volterra"
     data-description="<?=implode("+", $pstring);?>"
     data-image="https://lotka-volterra.se/assets/media/f65cd39b513820d6.png"
