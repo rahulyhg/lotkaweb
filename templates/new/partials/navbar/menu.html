@@ -5,7 +5,7 @@
     {{ include('new/partials/navbar/site_menu.html') }}
   </ul>
 </li>
-{# <li><a href="{{ path_for('participant.page', { 'page': 'shop' }) }}"> Shop</a></li> #}
+{#<li><a href="/shop.php?uid={{current.user.id}}"> Shop</a></li>#}
 
 <li class="dropdown">
   <a class="dropdown-toggle" data-toggle="dropdown" href="https://lotkavolterra.slack.com/" target="_new"><i class="fa fa-chat"></i> Slack</a>
@@ -19,6 +19,8 @@
 <li class="dropdown">
   <a class="dropdown-toggle" href="{{ path_for('participant.home') }}" data-toggle="dropdown"><i class="fa fa-home"></i> Community</a>
   <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="https://lotka-volterra.se/schedule.php" target="_blank">Shift schedule</a>
   {% for key, section in dashboard.sections %}
     <li class="{{section.pages ? 'dropdown' : ''}}">
       <a {% if section.pages %}class="dropdown-toggle" data-toggle="dropdown"{% endif %} href="{{ section.target }}"> {{ section.title }}</a>
