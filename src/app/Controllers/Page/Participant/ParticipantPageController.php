@@ -103,7 +103,7 @@ class ParticipantPageController extends Controller
             "underwear" =>         "Underwear",
             "tshirt" =>            "Neutral t-shirt or tank top",
             "undergarments" =>     "Warm undergarments (especially if you think you might end up topside).",
-            "self_care" =>         "Basic self-care kit (aspirin, blister band aids for your feet)"
+            "self_care" =>         "Basic self-care kit (aspirin, blister band aids for your feet, medications)"
           ],
         ],
 
