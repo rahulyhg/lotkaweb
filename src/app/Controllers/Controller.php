@@ -393,15 +393,15 @@ class Controller
       ];
     
       $menu["sections"]["lists"] = [
-        'title' => 'Packing List',
-        'target' => $this->router->pathFor('participant.packing'),
-        'pages' => [
-          'lists' => [
+//        'title' => 'Packing List',
+//        'target' => $this->router->pathFor('participant.packing'),
+//        'pages' => [
+//          'lists' => [
             'title' => 'Personal Packing Lists',
             'target' => $this->router->pathFor('participant.packing'),
             'info' => 'My Checklist, PNQs and TA Items',
             'image' => '/img/dashboard/' . 'my-lists.jpg'
-          ],
+//          ],
           /*
          'pnqs' => [
             'title' => 'PNQs Items',
@@ -416,7 +416,7 @@ class Controller
             'image' => '/img/dashboard/' . 'ta-lists.jpg'
           ],
           */
-        ]
+//        ]
       ];
     }
 
