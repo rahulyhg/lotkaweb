@@ -18,7 +18,7 @@ if ($_POST) {
     \Stripe\Stripe::setApiKey($skey);
     $token = $_POST['stripeToken'];
     $charge = \Stripe\Charge::create(array(
-      "amount" => 300,//(int)$cost * 100,
+      "amount" => (int)$cost * 100,
       "currency" => "sek",
       "description" => implode("+", $items),
       "statement_descriptor" => "Lotka-Volterra",
@@ -130,7 +130,7 @@ if ($_GET["gents_tshirt"]==1) {
 }
 if ($_GET["ladies_tshirt"]==1) {
   echo "<li>Ladies T-shirt (size ". $slim_size.") - 250 SEK</li>\n";
-  $pstring[] = "L" . $reg_size;
+  $pstring[] = "L" . $slim_size;
 }
 if ($_GET["roll_mat"]==1) {
   echo "<li>Roll mat - 100 SEK</li>\n";
