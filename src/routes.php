@@ -299,6 +299,10 @@ $app->group('/admin', function() use ($container) {
       $this->post('/{uid}/edit', 'RelationActionController:post');
       
       $this->get('/{uid}/delete', 'RelationActionController:delete')->setName('admin.relation.delete');
+      
+      $this->get('/json[/{uid}]', 'RelationActionController:asJson')->setName('admin.relation.json');      
+      
+      $this->get('/web[/{uid}]', 'RelationActionController:web')->setName('admin.relation.web');      
     });
   });
   
