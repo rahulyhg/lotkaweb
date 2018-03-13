@@ -1,0 +1,82 @@
+{% extends 'admin/dashboard/main.twig' %}
+
+{% block header %}
+  <script>
+    window.relData = {{ relations|json_encode()|raw }};
+  </script>
+
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" type="text/css" href="/resources/admin/rel/css/font-awesome.min.css">
+  <link rel="stylesheet" type="text/css" href="/resources/admin/rel/css/style.css">
+  <script type="text/javascript" src="//code.jquery.com/jquery-compat-git.js"></script>
+  <script type="text/javascript" src="/resources/admin/rel/js/d3.v3.min.js"></script>
+  <script type="text/javascript" src="/resources/admin/rel/js/relations.js"></script>
+{% endblock %}
+
+{% block title %}Relationship View{% endblock %}
+
+{% block contentHeader %}
+  <div id="content-header">
+    <div id="breadcrumb"> 
+      <a href="{{ path_for('admin.index') }}" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a> 
+      <a href="{{ path_for('admin.participant.dashboard') }}">Participants</a> 
+      <a href="#" class="current">Relations</a>
+    </div>
+    
+    <h1>Relations</h1>
+  </div>
+{% endblock %}
+
+{% block content %}
+  <div class="container-fluid">
+    <hr>
+    <div class="row-fluid">
+      <div class="span20">
+        <div class="widget-box">
+          <div class="widget-title"> <span class="icon"><i class="icon-th"></i></span>
+            <h5>Relations: {{ single ? character.name : '' }}</h5>
+          </div>
+          <div class="widget-content nopadding relmap">            
+            <svg width="100%" height="100%"></svg>
+            
+            <section class="node">
+              <h1>Character/Relationship Settings</h1>
+              <p class="rel">
+                <button type="button" class="source btn btn-rel btn-lg"></button>
+                  <i class="right fa fa-arrow-circle-o fa-3x"></i>
+                  <i class="left fa fa-arrow-circle-o fa-3x"></i>
+                <button type="button" class="target btn btn-rel btn-lg"></button>
+              </p>
+              <form>
+                <div class="control-group">
+                  <label class="control-label">Name :</label>
+                  <div class="controls">
+                    <input type="text" class="span11" id="name" name="name" placeholder="Name" value="{{ current.data.name }}">
+                 </div>
+                </div>    
+
+                <div class="control-group">
+                  <label class="control-label">Description :</label>
+                  <div class="controls">
+                    <textarea class="span11" id="desc" name="descrdesciption" rows="10">{{ current.data.description }}</textarea>
+                 </div>
+                </div>
+              </form>
+            </section>
+
+            <section class="output">
+                <h1>Export/Import</h1>
+                <form>
+                  <div class="form-group">
+                    <label for="desc">Paste or Copy relationship data here</label>
+                    <textarea class="form-control" rows="6" id="desc"></textarea>
+                  </div>
+                </form>
+            </section>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

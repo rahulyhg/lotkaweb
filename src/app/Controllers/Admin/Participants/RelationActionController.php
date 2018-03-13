@@ -273,4 +273,83 @@ class RelationActionController extends Controller
     $this->flash->addMessage('warning', "Relation {$item->name} was deleted.");
     return $response->withRedirect($this->router->pathFor('admin.relation.list'));
   }
+  
+  public function web($request, $response, $arguments)
+  {
+    $single = isset($arguments["uid"]);
+    $character = $single ? Character::where('id', $arguments['uid'])->first() : [];
+
+    return $this->view->render($response, 'admin/participants/relations/web.html',[
+      "single" => $single,
+      "character" => $character,
+      "relations" => self::getRelData($arguments),
+    ]);
+  }  
+  
+  public function asJson($request, $response, $arguments)
+  {
+    return $response->withJSON(
+        self::getRelData($arguments),
+        200,
+        JSON_UNESCAPED_UNICODE
+    );
+  }
+
+  private function getRelData($arguments) {
+    $single = false;
+    if(isset($arguments["uid"])) {
+      $characters = Character::where('id', $arguments['uid'])->get();
+      $single = true;
+    } else {
+      $characters = Character::orderBy('id')->get();
+    }
+
+    $data = [
+      "nodes" => [],
+      "links" => [],
+    ];
+    
+    foreach($characters as $c) {
+      $rel = $c->rel;
+      if($rel->count()) {
+        $data["nodes"][] = self::getNodeData($c);        
+        foreach($c->rel as $r) {
+          foreach($r->characters as $rc) {
+            if($rc->id != $c->id) {
+              $data["links"][] = self::getLinkData($r, $c, $rc);
+              if($single) $data["nodes"][] = self::getNodeData($rc);
+            }
+          }
+        }
+      }
+    }
+    
+    return $data;
+  }
+  
+  private function getNodeData($c) {
+    return [
+      "id" => $c->id,
+      "reflexive" => false, 
+      "name" => $c->name, 
+      "archetype" => [], 
+      "desc" => "", 
+      "notes" => "", 
+      "fate" => "" 
+    ];
+  }
+  
+  private function getLinkData($r, $s, $t) {
+    $private = $r->attr()->where('name', 'poublic')->get();
+    
+    return [
+      "source" => self::getNodeData($s),
+      "target" => self::getNodeData($t),
+      "left" => true, 
+      "right" => true, 
+      "name" => $r->name, 
+      "desc" => $r->description, 
+      "type" => $private
+    ];
+  }  
 }

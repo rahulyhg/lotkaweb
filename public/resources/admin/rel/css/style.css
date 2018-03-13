@@ -1,0 +1,112 @@
+@import url(http://fonts.googleapis.com/css?family=Roboto:400, 700);
+.relmap, svg {
+  min-height: 90vh;
+}
+.relmap svg {
+    background-color: #FFF;
+    box-shadow: 0 0 0 .2em rgba(0, 0, 0, .0625);
+    cursor: default;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+}
+.relmap svg:not(.active):not(.ctrl) {
+    cursor: crosshair;
+}
+.relmap path.link {
+    fill: none;
+    stroke: #000;
+    stroke-width: 4px;
+    cursor: default;
+}
+.relmap svg:not(.active):not(.ctrl) path.link {
+    cursor: pointer;
+}
+.relmap path.link.selected {
+    stroke-dasharray: 10, 2;
+}
+.relmap path.link.dragline {
+    pointer-events: none;
+}
+.relmap path.link.hidden {
+    stroke-width: 0;
+}
+.relmap circle.node {
+    stroke-width: 1.5px;
+    cursor: pointer;
+}
+.relmap circle.node.reflexive {
+    stroke: #000 !important;
+    stroke-width: 2.5px;
+}
+.relmap text {
+    font: 12px sans-serif;
+    pointer-events: none;
+}
+.relmap text.id {
+    text-anchor: middle;
+    font-weight: bold;
+    text-shadow: 0 0 0.2em #fff;
+}
+.relmap h1 {
+    margin: .25em 0;
+    font-size: 125%;
+    font-weight: 700;
+}
+.relmap strong {
+    font-weight: 700;
+}
+.relmap section {
+    padding: .5em .25em;
+}
+.relmap section {
+    border-radius: .1em;
+    padding: 0;
+    box-shadow: 0 0 0 .1em rgba(0, 0, 0, .0625);
+    background-color: #fff;
+    margin-bottom: 1em;
+    max-width: 900px;
+    margin: 0 auto;  
+}
+.relmap section form {
+    margin: .5em;
+    padding-bottom: 3em;    
+}
+.relmap section h1 {
+    background: rgba(0, 0, 0, .0625);
+    padding: .5em;
+    border-radius: .1em .1em 0 0;
+}
+.relmap .rel {
+    padding-top: .5em;
+    text-align: center;
+}
+.relmap .rel i {
+    vertical-align: middle;
+}
+.relmap .btn-rel {
+  background-color: #5bc0de;
+  box-shadow: inset 0 0 0 .125em rgba(0,0,0,.125);
+}
+.relmap .info {
+  border-radius: 100%;
+  border: .2em solid;
+  height: 1.35em;
+  width: 1.35em;
+  text-align: center;
+  line-height: 1.12em;
+  margin-top: -.25em;
+  cursor: hand;
+}
+.relmap .usage {
+  display: none;
+  padding: 1.5em;
+}
+.relmap .new-group {
+  margin-top: .5em;
+}
+.relmap .output {
+  display: none;
+}
