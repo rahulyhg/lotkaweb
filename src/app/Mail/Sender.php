@@ -3,6 +3,8 @@ namespace App\Mail;
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
+use App\Models\Post;
+use App\Models\User;
 
 use App\Mail\Templater;
   
@@ -58,5 +60,22 @@ class Sender
       echo 'Mailer Error: ' . $mail->ErrorInfo;
     }
     return false;
+  }
+  
+  public function message($from, $to, $message, $template_slug = 'message-email') {     
+    if(!$to || !$from) die();
+    
+    $recipient = $to->email;
+    $template = Post::where('slug', $template_slug)->first();
+
+    return self::send(
+      $recipient,                                   // Recipient
+      "$template->title $from->displayname",        // Subject Line
+      $template->content,                           // E-mail Body
+      [                                             // Values ([{###}] where ### is the KEY)
+        "message" => $message,
+        "sender-id" => $from->character_id,
+      ]
+    );
   }
 }
