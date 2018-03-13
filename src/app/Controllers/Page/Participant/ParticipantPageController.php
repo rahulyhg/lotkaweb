@@ -14,6 +14,9 @@ use App\Models\Order;
 
 use App\Controllers\Controller;
 use Slim\Views\Twig as View;
+use Respect\Validation\Validator as v;
+use App\Mail\Sender;
+use App\Mail\Templater;
 
 class ParticipantPageController extends Controller
 { 
@@ -122,8 +125,7 @@ class ParticipantPageController extends Controller
 
   public function packing($request, $response, $arguments) 
   {
-    $player = $this->container->auth->isWriter() && isset($arguments["uid"]) &&  $arguments["uid"] ?
-      self::getPlayerInfo($arguments["uid"]) : self::getCurrentUser();
+    $player = self::getPlayer($arguments);
     $user = $player["user"];
     
     return self::render(
@@ -138,8 +140,7 @@ class ParticipantPageController extends Controller
     
   public function save_packing($request, $response, $arguments) 
   {
-    $player = $this->container->auth->isWriter() && isset($arguments["uid"]) && $arguments["uid"] ?
-      self::getPlayerInfo($arguments["uid"]) : self::getCurrentUser();
+    $player = self::getPlayer($arguments);
     $user = $player["user"];
     
     $packing_lists = self::packing_lists();
@@ -167,5 +168,147 @@ class ParticipantPageController extends Controller
       $this->router->pathFor('participant.packing', ['uid' => $arguments["uid"]]):
       $this->router->pathFor('participant.packing')
     );
-  }  
+  }
+  
+  private function profileData() {
+    $attributes = [
+      'allergies', 
+      'birth_date', 
+      'care_of', 
+      'city', 
+      'country', 
+      'emergency_contact', 
+      'emergency_phone', 
+      'gender', 
+      'id_number_swe', 
+      'medical_conditions',
+      'onefifty_plus', 
+      'phone', 
+      'postal_code', 
+      'pref_bus',
+      'size', 
+      'state', 
+      'street_address_1', 
+      'street_address_2',
+      'torso_circumference', 
+    ];
+      
+    $torso_size = [['code' => 70, 'description' => 'Up to 70cm (28")']];
+    for ($i = 70; $i <= 200; $i+=5) {
+      $torso_size[] = [ 
+        'code' => $i+5, 
+        'description' => "$i to " . ($i+5) . "cm (" . ceil($i/2.54) . "-" . ceil(($i+5)/2.54) . "\")" 
+      ];
+    }
+    $torso_size[] = ['code' => 210, 'description' => 'Over 205cm (81")'];
+    
+    return [
+      'attributes' => $attributes,
+      'user_data' => [ 'username', 'email', 'first_name', 'last_name' ],
+      'genders' => ['Non-binary','Female','Male','Other'],
+      'sizes' => [
+        [ 'code' => 'SMALL',  'description' => "up to 165cm (<5'5\")"   ],
+        [ 'code' => 'MEDIUM', 'description' => "165-175cm (5'9\")"  ],
+        [ 'code' => 'LARGE',  'description' => "175-190cm (6'3\")" ],
+        [ 'code' => 'XLARGE', 'description' => "over 190cm (>6'3\")" ], 
+      ],
+      'torso_circumference' => $torso_size,
+    ];    
+  }
+  
+  public function profile($request, $response, $arguments) 
+  {
+    $player = self::getPlayer($arguments);
+    $user = $player["user"];
+    
+    return self::render(
+      "profile", 
+      [
+        "user" => $user,
+        "profile" => self::profileData(),
+      ], 
+      $response
+    );
+    
+  }
+  
+  public function save_profile($request, $response, $arguments) 
+  {
+    
+    $validation = $this->validator->validate($request, [
+      'email' => v::noWhitespace()->notEmpty()->emailAvailable(),
+      'email' => v::noWhitespace()->notEmpty()->userAvailable(),
+    ]);
+
+    if ($validation->failed()) {
+      $this->flash->addMessage('error', "This email is already in the system, please use another one.");
+      return $response->withRedirect(
+        isset($arguments["uid"])  ? 
+        $this->router->pathFor('participant.profile', ['uid' => $arguments["uid"]]):
+        $this->router->pathFor('participant.profile')      
+      );
+    }
+    
+    $player = self::getPlayer($arguments);
+    $user = $player["user"];
+    
+    $profileData = self::profileData();
+
+    foreach($profileData["attributes"] as $key) {
+      $value = $request->getParam($key);
+      $value = is_null($value) ? false : $value;
+      self::setAttribute($user, $key, $value);
+    }
+
+    $credentials = [
+      'email' => $request->getParam('email'),
+      'username' => $request->getParam('email'),
+    ];
+    
+    $this->container->sentinel->update($user, $credentials);
+    
+    if($user->save()) {
+      $this->flash->addMessage('success', "Profile updated."); 
+    } else {
+      $this->flash->addMessage('error', "Something went wrong saving the profile, sorry."); 
+    }
+    
+    return $response->withRedirect(
+      isset($arguments["uid"])  ? 
+      $this->router->pathFor('participant.profile', ['uid' => $arguments["uid"]]):
+      $this->router->pathFor('participant.profile')      
+    );
+  }
+  
+  public function sendMessage($request, $response, $arguments) 
+  {
+    $player = self::getCurrentUser();
+    $from = $player["user"];
+    $to = isset($arguments["uid"]) ? $arguments["uid"] : false; //hashed
+    $to = User::where('id', $to)->first();
+    $message = $request->getParam('message');
+    
+    if($to && $message) {
+      $mail = new Sender($this->container->get('settings'));
+      
+      if($mail->message($from, $to, $message)) {
+        $this->flash->addMessage('success', "Your message have been sent!");
+      } else {
+        $this->flash->addMessage('error', "Something went wrong when sending your message, please try again later.");
+      };  
+      return $response->withRedirect($this->router->pathFor('participant.home'));
+    } else {
+      $this->flash->addMessage('error', "Something went wrong sending your message, sorry."); 
+      return $response->withRedirect($this->router->pathFor('participant.home'));
+    }
+  }
+  
+  //************
+  // Helpers
+  //************
+  
+  private function getPlayer($arguments) {
+    return $this->container->auth->isWriter() && isset($arguments["uid"]) && $arguments["uid"] ?
+      self::getPlayerInfo($arguments["uid"]) : self::getCurrentUser();
+  }
 }

@@ -597,6 +597,21 @@ $app->group('/participants', function () use ($container) {
       ->setName('participant.packing.admin');    
   });
   
+  //Profile
+  $this->group('/profile', function () {  
+    $this->get('[/]', 'ParticipantPageController:profile')->setName('participant.profile');
+    $this->post('[/{uid}]', 'ParticipantPageController:save_profile')->setName('participant.profile.save');
+
+    $this->get('/{uid}', 'ParticipantPageController:profile')
+      ->setName('participant.profile.admin');
+  });
+
+  //Message
+  $this->group('/message', function () {  
+    //$this->get('/{uid}', 'ParticipantPageController:message')->setName('participant.message');
+    $this->post('/{uid}', 'ParticipantPageController:sendMessage')->setName('participant.message');
+  }); 
+  
   $this->get('/{page}[/{uid}]', 'ParticipantPageController:page')
     ->setName('participant.page');  
                
