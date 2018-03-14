@@ -300,9 +300,13 @@ $app->group('/admin', function() use ($container) {
       
       $this->get('/{uid}/delete', 'RelationActionController:delete')->setName('admin.relation.delete');
       
-      $this->get('/json[/{uid}]', 'RelationActionController:asJson')->setName('admin.relation.json');      
+      $this->get('/json/{uid}', 'RelationActionController:asJson')->setName('admin.relation.json');      
       
-      $this->get('/web[/{uid}]', 'RelationActionController:web')->setName('admin.relation.web');      
+      $this->group('/web', function () {
+        $this->get('/', 'RelationActionController:web')->setName('admin.relation.web'); 
+        $this->get('/{uid}', 'RelationActionController:web')->setName('admin.relation.web'); 
+      });
+           
     });
   });
   
