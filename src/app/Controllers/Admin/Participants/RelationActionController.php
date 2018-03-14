@@ -312,14 +312,20 @@ class RelationActionController extends Controller
     foreach($characters as $c) {
       $rel = $c->rel;
       if($rel->count()) {
-        $data["nodes"][] = self::getNodeData($c);        
-        foreach($c->rel as $r) {
-          foreach($r->characters as $rc) {
-            if($rc->id != $c->id) {
-              $data["links"][] = self::getLinkData($r, $c, $rc);
-              if($single) $data["nodes"][] = self::getNodeData($rc);
-            }
-          }
+        $data["nodes"][] = self::getNodeData($c);
+        $data = self::getCharacterLinks($c, $data, $single);
+      }
+    }
+    
+    return $data;
+  }
+  
+  private function getCharacterLinks($c, $data, $single = false) {
+    foreach($c->rel as $r) {
+      foreach($r->characters as $rc) {
+        if($rc->id != $c->id) {
+          $data["links"][] = self::getLinkData($r, $c, $rc);
+          if($single) $data["nodes"][] = self::getNodeData($rc);
         }
       }
     }

@@ -310,11 +310,11 @@ svg.loading path.lights {
   opacity: .1;
 }
 .check > input + label:before {
-  background-image: url('data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGlkPSJjaGVja2JveCI+PHBhdGggZD0iTTAsMCBsNTAgNTAgLTUwIDUwIE0xMDAsIDAgbC01MCA1MCA1MCA1MCIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjEwIiBmaWxsPSJ0cmFuc3BhcmVudCI+PGFuaW1hdGUgYXR0cmlidXRlVHlwZT0iWE1MIiBhdHRyaWJ1dGVOYW1lPSJkIiBmcm9tPSJNMCwwIGw1MCA1MCAtNTAgNTAgTTEwMCwgMCBsLTUwIDUwIDUwIDUwIiB0bz0iTTEwMCwwIGwtMTAwIDAgMCAxMDAgTTEwMCwgMCBsMCAxMDAgLTEwMCAwIiBkdXI9Ii4xNXMiIGZpbGw9ImZyZWV6ZSIvPjwvcGF0aD48L3N2Zz4=');
+  background-image: url('data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgdmlld0JveD0iMCAwIDEwMCAxMDAiID48cGF0aCBkPSJNNSw1IEw5NSA1IDk1IDk1IDUgOTUgeiAiIHN0cm9rZT0iI0ZGRiIgc3Ryb2tlLXdpZHRoPSI1IiBmaWxsPSJ0cmFuc3BhcmVudCIvPjwvc3ZnPg==');
 }
 .check > input:checked + label:before {
   opacity: 1;
-  background-image: url('data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGlkPSJjaGVja2JveCI+PHBhdGggZD0iTTEwMCwwIGwtMTAwIDAgMCAxMDAgTTEwMCwgMCBsMCAxMDAgLTEwMCAwIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iMTAiIGZpbGw9InRyYW5zcGFyZW50Ij48YW5pbWF0ZSBhdHRyaWJ1dGVUeXBlPSJYTUwiIGF0dHJpYnV0ZU5hbWU9ImQiIGZyb209Ik0xMDAsMCBsLTEwMCAwIDAgMTAwIE0xMDAsIDAgbDAgMTAwIC0xMDAgMCIgdG89Ik0wLDAgbDUwIDUwIC01MCA1MCBNMTAwLCAwIGwtNTAgNTAgNTAgNTAiIGR1cj0iLjE1cyIgZmlsbD0iZnJlZXplIi8+PC9wYXRoPjwvc3ZnPg==');
+  background-image: url('data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgdmlld0JveD0iMCAwIDEwMCAxMDAiID48cGF0aCBkPSJNMCwwIEwxMDAsIDEwMCBNMTAwLCAwIEwwLCAxMDAiIHN0cm9rZT0iI0ZGRiIgc3Ryb2tlLXdpZHRoPSIxMCIvPjwvc3ZnPg==');
 }
 .check.input_d > input + label:before {
   background-image: url('data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgdmlld0JveD0iMCAwIDEwMCAxMDAiID48cGF0aCBkPSJNNSw1IEw5NSA1IDk1IDk1IDUgOTUgeiAiIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLXdpZHRoPSI1IiBmaWxsPSJ0cmFuc3BhcmVudCIvPjwvc3ZnPg==');
@@ -333,7 +333,7 @@ svg.loading path.lights {
 }
 
 .check > label:hover {
-  opacity: 0.5;
+  opacity: 0.85;
 }
 .check > input[disabled][name] + label {
   opacity: 0.25;
