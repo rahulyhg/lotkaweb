@@ -10,6 +10,7 @@ if ($_POST) {
 }
 
 $db = mysqli_connect("localhost","root","rou7oEvl","lvtickets");
+$db->query("SET NAMES utf8");
 ?><html>
 <head>
     <link href="/assets/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -79,9 +80,16 @@ $(document).ready(function() {
 </script>
 
 <h1>Lotka-Volterra Shop</h1>
-
-<form action="" method="post">
-<table>
+<i>NOTE!</i> Don't copy and send this link to someone else. It contains your specific user id, and if someone else uses it to pay, their payment will be registered to you.<br>
+<br>
+This order will be registered to:  <?php
+$sql = "SELECT displayname FROM users WHERE id=".(int)$_GET["uid"];
+$rez = $db->query($sql);
+while($n = $rez->fetch_assoc()) {
+  echo $n["displayname"];
+}
+?><br><br>
+<form action="" method="post"> <table>
   <tr>
     <td>
 <img src="https://lotka-volterra.se/assets/media/f50f3d92f5923c50.jpg"><br>
