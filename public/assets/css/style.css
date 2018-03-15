@@ -2979,3 +2979,26 @@ Google map
   border-bottom: 3px solid transparent;
   border-top: 3px solid #9F28A7;
 }
+img.right {
+  float: right;
+  padding:5px;
+}
+
+.infobox {
+  border: 1px solid #555;
+  background-color: #333;
+  font-size: 14px;
+  font-style: italic;
+  display: table;
+  padding:10px;
+}
+.infobox:before {
+    font-family: FontAwesome;
+    font-size:14px;
+    content: "\f059 ";
+    padding-right:3px;
+    padding-bottom:3px;
+    color: #91e28f;
+}
+
+
