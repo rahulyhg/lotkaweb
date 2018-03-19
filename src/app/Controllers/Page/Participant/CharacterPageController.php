@@ -168,7 +168,7 @@ class CharacterPageController extends Controller
         $character_list[] = [
           "data" => $character, 
           "attributes" => self::mapAttributes($character->attr),
-          "order" => Order::where('user_id', $character->user->id)->first(),
+          "order" => Order::where('user_id', $character->user_id)->first(),
         ];
       }
     }

@@ -172,24 +172,26 @@ class ParticipantPageController extends Controller
   
   private function profileData() {
     $attributes = [
-      'allergies', 
-      'birth_date', 
       'care_of', 
-      'city', 
-      'country', 
-      'emergency_contact', 
-      'emergency_phone', 
-      'gender', 
-      'id_number_swe', 
-      'medical_conditions',
-      'onefifty_plus', 
-      'phone', 
-      'postal_code', 
-      'pref_bus',
-      'size', 
-      'state', 
       'street_address_1', 
       'street_address_2',
+      'city', 
+      'postal_code', 
+      'state', 
+      'country', 
+      
+      'phone', 
+      
+      'emergency_contact', 
+      'emergency_phone', 
+      
+      'birth_date', 
+      'allergies', 
+      'gender', 
+//      'id_number_swe', 
+//      'medical_conditions',
+      'onefifty_plus', 
+      'size', 
       'torso_circumference', 
     ];
       
@@ -224,7 +226,7 @@ class ParticipantPageController extends Controller
     return self::render(
       "profile", 
       [
-        "user" => $user,
+        "player" => $player,
         "profile" => self::profileData(),
       ], 
       $response
@@ -285,7 +287,7 @@ class ParticipantPageController extends Controller
     $player = self::getCurrentUser();
     $from = $player["user"];
     $to = isset($arguments["uid"]) ? $arguments["uid"] : false; //hashed
-    $to = User::where('id', $to)->first();
+    $to = $to ? User::where('id', $to)->first() : false;
     $message = $request->getParam('message');
     
     if($to && $message) {
