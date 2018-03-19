@@ -22,11 +22,18 @@ return [
       'path' => __DIR__ . '/../logs/app.log',
       'level' => \Monolog\Logger::DEBUG,
     ],
+    
+    'tickets' => [
+      "host" => "<OUR_TICKET_DB_HOST_HERE>",
+      "user" => "<OUR_TICKET_DB_USERNAME_HERE>",
+      "password" => "<OUR_TICKET_DB_PASSWORD_HERE>",
+      "database" => "<OUR_TICKET_DB_NAME_HERE>",
+    ],    
 
     'db' => [
-      'driver' => 'mysql',
-      'host' => 'localhost',
-      'database' => 'lotka-volterra',
+      'driver' => '<OUR_DB_DRIVER_HERE>',
+      'host' => '<OUR_DB_HOST_HERE>',
+      'database' => '<OUR_DB_NAME_HERE>',
       'username' => '<OUR_DB_USERNAME_HERE>',
       'password' => '<OUR_DB_PASSWORD_HERE>',
       'charset'   => 'utf8',
@@ -36,14 +43,14 @@ return [
 
     'mail' => [
       'from' => [
-        'email' => <FROM_MAIL>,
-        'name' => <FROM_NAME>
+        'email' => '<FROM_MAIL>',
+        'name' => '<FROM_NAME>'
       ],
 
       'smtp' => [
         'server' =>	  'smtp.gmail.com', 
-        'email' => 	  <SENDER_EMAIL>, 
-        'password' =>	<SENDER_EMAIL_PASWORD>, 
+        'email' => 	  '<SENDER_EMAIL>', 
+        'password' =>	'<SENDER_EMAIL_PASWORD>', 
         'port' =>    	587,
       ],
     ],
@@ -72,8 +79,8 @@ return [
       'name' => 'Lotka-volterra', 
       'date' => '5 April 2018',
       'ticket' => [
-        'target' => <OUR_TICKET_TARGET_AMOUNT>,
-        'goal' => <OUR_TICKET_SALES_GOAL>,
+        'target' => '<OUR_TICKET_TARGET_AMOUNT>',
+        'goal' => '<OUR_TICKET_SALES_GOAL>',
       ],
       'devBlog' => [
         'active' => false,
