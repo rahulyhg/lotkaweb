@@ -71,6 +71,43 @@
              </div>
             </div>
             
+            
+            <div class="widget-box collapsible">
+              <div class="widget-title"> 
+                <a href="#collapseBulk" data-toggle="collapse"> 
+                  <span class="icon"><i class="icon-user"></i></span>
+                  <h5>Bulk Assign</h5>
+                </a> 
+              </div>
+              <div class="collapse" id="collapseBulk">
+                <div class="widget-content character_filters">
+                  <div class="control-group">
+                    <div class="character_filter controls">
+                      <select name="filter" class="span3 special">
+                      {% for item in character_filters %}
+                        <option>{{ item }}</option>
+                      {% endfor %}
+                      </select>
+                      <select name="comparison" class="span3 special">
+                      {% for item in filter_comparison %}
+                        <option>{{ item }}</option>
+                      {% endfor %}
+                      </select>
+                      &nbsp;
+                      <input type="text" class="span3" name="filter_value" placeholder="value">
+                      <button class="btn btn-success add_filter span1 pull-right">+</i></button>                  
+                    </div>
+                  </div>
+                </div>
+              
+                <div class="control-group">
+                  <div class="controls">              
+                    <button class="btn btn-success filter_characters span11 pull-right"><i class="icon-search"></i></button>
+                  </div>
+                </div>
+              </div>
+            </div> 
+            
             <div class="control-group">
               <label class="control-label">Characters :</label>
               <div class="controls">
@@ -108,7 +145,7 @@
                 {% endfor %}
                 </select>
               </div>
-            </div>
+            </div>           
             
             {{ include('/admin/partials/fragments/attributes.html') }}
   
@@ -136,5 +173,32 @@
   $(".attributes").on("click", ".remove_attrib", function (e) {
     e.preventDefault();
     $addDiv = $(this).parent().remove();
+  });
+
+  $(".character_filters").on("click", ".add_filter", function (e) {
+    e.preventDefault();
+    $addDiv = $(this).parent().clone();
+    $addDiv.find('input, select').each(function () { $(this).val(null); })
+    $(this).parent().after($addDiv);
+    $(this).parent().find('button')
+      .removeClass('btn-success add_filter').addClass('btn-warning remove_filter').text('-');
+  });
+
+  $(".character_filters").on("click", ".remove_filter", function (e) {
+    e.preventDefault();
+    $addDiv = $(this).parent().remove();
+  });
+
+  $(".filter_characters").on("click", function (e) {
+    e.preventDefault();
+    var filter = {};
+
+    $(".character_filter").each(function () {
+      filter[$(this).find("[name=filter]").val()] = $(this).find("[name=comparison]").val() + ":" + $(this).find("[name=filter_value]").val();
+    });
+
+    $.getJSON("/admin/api/v1/characters/search", filter).done(function (r) { 
+      $('[name="character_ids[]"]').val(r.characters.map(c => c.id)).trigger('change');
+    });
   });
 {% endblock %}

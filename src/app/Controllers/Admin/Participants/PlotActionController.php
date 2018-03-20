@@ -11,6 +11,7 @@ use App\Models\Plot;
 use App\Controllers\Controller;
 use Respect\Validation\Validator as v;
 use Slim\Views\Twig as View;
+use App\Controllers\Admin\Participants\CharacterActionController as Char;
 
 class PlotActionController extends Controller
 {
@@ -24,6 +25,8 @@ class PlotActionController extends Controller
   private function options() {
     return [
       'characters' => Character::orderBy('name')->get(),
+      'character_filters' => Char::characterAttributes(),
+      'filter_comparison' => ['=','<','>','<>','<=','>='],
       'groups' => Group::orderBy('name')->get(),
       'plots' => Plot::orderBy('name')->get(),
       'set_attr' => self::attributes(),

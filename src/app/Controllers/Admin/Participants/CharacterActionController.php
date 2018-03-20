@@ -17,13 +17,15 @@ use Slim\Views\Twig as View;
 class CharacterActionController extends Controller
 {
 
-  private function character_attributes() {
+  public function characterAttributes() {
     return [
-      'quote', 'org', 'shift', 'role', 'traits', 'nickname', 'synopsis', 'npc', 'reviewed', 'submitted_for_review', 'haven_id',
-      'iso_int_note','mil_dem_note','nos_pro_note','lib_col_note','log_int_note','dir_avo_note','phy_non_note','mal_con_note',
-       'iso_int','mil_dem','nos_pro','lib_col','log_int','dir_avo','phy_non','mal_con', 'haven_history', 
-      'self_vision', 'others_vision', 'notes', 'bunk_budy', 'age',
-      'gender','time_in_thermopylae', 'contacts_in_haven', 'pronoun', 'history', 'traumas', 'personnel_file', 'how_survived', 'personal_property_items'
+      'age','bunk_budy','contacts_in_haven','dir_avo','dir_avo_note','gender',
+      'haven_history','haven_id','history','how_survived','iso_int','iso_int_note',
+      'lib_col','lib_col_note','log_int','log_int_note','mal_con','mal_con_note',
+      'mil_dem','mil_dem_note','nickname','nos_pro','nos_pro_note','notes','npc',
+      'org','others_vision','personal_property_items','personnel_file','phy_non',
+      'phy_non_note','pronoun','quote','reviewed','role','self_vision','shift',
+      'submitted_for_review','synopsis','time_in_thermopylae','traits','traumas',
     ];
   }
   
@@ -36,7 +38,7 @@ class CharacterActionController extends Controller
       'relations' => Relation::orderBy('name')->get(),
       'shifts' => self::characterShifts(),
       'orgs' => self::characterOrgs(),
-      'set_attr' => self::character_attributes(),
+      'set_attr' => self::characterAttributes(),
       'genders' => ['Non-binary','Female','Male','Other'],
     ];
   }
@@ -53,7 +55,7 @@ class CharacterActionController extends Controller
       'values' => $request->getParam('attrVal')
     ];
     
-    foreach (self::character_attributes() as $attr) {
+    foreach (self::characterAttributes() as $attr) {
       if ( strlen($request->getParam($attr)) ) {
         $attributes['keys'][] = $attr;
         $attributes['values'][] = $request->getParam($attr);
@@ -360,5 +362,36 @@ class CharacterActionController extends Controller
     $item->delete();
     $this->flash->addMessage('warning', "Character {$item->name} was deleted.");
     return $response->withRedirect($this->router->pathFor('admin.character.list'));
+  }
+  
+  public function apiCharacterSearch($request, $response, $arguments) {
+    $params = $request->getQueryParams();    
+    $res = Character::select('characters.name','characters.id');
+      
+    foreach($params as $name => $value) {
+      $res->whereHas(
+        'attr', function ($query) use ($name, $value) {
+            if(strpos($value, ':') === false) {
+              $comparison = '=';
+              $value = ':'.$value;
+            } else {
+              $comparison = strstr($value, ':', true);
+            }
+            $value = str_replace(':', '', strstr($value, ':'));          
+            $query->where([['name', $name], ['value', $comparison, $value]]);            
+          }
+      ); //->with('attr');
+    }
+    
+    return $response->withJSON(
+        [ 
+          "characters" => $res->get(), 
+          "filter" => $params, 
+          "count" => $res->count(), 
+//          "debug" => $res->toSql() 
+        ],
+        200,
+        JSON_UNESCAPED_UNICODE
+    );    
   }
 }

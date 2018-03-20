@@ -80,7 +80,6 @@ $app->group('/api/v1', function () {
       "Names reserved by external provider TextTalk."
     );
   });
-  
 });
 
 //User
@@ -371,7 +370,17 @@ $app->group('/admin', function() use ($container) {
     
     $this->get('/taxon/{name}[/{parent}]', 'ListActionController:addUpdateTaxons')->setName('admin.items.taxon');
     
-  });    
+  });
+  
+  //API
+  $this->group('/api', function () {
+    $this->group('/v1', function () {
+      $this->group('/characters', function () {
+        $this->get('/search', 'CharacterActionController:apiCharacterSearch')->setName('admin.api.character.search');
+        
+      });      
+    });
+  });
   
 })->add(new AdminMiddleware($container));
 
@@ -599,7 +608,7 @@ $app->group('/participants', function () use ($container) {
   //Packing
   $this->group('/packing', function () {  
     $this->get('[/]', 'ParticipantPageController:packing')->setName('participant.packing');
-    $this->post('[/{uid}]', 'ParticipantPageController:save_packing')->setName('participant.packing.save');
+    $this->post('[/{uid}]', 'ParticipantPageController:savePacking')->setName('participant.packing.save');
 
     $this->get('/{uid}', 'ParticipantPageController:packing')
       ->setName('participant.packing.admin');    
@@ -608,7 +617,7 @@ $app->group('/participants', function () use ($container) {
   //Profile
   $this->group('/profile', function () {  
     $this->get('[/]', 'ParticipantPageController:profile')->setName('participant.profile');
-    $this->post('[/{uid}]', 'ParticipantPageController:save_profile')->setName('participant.profile.save');
+    $this->post('[/{uid}]', 'ParticipantPageController:saveProfile')->setName('participant.profile.save');
 
     $this->get('/{uid}', 'ParticipantPageController:profile')
       ->setName('participant.profile.admin');

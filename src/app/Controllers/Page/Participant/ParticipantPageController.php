@@ -138,7 +138,7 @@ class ParticipantPageController extends Controller
     );
   }
     
-  public function save_packing($request, $response, $arguments) 
+  public function savePacking($request, $response, $arguments) 
   {
     $player = self::getPlayer($arguments);
     $user = $player["user"];
@@ -234,7 +234,7 @@ class ParticipantPageController extends Controller
     
   }
   
-  public function save_profile($request, $response, $arguments) 
+  public function saveProfile($request, $response, $arguments) 
   {
     
     $validation = $this->validator->validate($request, [
@@ -293,7 +293,7 @@ class ParticipantPageController extends Controller
     if($to && $message) {
       $mail = new Sender($this->container->get('settings'));
       
-      if($mail->message($from, $to, $message)) {
+      if($mail->message($from, $to, $message, 'message-email', true)) {
         $this->flash->addMessage('success', "Your message have been sent!");
       } else {
         $this->flash->addMessage('error', "Something went wrong when sending your message, please try again later.");

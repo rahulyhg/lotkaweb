@@ -35,7 +35,7 @@ class Sender
     $mail->Port = $email_settings['smtp']['port'];;         // TCP port to connect to
   }
 
-  public function send($recipient, $subject, $body_template, $vars = array()) {
+  public function send($recipient, $subject, $body_template, $vars = array(), $bcc = false) {
     $email_settings = $this->settings['mail'];
     $mail = $this->mail;
     
@@ -50,6 +50,7 @@ class Sender
       $body = new Templater($body_template, $vars);
       
       $mail->addAddress($recipient);
+      if($bcc) $mail->addBCC($bcc);
       $mail->Subject = $subject;
       $mail->Body    = $body;
 
@@ -62,7 +63,7 @@ class Sender
     return false;
   }
   
-  public function message($from, $to, $message, $template_slug = 'message-email') {     
+  public function message($from, $to, $message, $template_slug = 'message-email', $bcc = false) {     
     if(!$to || !$from) die();
     
     $recipient = $to->email;
@@ -75,7 +76,8 @@ class Sender
       [                                             // Values ([{###}] where ### is the KEY)
         "message" => $message,
         "sender-id" => $from->character_id,
-      ]
+      ],
+      $bcc ? $from->email : false
     );
   }
 }

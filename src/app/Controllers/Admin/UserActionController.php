@@ -125,7 +125,8 @@ class UserActionController extends Controller
       $userList[] = [
         "data" => $user,
         "order" => Order::where('user_id', $user->id)->first(),
-        "attr" => self::mapAttributes( $user->attr )
+        "attr" => self::mapAttributes( $user->attr ),
+        "character" => $user->character, 
       ];
     }
     
