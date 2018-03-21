@@ -443,4 +443,16 @@ class UserActionController extends Controller
     $this->flash->addMessage('success', "User '{$credentials['username']}' have been successfully registered" . $attest_info);
     return $response->withRedirect($this->router->pathFor('admin.orders.all'));
   }
+  
+  public function makeRole($request, $response, $arguments) {
+    if(isset($arguments['name'])) {
+      $rolename = strtolower($arguments['name']);
+      $role = $this->container->sentinel->getRoleRepository()->createModel()->create([
+          'name' => ucfirst($rolename),
+          'slug' => $rolename,
+      ]);
+      
+      die(var_dump($role));
+    }
+  }
 }

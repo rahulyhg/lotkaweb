@@ -10,11 +10,12 @@ class ParticipantMiddleware extends Middleware
     
     if ($this->container->sentinel->getUser()) {
       $isAdmin = $this->container->sentinel->getUser()->inRole('admin');
-      $isParticipant = $this->container->sentinel->getUser()->inRole('participant') || $isAdmin;
+      $isWriter = $this->container->sentinel->getUser()->inRole('writer') || $isAdmin;
+      $isParticipant = $this->container->sentinel->getUser()->inRole('participant') || $isWriter;
     }
 
     if (!$isParticipant) {
-      $this->container->flash->addMessage('error', 'You have no access to view this page.');
+      $this->container->flash->addMessage('error', 'You have no access to view this participant page.');
       $_SESSION['redirect_uri'] = $request->getUri()->getPath();     
       return $response->withRedirect($this->container->router->pathFor('user.login'));
     }

@@ -121,6 +121,17 @@ $app->group('/admin', function() use ($container) {
     ]);
   }
 
+  $self = $this;
+  
+  $onlyAdmin = function ($request, $response, $next) use ($container) {
+    if(!$this->auth->isAdmin()) {
+      $container->flash->addMessage('error', 'You have no access to view this admin page.');
+      $_SESSION['redirect_uri'] = $request->getUri()->getPath();
+      return $response->withRedirect($container->router->pathFor('admin.index'));      
+    }
+    return $next($request, $response);
+  };
+  
   $this->get('', 'AdminController:index')->setName('admin.index');
 
   //Todo
@@ -144,7 +155,7 @@ $app->group('/admin', function() use ($container) {
     $this->get('/export', 'UserActionController:csv')->setName('admin.users.export'); 
     
     $this->get('/gallery', 'UserActionController:gallery')->setName('admin.users.gallery');    
-  });
+  })->add($onlyAdmin);
   
   //Orders
   $this->group('/orders', function() {
@@ -184,7 +195,7 @@ $app->group('/admin', function() use ($container) {
 
       $this->get('/unattest', 'OrderActionController:unattestOrder')->setName('admin.order.unattest');
     });
-  });
+  })->add($onlyAdmin);
   
   //Tickets
   $this->group('/tickets', function() {
@@ -197,7 +208,7 @@ $app->group('/admin', function() use ($container) {
     $this->post('/{uid}/edit', 'TicketActionController:postEdit');
 
     $this->get('/{uid}/delete', 'TicketActionController:delete')->setName('admin.ticket.delete');
-  });
+  })->add($onlyAdmin);
   
   //Tasks
   $this->group('/tasks', function() {
@@ -233,7 +244,7 @@ $app->group('/admin', function() use ($container) {
     $this->get('/{uid}/unpublish', 'PostActionController:unpublish')->setName('admin.post.unpublish');
 
     $this->get('/{uid}/delete', 'PostActionController:delete')->setName('admin.post.delete');
-  });
+  })->add($onlyAdmin);
   
   //Participants
   $this->group('/participants', function() {
@@ -322,13 +333,13 @@ $app->group('/admin', function() use ($container) {
     $this->post('/{uid}/edit', 'MediaActionController:postEdit');
 
     $this->get('/{uid}/delete', 'MediaActionController:delete')->setName('admin.media.delete');
-  });  
+  })->add($onlyAdmin);
   
   //Bulk mail
   $this->group('/email', function() {
     $this->get('', 'BulkmailActionController:compose')->setName('admin.bulkmail');    
     $this->post('', 'BulkmailActionController:send');
-  });
+  })->add($onlyAdmin);
   
   //Attributes
   $this->group('/attributes', function () {
@@ -341,7 +352,7 @@ $app->group('/admin', function() use ($container) {
     $this->post('/{uid}/edit', 'AttributeActionController:post');
 
     $this->get('/{uid}/delete', 'AttributeActionController:delete')->setName('admin.attributes.delete');
-  });  
+  })->add($onlyAdmin);
   
   //Lists
   $this->group('/lists', function () {
@@ -354,7 +365,7 @@ $app->group('/admin', function() use ($container) {
     $this->post('/{uid}/edit', 'ListActionController:save');
 
     $this->get('/{uid}/delete', 'ListActionController:delete')->setName('admin.lists.delete');
-  });
+  })->add($onlyAdmin);
   
   //Items
   $this->group('/items', function () {
@@ -370,7 +381,7 @@ $app->group('/admin', function() use ($container) {
     
     $this->get('/taxon/{name}[/{parent}]', 'ListActionController:addUpdateTaxons')->setName('admin.items.taxon');
     
-  });
+  })->add($onlyAdmin);
   
   //API
   $this->group('/api', function () {
@@ -381,6 +392,10 @@ $app->group('/admin', function() use ($container) {
       });      
     });
   });
+  
+  $this->group('/role', function () {
+    $this->get('/new/{name}', 'UserActionController:makeRole')->setName('admin.newRole');
+  })->add($onlyAdmin);
   
 })->add(new AdminMiddleware($container));
 
