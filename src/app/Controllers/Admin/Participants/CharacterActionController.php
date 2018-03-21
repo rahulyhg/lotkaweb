@@ -177,6 +177,12 @@ class CharacterActionController extends Controller
       $item->attr()->sync($requestData['attributes']);
       $item->groups()->sync($requestData['groups']);
       $item->rel()->sync($requestData['relations']);
+
+      $user = User::where('id', $requestData['values']['user_id'])->first();
+      if($user) {
+        self::setAttribute($user, "packing_pnqs", $request->getParam("packing_pnqs"));
+        self::setAttribute($user, "packing_ta", $request->getParam("packing_ta"));
+      }
       
       $this->flash->addMessage('success', "Character details have been saved.");
     } else {

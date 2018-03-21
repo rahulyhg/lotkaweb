@@ -233,16 +233,16 @@
             </div>
 
             <div class="control-group">
-              <label class="control-label">History in Haven :</label>
+              <label class="control-label">Items - temporary assignment :</label>
               <div class="controls">
-                <textarea class="span11" name="haven_history" rows="8">{{ current.attr.haven_history }}</textarea>
+                <textarea class="span11" name="packing_ta" rows="8">{{ current.data.user.attr|key('packing_ta') }}</textarea>
              </div>
             </div>
 
             <div class="control-group">
-              <label class="control-label">Personal property items :</label>
+              <label class="control-label">Items - personal, no consequence :</label>
               <div class="controls">
-                <textarea class="span11" name="personal_property_items" rows="8">{{ current.attr.personal_property_items }}</textarea>
+                <textarea class="span11" name="packing_pnqs" rows="8">{{ current.data.user.attr|key('packing_pnqs') }}</textarea>
              </div>
             </div>
             
