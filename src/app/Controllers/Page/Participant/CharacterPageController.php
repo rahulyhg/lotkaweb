@@ -28,6 +28,8 @@ class CharacterPageController extends Controller
   }
   
   public function gallery($request, $response, $arguments){
+    ini_set('memory_limit','512M');
+    
     return self::render(
       "character-gallery", 
       [
