@@ -84,7 +84,7 @@
             <div class="control-group">
               <label class="control-label">Submitted for review :</label>
               <div class="controls">
-                <input type="checkbox" class="span11" name="submitted_for_review" {% if current.attr.submitted_for_review %}checked{% endif %} {% if current.attr.reviewed %}disabled{% endif %} >
+                <input type="checkbox" class="span11" name="submitted_for_review" {% if current.attr.submitted_for_review or current.attr.reviewed %}checked{% endif %} {% if current.attr.reviewed %}disabled{% endif %} >
               </div>
             </div>
             
@@ -379,4 +379,31 @@
     $("[name=age_nightfall]").val(isNaN(age)?'':age-13);
   })
 
+  String.prototype.hashCode = function() {
+    var hash = 0, i, chr;
+    if (this.length === 0) return hash;
+    for (i = 0; i < this.length; i++) {
+      chr   = this.charCodeAt(i);
+      hash  = ((hash << 5) - hash) + chr;
+      hash |= 0; // Convert to 32bit integer
+    }
+    return hash;
+  };
+
+  var id = (n) => (n = n.toUpperCase().split('').map(c => c.charCodeAt(0)).reverse().join('').slice(0,12), n = n + n.split('').reduce((a,b, c)=> +a + +b).toString().split('').reduce((a,b, c)=> +a + +b).toString().split('').reduce((a,b, c)=> +a + +b), n)
+
+  var settings = {
+    date: +(new Date), 
+    offset: 410248800000
+  }
+
+  var name = $("[name=name]").val();
+  var salted = name + ' HEAVEN RELOCATION DEP. ' + settings.offset;
+  var gen_id = id(Math.abs(salted.hashCode()).toString(16));
+
+  var h_id_el = $('.haven_id');
+  var h_id_i = $('[name=haven_id]');
+
+  if(h_id_i.length && h_id_i.val() == '' && name)
+      h_id_i.val(gen_id)
 {% endblock %}
