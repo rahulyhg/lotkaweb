@@ -14,6 +14,9 @@ use App\Controllers\Controller;
 use Respect\Validation\Validator as v;
 use Slim\Views\Twig as View;
 
+use App\Mail\Sender;
+use App\Mail\Templater;
+
 class CharacterActionController extends Controller
 {
 
@@ -129,6 +132,7 @@ class CharacterActionController extends Controller
   private function save($requestData, $request, $response, $arguments) {
     // update data
     $item = Character::firstOrCreate(['id' => $arguments['uid']]);
+    $user = false;
     
     if(is_null($requestData['values']['user_id'])) {
       $user = User::where('id', $item->user_id)->first();      
@@ -177,6 +181,27 @@ class CharacterActionController extends Controller
       $item->attr()->sync($requestData['attributes']);
       $item->groups()->sync($requestData['groups']);
       $item->rel()->sync($requestData['relations']);
+      
+      if($request->getParam("mark_reviewed")) {
+        self::setAttribute($item, "submitted_for_review", "on");
+        self::setAttribute($item, "reviewed", "on");
+        
+        /* TODO: ACTIVATE EMAIL BUNDLE ON COMPETION
+        
+        if($user && $user->email) {
+          $mail = new Sender($this->container->get('settings'));
+          $template = Post::where('slug', 'reviewed-email')->first();
+          $email_vars = [
+            "BUNDLE_URL" => $this->router->pathFor('participant.bundle', ['hash' => $user->hash]), 
+          ];
+          $mail->send($user->email, $template->title, $template->content, $email_vars);
+          
+          $this->flash->addMessage('success', "Character details have been marked as reviewed and the participant have been emailed.");        
+        }
+        
+        */
+        $this->flash->addMessage('success', "Character details have been marked as reviewed.");        
+      }
 
       $user = User::where('id', $requestData['values']['user_id'])->first();
       if($user) {

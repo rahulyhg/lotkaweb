@@ -24,7 +24,7 @@ class OnboardingPageController extends Controller
 {
   
   private function getParticipantFromHash($arguments) {
-    $user_hash = filter_var($arguments['hash'], FILTER_SANITIZE_STRING);
+    $user_hash = filter_var(isset($arguments['hash']) ? $arguments['hash'] : 'nohash', FILTER_SANITIZE_STRING);
     $user = User::where('hash', $user_hash)->first();
     $participant = [];
       
@@ -309,5 +309,18 @@ class OnboardingPageController extends Controller
     return $response->withRedirect($this->router->pathFor('participant.onboarding', 
       ['hash' => $participant["hash"], 'stage' => $onbording_stage_attributes['onboarding_stage']]
     ));
-  }  
+  }
+  
+  public function bundle($request, $response, $arguments)
+  {
+    $participant = self::getParticipantFromHash($arguments);
+    
+    if(!$participant["user"]) {
+      $this->flash->addMessage('error', "Something went wrong with creating your player pack. Please contact the Organizers.");
+      return $response->withRedirect($this->router->pathFor('home'));
+    }
+    
+    die("create a PDF-bunlde and E-ticket for scanning on site here.");
+  }
+  
 }

@@ -260,6 +260,12 @@
              </div>
             </div>
             
+            {% if not new and not current.attr.reviewed %}
+            <div class="form-actions">
+              <button type="submit" name="mark_reviewed" value="reviewed" class="btn btn-info pull-right">Mark As Reviewed</button>
+            </div>            
+            {% endif %}
+            
             <div class="control-group">
               <label class="control-label">Values :</label>
               <div class="controls">
@@ -350,6 +356,9 @@
   
             <div class="form-actions">
               <button type="submit" class="btn btn-success">Save</button>
+            {% if not new and not current.attr.reviewed %}
+              <button type="submit" name="mark_reviewed" value="reviewed" class="btn btn-info pull-right">Mark As Reviewed</button>
+            {% endif %}
             </div>
           </form>
         </div>

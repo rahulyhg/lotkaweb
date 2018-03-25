@@ -455,4 +455,85 @@ class UserActionController extends Controller
       die(var_dump($role));
     }
   }
+  
+  
+  private function getParticipantFromHash($arguments) {
+    $user_hash = filter_var(isset($arguments['hash']) ? $arguments['hash'] : 'nohash', FILTER_SANITIZE_STRING);
+    $user = User::where('hash', $user_hash)->first();
+    $participant = [];
+      
+    if($user) {
+      $participant["user"] = $user;
+      $participant["attributes"] = self::mapAttributes($user->attr);
+      $participant["hash"] = $user_hash;
+    } else {
+      $participant = $user_hash;
+    }
+    
+    return $participant;
+  }
+  
+  public function checkIn($request, $response, $arguments) {
+    $participant = self::getParticipantFromHash($arguments);
+    $template = Post::where('slug', 'checkin')->first()->content;
+    $double = false;
+    if(!isset($participant["user"])) {
+      $participant = false;
+    } else {
+      if($participant["user"]->attr->where('name', 'checked_in')->whereIn('value', ['1', 'on'])->count() > 0) {
+        $double = true;
+      } else {
+        self::setAttribute($participant["user"], "checked_in", "1");        
+      }
+    }
+
+    return $this->view->render($response, '/new/barebones.html', [
+      'content' => $template,
+      'participants' => User::where([['character_id', '<>', 0],['displayname', '<>', '']])->orderBy('displayname')->get(),
+      'participant' => $participant,
+      'double' => $double,
+    ]);  
+  }
+  
+  public function manualCheckIn($request, $response, $arguments) {
+    $participant = [];
+    $revert = false;
+    $checkin = false;
+    $hash = [];
+    if($request->getParam('revert_checkin')) {
+      $hash['hash'] = $request->getParam('revert_checkin');
+      $revert = true;
+    }
+    if($request->getParam('checkin')) {
+      $hash['hash'] = $request->getParam('checkin');
+      $checkin = true;
+    }
+    
+    $participant = self::getParticipantFromHash($hash);
+    
+    if(!isset($participant["user"])) {
+      $this->flash->addMessage('waning', "No participant with this code ($participant) found!"); 
+      return $response->withRedirect($this->router->pathFor('admin.checkin', [ 'hash' => 'list' ]));
+    } else {
+      if($revert) {
+        self::removeAttribute($participant["user"], "checked_in");
+        $this->flash->addMessage('warning', "Participant check-in reverted!");
+      }
+      if($checkin) {
+        self::setAttribute($participant["user"], "checked_in", "1");        
+        $this->flash->addMessage('success', "Participant checked-in!");
+      }
+    }
+    return $response->withRedirect($this->router->pathFor('admin.checkin', [ 'hash' => 'list' ]));
+  }
+  
+  public function namesign($request, $response, $arguments) {
+    $participant = self::getParticipantFromHash($arguments);
+    $template = Post::where('slug', 'namesign')->first()->content;
+    
+    return $this->view->render($response, '/new/barebones.html', [
+      'content' => $template,
+      'participant' => $participant,
+    ]);     
+  }
 }

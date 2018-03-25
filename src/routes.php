@@ -396,6 +396,14 @@ $app->group('/admin', function() use ($container) {
   $this->group('/role', function () {
     $this->get('/new/{name}', 'UserActionController:makeRole')->setName('admin.newRole');
   })->add($onlyAdmin);
+
+  $this->group('/checkin', function () {
+    $this->get('/namesign/{hash}', 'UserActionController:namesign')->setName('admin.checkin.namesign');
+    
+    $this->get('/{hash}', 'UserActionController:checkIn')->setName('admin.checkin');
+    $this->post('/', 'UserActionController:manualCheckIn')->setName('admin.checkin.manual');
+  });
+  
   
 })->add(new AdminMiddleware($container));
 
@@ -443,9 +451,12 @@ $app->get('/setup', function () {
 */
 
 $app->group('/welcome/', function () { 
+  $this->get('{hash}/bundle[/]', 'OnboardingPageController:bundle')
+    ->setName('participant.bundle'); 
+  
   $this->get('{hash}/[{stage}]', 'OnboardingPageController:onboarding')
     ->setName('participant.onboarding'); 
-  $this->post('{hash}/[{stage}]', 'OnboardingPageController:save'); 
+  $this->post('{hash}/[{stage}]', 'OnboardingPageController:save');   
 });
 
 $app->group('/participants', function () use ($container) { 
