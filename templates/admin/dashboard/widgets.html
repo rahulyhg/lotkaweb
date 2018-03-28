@@ -1,6 +1,8 @@
 <div class="container-fluid">
   <div class="quick-actions_homepage">
     <ul class="quick-actions">
+      <li class="bg_dg"> <a href="{{ path_for('admin.checkin', { 'hash': 'list' }) }}"> <i class="icon-check"></i> <span class="label label-important"></span> Check In </a> </li>
+
       <li class="bg_lb"> <a href="{{ path_for('admin.orders.all') }}"> <i class="icon-money"></i> <span class="label label-important">{{ orderStatus.unattested }}</span> Orders </a> </li>
       <li class="bg_lg"> <a href="{{ path_for('admin.users.all') }}"> <i class="icon-user"></i> Users </a> </li>
       <li class="bg_dy"> <a href="{{ path_for('admin.posts.all') }}"> <i class="icon-copy"></i> Posts </a> </li>
