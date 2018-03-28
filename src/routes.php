@@ -285,6 +285,8 @@ $app->group('/admin', function() use ($container) {
     //Plots
     $this->group('/plots', function () {
       $this->get('/all', 'PlotActionController:index')->setName('admin.plot.list');
+      $this->get('/submitted', 'PlotActionController:submitted_for_review')->setName('admin.plot.list.submitted');
+      $this->get('/reviewed', 'PlotActionController:reviewed')->setName('admin.plot.list.reviewed');      
       
       $this->get('/add', 'PlotActionController:add')->setName('admin.plot.add');
       $this->post('/add', 'PlotActionController:post');

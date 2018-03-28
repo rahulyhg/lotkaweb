@@ -31,7 +31,8 @@
                   <th>Name</th>
                   <th>Parent</th>
                   <th>Characters</th>
-                  <th>Groups</th>
+                  <th>Submitted</th>
+                  <th>Reviewed</th>                  
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -50,11 +51,9 @@
                     <a href="{{ path_for('admin.character.edit', { 'uid': character.id }) }}" title="Edit Character">{{ character.name }}</a>{% if loop.last %}{% else %}, {% endif %}
                     {% endfor %}
                   </td>
-                  <td>
-                    {% for group in plot.groups %}
-                    <a href="{{ path_for('admin.group.edit', { 'uid': group.id }) }}" title="Edit Group">{{ group.name }}</a>{% if loop.last %}{% else %}, {% endif %}
-                    {% endfor %}
-                  </td>
+                  <td class="btn-{{ plot.attr|key('submitted_for_review') ? 'success' : 'warning' }}"><i class="icon-check{{ plot.attr|key('submitted_for_review') ? '' : '-empty' }}"></i> {{ plot.attr|key('submitted_for_review') ? 'Yes' : 'No' }}</td>
+                  <td class="btn-{{ plot.attr|key('reviewed') ? 'success' : plot.attr|key('submitted_for_review') ? 'danger' : 'warning' }}"><i class="icon-check{{ plot.attr|key('reviewed') ? '' : '-empty' }}"></i> {{ plot.attr|key('reviewed') ? 'Yes' : 'No' }}</td>                  
+
                   <td class="center">
                     <a href="{{ path_for('admin.plot.edit', { 'uid': plot.id }) }}" class="btn btn-default" title="Edit Plot"><i class="icon-edit"></i></a>
                     <a href="{{ path_for('admin.plot.delete', { 'uid': plot.id }) }}" class="btn btn-danger" title="Delete Plot"><i class="icon-remove"></i></a>

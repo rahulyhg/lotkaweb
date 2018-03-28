@@ -141,4 +141,34 @@ class PlotActionController extends Controller
     $this->flash->addMessage('warning', "{$item->name} was deleted.");
     return $response->withRedirect($this->router->pathFor('admin.plot.list'));
   }
+  
+  public function submitted_for_review($request, $response, $arguments)
+  {
+    //Filter by attribute
+    $item = Plot::whereHas(
+        'attr', function ($query) {
+            $query->where([['name', 'submitted_for_review'], ['value', '<>', '0'], ['value', '<>', 'off']]);
+        }
+    )
+    ->with('attr');
+    
+    return $this->view->render($response, "admin/participants/plots/list.html", [
+      'list' => $item->get(),
+    ]);
+  }
+  
+  public function reviewed($request, $response, $arguments)
+  {
+    //Filter by attribute
+    $item = Plot::whereHas(
+        'attr', function ($query) {
+            $query->where([['name', 'reviewed'], ['value', '<>', '0'], ['value', '<>', 'off']]);
+        }
+    )
+    ->with('attr');
+    
+    return $this->view->render($response, "admin/participants/plots/list.html", [
+      'list' => $item->get(),
+    ]);
+  }  
 }
