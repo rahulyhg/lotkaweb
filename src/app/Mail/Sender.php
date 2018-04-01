@@ -49,8 +49,13 @@ class Sender
       
       $body = new Templater($body_template, $vars);
       
-      $mail->addAddress($recipient);
-      if($bcc) $mail->addBCC($bcc);
+      if($bcc) {
+        $mail->addAddress("lotka@beratta.org");      
+        $mail->addBCC($bcc);
+        $mail->addBCC($recipient);
+      } else {
+        $mail->addAddress($recipient);      
+      }
       $mail->Subject = $subject;
       $mail->Body    = $body;
 

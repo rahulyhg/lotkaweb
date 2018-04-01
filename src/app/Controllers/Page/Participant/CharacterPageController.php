@@ -43,9 +43,11 @@ class CharacterPageController extends Controller
     $player = $this->container->auth->isWriter() && $arguments["uid"] ?
       self::getPlayerInfo($arguments["uid"]) : self::getCurrentUser();
     
-    $character = $player["user"]->character;    
+    $character = $player["user"]->character;
     $user = $player["user"];
-    
+
+//    self::markNotificationsAsSeen($character, $user);
+
     return self::render(
       "character-my", 
       [

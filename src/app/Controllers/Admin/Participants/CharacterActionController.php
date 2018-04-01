@@ -186,6 +186,15 @@ class CharacterActionController extends Controller
         self::setAttribute($item, "submitted_for_review", "on");
         self::setAttribute($item, "reviewed", "on");
         
+        if($user) {
+          self::notify($user, $item, [
+            'title' => 'Character reviewed!',
+            'description' => 'Your character have been reviewed.', 
+            'icon' => 'exclamation-circle',
+            'target' => $this->router->pathFor('participant.character.my'),
+          ]);
+        }
+        
         /* TODO: ACTIVATE EMAIL BUNDLE ON COMPETION
         
         if($user && $user->email) {
