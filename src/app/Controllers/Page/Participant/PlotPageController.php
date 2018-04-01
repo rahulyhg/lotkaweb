@@ -80,7 +80,7 @@ class PlotPageController extends Controller
     
     self::markNotificationsAsSeen($plot, $currentUser);
         
-    if( !$plot || (!$isRequest && (!$inPlot && $plot_id != 'new')) || !$isPublic) {      
+    if( !$plot || (!$isRequest && (!$inPlot && $plot_id != 'new') && !$isPublic) ) {      
       $this->flash->addMessage('error', "We can't find this plot, either it's been removed or you can't access it any more.");
       return $response->withRedirect($this->router->pathFor('participant.home'));
     }
