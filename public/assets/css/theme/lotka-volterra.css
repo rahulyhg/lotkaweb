@@ -497,6 +497,13 @@ svg.loading path.lights {
     filter: grayscale(1);
 }
 
+.sponsors img {
+    width: 150px;
+    padding: .25em;
+    /* filter: grayscale(1); */
+    margin: .5em 0;
+}
+
 .work-item > div > div.post-thumbnail::after {
   content: '';
   height: 270px;
