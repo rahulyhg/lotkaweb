@@ -293,6 +293,8 @@ $app->group('/admin', function() use ($container) {
       
       $this->get('/{uid}/edit', 'PlotActionController:edit')->setName('admin.plot.edit');
       $this->post('/{uid}/edit', 'PlotActionController:post');
+
+    $this->get('/export', 'PlotActionController:csv')->setName('admin.plots.export'); 
       
       $this->get('/{uid}/delete', 'PlotActionController:delete')->setName('admin.plot.delete');
     });

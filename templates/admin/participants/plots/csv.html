@@ -1,0 +1,4 @@
+"id", "name", "synopsis", "description", "public", "reviewed","characters"
+{% for plot in list %}
+"{{plot.data.id}}", "{{plot.data.name}}", "{{plot.attr.synopsis}}", "{{plot.data.description}}", "{{plot.attr.public}}", "{{plot.attr.reviewed}}","{% for character in plot.characters %}{{ character.name }}, {% endfor %}"
+{% endfor %}

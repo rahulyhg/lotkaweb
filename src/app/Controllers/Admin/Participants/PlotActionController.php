@@ -170,5 +170,22 @@ class PlotActionController extends Controller
     return $this->view->render($response, "admin/participants/plots/list.html", [
       'list' => $item->get(),
     ]);
+  }
+  
+  public function csv($request, $response, $arguments)
+  {
+    $plots = Plot::all();
+    $list = [];
+    foreach ($plots as $plot) {
+      $list[] = [
+        "data" => $plot,
+        "attr" => self::mapAttributes( $plot->attr ),
+        "characters" => $plot->characters, 
+      ];
+    }
+    
+    return $this->view->render($response, 'admin/participants/plots/csv.html', [
+      'list' => $list
+    ])->withHeader('Content-Type', 'text/csv');
   }  
 }
