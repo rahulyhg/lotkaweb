@@ -498,10 +498,11 @@ svg.loading path.lights {
 }
 
 .sponsors img {
-    width: 150px;
+    max-width: 150px;
     padding: .25em;
     /* filter: grayscale(1); */
     margin: .5em 0;
+    max-height: 4em;
 }
 
 .work-item > div > div.post-thumbnail::after {
