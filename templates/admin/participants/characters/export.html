@@ -1,0 +1,11 @@
+{%
+set character_values, character_attr = ['id','name','description'], ['nickname','age','gender','pronoun','haven_history','contacts_in_haven','history','how_survived','personnel_file','traumas','notes','time_in_thermopylae','org','shift','npc']
+%}
+{{ character_values|join(',') }},{{ character_attr|join(',') }},ex
+{% for character in listItems %}
+{% spaceless %}
+{% for data in character_values %}{% if character[data] is iterable %}"{{ character[data]|join(' and ') }}"{% else %}"{{ character[data] | replace({"\n": " ", "\r\n": " ", "\t": " ", "\n\r": " ", ",": " "}) }}"{% endif %},{% endfor %}
+{% for data in character_attr %}{% if character.attr|key(data) is iterable %}"{{ character.attr|key(data)|join(' and ') }}"{% else %}"{{ character.attr|key(data) | replace({"\n": " ", "\r\n": " ", "\t": " ", "\n\r": " ", ",": " "}) }}"{% endif %},{% endfor %}
+{% endspaceless %}
+
+{% endfor %}

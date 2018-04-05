@@ -432,6 +432,15 @@ class CharacterActionController extends Controller
         ],
         200,
         JSON_UNESCAPED_UNICODE
-    );    
+    );
   }
+  
+  public function csv($request, $response, $arguments)
+  {
+    $items = Character::all();
+
+    return $this->view->render($response, 'admin/participants/characters/export.html', [
+      'listItems' => $items
+    ])->withHeader('Content-Type', 'text/csv');
+  }  
 }
