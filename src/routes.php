@@ -268,6 +268,7 @@ $app->group('/admin', function() use ($container) {
       $this->post('/{uid}/edit', 'CharacterActionController:post');
       
       $this->get('/export', 'CharacterActionController:csv')->setName('admin.character.export'); 
+      $this->get('/gm', 'CharacterActionController:gm')->setName('admin.character.gm'); 
      
       $this->get('/{uid}/delete', 'CharacterActionController:delete')->setName('admin.character.delete');
     });

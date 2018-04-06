@@ -442,5 +442,14 @@ class CharacterActionController extends Controller
     return $this->view->render($response, 'admin/participants/characters/export.html', [
       'listItems' => $items
     ])->withHeader('Content-Type', 'text/csv');
-  }  
+  }
+  
+  public function gm($request, $response, $arguments)
+  {
+    $items = Character::all();
+
+    return $this->view->render($response, 'admin/participants/characters/gm-export.html', [
+      'listItems' => $items
+    ]);
+  }    
 }
