@@ -1,0 +1,6 @@
+{% set list_values = ['type','assignee','desc'] %}
+{{ list_values|join(',') }},ex
+{% for type, list in lists %}{% for item in list %}
+{% for data in list_values %}"{{ item[data] | replace({"\n": " ", "\r\n": " ", "\t": " ", "\n\r": " ", ",": " "}) }}",{% endfor %}
+
+{% endfor %}{% endfor %}

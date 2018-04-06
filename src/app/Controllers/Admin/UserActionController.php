@@ -536,4 +536,43 @@ class UserActionController extends Controller
       'participant' => $participant,
     ]);     
   }
+
+  public function exportItems($request, $response, $arguments)
+  {
+    $DB = $this->db->getDatabaseManager();
+    $sql = "SELECT c.id, c.name, a.name as attr, a.value, a.id as attr_id FROM attributes a JOIN user_attribute ua ON a.id = ua.attribute_id JOIN users u ON ua.user_id = u.id JOIN characters c ON u.character_id = c.id WHERE a.name IN ('packing_pnqs', 'packing_ta') AND a.value NOT LIKE '' ORDER BY c.name";
+    $owners = $DB->select( $DB->raw( $sql ) );
+    $itemData = [
+      "pnqs" => [],
+      "ta" => [],
+    ];
+
+    foreach($owners as $id => $owenrData) {
+      $lists = [
+        "pnqs" => $owenrData->attr && $owenrData->attr == "packing_pnqs" ? explode("\n", $owenrData->value) : [],
+        "ta" => $owenrData->attr && $owenrData->attr == "packing_ta" ? explode("\n", $owenrData->value) : [],
+      ];
+      $assignee = isset($owenrData->name) ? $owenrData->name : "[ NO ASSIGNEE ]";
+      $assignee_id = isset($owenrData->id) ? $owenrData->id : "[ NO ASSIGNEE ]";
+      
+      foreach($lists as $list_type => $listData) { 
+        if(count($listData) > 0) {
+          foreach($listData as $id => $item) {
+            $itemData[$list_type][] = [
+              "type" => $list_type,
+              "assignee" => $assignee,
+              "assignee_id" => $assignee_id,
+              "desc" => $item,
+            ];
+          }
+        }
+      }
+    }
+    
+    #die(var_dump($itemData));
+    
+    return $this->view->render($response, 'admin/participants/characters/exportItems.html', [
+      'lists' => $itemData
+    ])->withHeader('Content-Type', 'text/csv');
+  }  
 }
