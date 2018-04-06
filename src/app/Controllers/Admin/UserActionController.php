@@ -549,8 +549,8 @@ class UserActionController extends Controller
 
     foreach($owners as $id => $owenrData) {
       $lists = [
-        "pnqs" => $owenrData->attr && $owenrData->attr == "packing_pnqs" ? explode("\n", $owenrData->value) : [],
-        "ta" => $owenrData->attr && $owenrData->attr == "packing_ta" ? explode("\n", $owenrData->value) : [],
+        "pnqs" => $owenrData->attr && $owenrData->attr == "packing_pnqs" ? preg_split('/\r\n|\r|\n/', $owenrData->value) : [],
+        "ta" => $owenrData->attr && $owenrData->attr == "packing_ta" ? preg_split('/\r\n|\r|\n/', $owenrData->value) : [],
       ];
       $assignee = isset($owenrData->name) ? $owenrData->name : "[ NO ASSIGNEE ]";
       $assignee_id = isset($owenrData->id) ? $owenrData->id : "[ NO ASSIGNEE ]";
