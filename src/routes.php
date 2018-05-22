@@ -321,10 +321,10 @@ $app->group('/admin', function() use ($container) {
       $this->get('/json/{uid}', 'RelationActionController:asJson')->setName('admin.relation.json');      
       
       $this->group('/web', function () {
-        $this->get('/', 'RelationActionController:web')->setName('admin.relation.web'); 
-        $this->get('/{uid}', 'RelationActionController:web')->setName('admin.relation.web'); 
+        //$this->get('/', 'RelationActionController:web')->setName('admin.relation.web');
+        $this->get('/json', 'RelationActionController:asJson')->setName('admin.relation.json');
+        //$this->get('/{uid}', 'RelationActionController:web')->setName('admin.relation.web');
       });
-           
     });
   });
   

@@ -349,8 +349,8 @@ class RelationActionController extends Controller
     $private = $r->attr()->where('name', 'poublic')->get();
     
     return [
-      "source" => self::getNodeData($s),
-      "target" => self::getNodeData($t),
+      "source" => $s->id,
+      "target" => $t->id,
       "left" => true, 
       "right" => true, 
       "name" => $r->name, 
